@@ -1,0 +1,13 @@
+# Python
+__pycache__/
+*.pyc
+# PyInstaller build output (the finished exe lives in download/)
+build/
+dist/
+*.spec
+# GeoTIFFs you make
+*.tif
+*.tiff
+# Anywhere
+.DS_Store
+Thumbs.db
