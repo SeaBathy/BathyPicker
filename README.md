@@ -92,6 +92,16 @@ The Whitsundays, built with BathyPicker and opened in
 [SeaBathy Desktop](https://github.com/SeaBathy/seabathy-desktop): coloured by depth, then in
 3D with satellite imagery draped over the seabed at Whitehaven Beach and Hill Inlet.
 
+IMAS maps the seafloor only, so land in the file is empty. For the 3D picture, island
+heights from [GMRT](https://www.gmrt.org) (free worldwide elevation, CC BY 4.0) were laid
+under the IMAS depths with GDAL, so the satellite drapes over the hills too:
+
+```bash
+gdalwarp -te <west> <south> <east> <north> -tr <IMAS pixel size> gmrt.tif gmrt_grid.tif
+gdalbuildvrt stack.vrt gmrt_grid.tif imas.tif      # IMAS on top wherever it has data
+gdal_translate stack.vrt with-land.tif
+```
+
 <p align="center">
   <img src="screenshots/in-seabathy.jpg" width="420" alt="The GeoTIFF in SeaBathy's chart, coloured by depth">
   <img src="screenshots/in-seabathy-3d.jpg" width="420" alt="The Whitsundays in SeaBathy's 3D view with satellite imagery">
