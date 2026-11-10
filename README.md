@@ -152,6 +152,7 @@ keeps the window open after an error so it can be read.
 - **GDAL** (MIT), downloaded on first use if needed, not included here.
 - **The exe** is built with [PyInstaller](https://pyinstaller.org) and includes Python (PSF licence).
 - **BathyPicker's code:** MIT licence, see [LICENSE](LICENSE).
+- **Full licence texts and notices** for everything above: [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) and the [`licenses`](licenses) folder.
 
 BathyPicker is an independent project, not made or endorsed by IMAS or the University of
 Tasmania.
