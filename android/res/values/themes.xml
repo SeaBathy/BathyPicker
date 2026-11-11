@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.BathyPicker" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@color/deep</item>
+        <item name="android:statusBarColor">@color/deep</item>
+        <item name="android:navigationBarColor">@color/deep</item>
+        <item name="android:colorPrimary">@color/sea</item>
+        <item name="android:colorAccent">@color/sea</item>
+    </style>
+    <color name="deep">#0B2530</color>
+    <color name="sea">#0A5C6B</color>
+    <color name="mark">#B3267A</color>
+</resources>

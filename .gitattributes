@@ -1,3 +1,6 @@
 * text=auto
 *.exe binary
 *.jpg binary
+*.apk binary
+*.png binary
+*.sh text eol=lf
