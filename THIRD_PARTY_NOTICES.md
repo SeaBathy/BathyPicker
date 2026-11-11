@@ -1,7 +1,7 @@
 # Third-party software and data
 
 BathyPicker's own code is under the MIT licence in [`LICENSE`](LICENSE). It uses, or
-`BathyPicker.exe` includes, the software and data below under their own licences. The full
+`BathyPicker.exe` and `BathyPicker.apk` include, the software and data below under their own licences. The full
 licence texts are in the [`licenses`](licenses) folder.
 
 ## Included in `BathyPicker.exe`
@@ -13,7 +13,16 @@ licence texts are in the [`licenses`](licenses) folder.
 
 `bathy_picker.py` on its own uses only Python's standard library.
 
-## Loaded by the map page (not included)
+## Included in `BathyPicker.apk` (Android)
+
+| Component | Version | Licence | Full text |
+| --- | --- | --- | --- |
+| Leaflet (in the app's assets) | 1.9.4 | BSD 2-Clause | [`licenses/Leaflet-1.9.4-LICENSE.txt`](licenses/Leaflet-1.9.4-LICENSE.txt) |
+
+The rest of the app is BathyPicker's own code (MIT) and Android's built-in libraries. It doesn't
+use GDAL.
+
+## Loaded by the desktop map page (not included)
 
 | Component | Version | Licence | Full text |
 | --- | --- | --- | --- |

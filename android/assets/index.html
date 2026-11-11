@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>BathyPicker</title>
+<link rel="stylesheet" href="leaflet/leaflet.css">
+<style>
+:root{
+  --paper:#e9f1f3; --paper-2:#dbe7eb; --ink:#10303a; --ink-2:#425f69; --line:#b6cad1;
+  --sea:#0a5c6b; --mark:#b3267a; --shoal:#8f5300; --ok:#17674a; --bad:#a1262d;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{font:15px/1.45 "Avenir Next","Segoe UI",system-ui,-apple-system,Roboto,sans-serif;color:var(--ink);background:#0b2530}
+#map{position:absolute;inset:0}
+#panel{position:absolute;z-index:1000;display:flex;flex-direction:column;gap:16px;overflow:auto;padding:16px;
+  background:var(--paper);box-shadow:0 8px 28px rgba(8,38,48,.35)}
+#panel.collapsed{display:none}
+@media (min-width:820px){#panel{left:12px;top:12px;bottom:12px;width:392px;border-radius:10px}.maptoggle{display:none!important}}
+@media (max-width:819px){#panel{left:0;right:0;bottom:0;max-height:54vh;border-radius:14px 14px 0 0;padding-bottom:calc(18px + env(safe-area-inset-bottom))}}
+h1{font-size:18px;line-height:1.25;margin:0 0 4px;font-weight:650}
+h2{font-size:13px;margin:0 0 8px;font-weight:650;color:var(--ink-2)}
+dialog h2{font-size:16px;color:var(--ink)}
+p{margin:0}
+.lede{color:var(--ink-2)}
+section{padding-top:14px;border-top:1px solid var(--line)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.f{display:flex;flex-direction:column;gap:2px;font-size:13px;color:var(--ink-2)}
+input[type=number],input[type=text],select{width:100%;height:42px;padding:0 10px;font:inherit;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:6px;font-variant-numeric:tabular-nums}
+button{font:inherit;min-height:44px;padding:0 16px;border-radius:6px;border:1px solid var(--sea);background:transparent;color:var(--sea);font-weight:600;cursor:pointer}
+button.primary{background:var(--sea);color:#fff}
+button:disabled{opacity:.45;cursor:not-allowed}
+:focus-visible{outline:3px solid var(--mark);outline-offset:2px}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.row>*{flex:1 1 auto}
+.pick{display:flex;gap:8px}
+.pick input{flex:1 1 auto;min-width:0}
+.pick button{flex:0 0 auto}
+.hint{font-size:13px;color:var(--ink-2);margin-top:6px}
+.zone{display:flex;align-items:center;gap:10px;min-height:36px}
+.zone input{width:18px;height:18px;accent-color:var(--sea)}
+.zone .zres{margin-left:auto;color:var(--ink-2);font-size:13px;font-variant-numeric:tabular-nums}
+.box{padding:10px 12px;border-radius:6px;background:var(--paper-2);margin-top:10px}
+.box.err{background:#f6dcdc;color:var(--bad)}
+.box.warn{background:#f4e6cf;color:var(--shoal)}
+.box.ok{background:#d7ebe2;color:var(--ok)}
+.stale{opacity:.5}
+table{border-collapse:collapse;width:100%;font-size:13px;font-variant-numeric:tabular-nums}
+td,th{text-align:left;padding:3px 6px 3px 0;vertical-align:top}
+th{color:var(--ink-2);font-weight:600}
+progress{width:100%;height:12px;accent-color:var(--sea)}
+pre{margin:8px 0 0;max-height:140px;overflow:auto;font-size:12px;white-space:pre-wrap;word-break:break-word;background:#fff;border:1px solid var(--line);border-radius:6px;padding:8px}
+footer{font-size:12px;color:var(--ink-2)}
+footer a,.box a{color:inherit}
+dialog{border:0;border-radius:10px;padding:16px;width:min(520px,92vw);background:var(--paper);color:var(--ink);box-shadow:0 12px 40px rgba(8,38,48,.5)}
+dialog::backdrop{background:rgba(8,38,48,.55)}
+.dirs{list-style:none;margin:8px 0;padding:0;max-height:34vh;overflow:auto;border:1px solid var(--line);border-radius:6px;background:#fff}
+.dirs button{width:100%;min-height:42px;text-align:left;border:0;border-bottom:1px solid var(--line);border-radius:0;color:var(--ink);font-weight:500}
+.dirs .empty{padding:10px 12px;color:var(--ink-2)}
+.handle{position:absolute;width:26px;height:26px;border:2px solid var(--mark);background:#fff;border-radius:3px;box-shadow:0 0 0 2px rgba(255,255,255,.85);cursor:grab;touch-action:none}
+.handle.m{border-radius:50%;background:var(--mark)}
+.handle.m::after{content:"";position:absolute;inset:5px;border:2px solid #fff;border-radius:50%}
+.tagwrap .tag{position:absolute;transform:translate(-50%,-140%);background:var(--mark);color:#fff;padding:3px 9px;border-radius:3px;font:600 12px/1.3 "Avenir Next","Segoe UI",system-ui,sans-serif;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.35)}
+.maptoggle{display:none;min-height:36px;padding:0 12px;background:var(--paper);border:1px solid var(--line);color:var(--ink);border-radius:6px}
+@media (max-width:819px){.maptoggle{display:block}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div id="map" role="application" aria-label="Map for choosing an area"></div>
+
+<div id="panel">
+  <div>
+    <h1>BathyPicker</h1>
+    <p class="lede">Drag the box over Australian waters. The app pulls every depth layer for it from IMAS and merges them into one GeoTIFF.</p>
+  </div>
+
+  <section aria-labelledby="h-area">
+    <h2 id="h-area">Area</h2>
+    <div class="grid">
+      <label class="f">North<input id="in-n" type="number" step="any" inputmode="decimal"></label>
+      <label class="f">South<input id="in-s" type="number" step="any" inputmode="decimal"></label>
+      <label class="f">West<input id="in-w" type="number" step="any" inputmode="decimal"></label>
+      <label class="f">East<input id="in-e" type="number" step="any" inputmode="decimal"></label>
+    </div>
+    <div class="row" style="margin-top:10px">
+      <button id="fit" type="button">Use what's on screen</button>
+      <select id="preset" aria-label="Jump to a place">
+        <option value="">Jump to&hellip;</option>
+        <option value="148.6,-20.5,149.2,-20.0">Whitsunday Islands</option>
+        <option value="145.9,-19.4,149.0,-17.4">Cairns to Townsville and the outer reef</option>
+        <option value="150.9,-34.4,151.6,-33.5">Sydney coast</option>
+        <option value="115.2,-32.4,116.0,-31.6">Perth and Rottnest</option>
+        <option value="147.0,-43.4,148.4,-42.6">South-east Tasmania</option>
+        <option value="112,-44,154,-10">All of Australia</option>
+      </select>
+    </div>
+    <p class="hint">Corners resize the box. The round handle in the middle moves it.</p>
+  </section>
+
+  <section aria-labelledby="h-layers">
+    <h2 id="h-layers">Depth layers to merge</h2>
+    <div id="zones"></div>
+  </section>
+
+  <section aria-labelledby="h-out">
+    <h2 id="h-out">Output</h2>
+    <div class="grid">
+      <label class="f">Detail
+        <select id="res">
+          <option value="auto">Automatic</option>
+          <option value="finest">Full detail</option>
+          <option value="10">10 m</option><option value="20">20 m</option><option value="30">30 m</option>
+          <option value="50">50 m</option><option value="100">100 m</option><option value="250">250 m</option>
+          <option value="500">500 m</option><option value="1000">1 km</option>
+        </select>
+      </label>
+      <label class="f">Coordinates<select id="crs"></select></label>
+    </div>
+    <p class="hint" style="margin-top:10px">Saves to <strong>Download/BathyPicker</strong> on this phone.</p>
+    <input id="outdir" type="hidden" value="">
+    <details style="margin-top:10px">
+      <summary>More options</summary>
+      <label class="f" style="margin-top:8px">Resampling
+        <select id="resamp">
+          <option value="auto">Automatic</option><option value="near">Nearest</option><option value="average">Average</option>
+          <option value="bilinear">Bilinear</option><option value="cubic">Cubic</option>
+        </select>
+      </label>
+    </details>
+    <p class="hint">Automatic picks the finest detail that stays under <span id="cap"></span> GB. WGS84 lat/long is what SeaBathy reads.</p>
+  </section>
+
+  <section aria-labelledby="h-go">
+    <h2 id="h-go">Build</h2>
+    <div class="row">
+      <button id="check" type="button">Check size</button>
+      <button id="build" type="button" class="primary" disabled>Build GeoTIFF</button>
+    </div>
+    <div id="assess" aria-live="polite"></div>
+    <div id="job" hidden>
+      <div class="box" style="margin-top:12px">
+        <div id="jobtext"></div>
+        <progress id="bar" max="100" value="0" style="margin-top:8px"></progress>
+        <div class="row" style="margin-top:8px"><button id="cancel" type="button">Cancel</button></div>
+        <details><summary>Details</summary><pre id="joblog"></pre></details>
+      </div>
+    </div>
+    <div id="result" aria-live="polite"></div>
+  </section>
+
+  <footer>
+    <p id="cite"></p>
+    <p style="margin-top:6px">Not for navigation. BathyPicker for Android <span id="gdalver"></span>. <a href="https://github.com/SeaBathy/BathyPicker">Source and licences</a></p>
+  </footer>
+</div>
+
+<script src="leaflet/leaflet.js"></script>
+<script>
+(function () {
+  "use strict";
+  const CFG = JSON.parse(BP.config());
+  const $ = (id) => document.getElementById(id);
+  const MIN_SPAN = 0.0005;
+  const panel = $("panel");
+  const toolsReady = true;
+  let busy = false;
+  let assessedKey = null;
+
+  function el(tag, cls, text) {
+    const n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text !== undefined) n.textContent = text;
+    return n;
+  }
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const sz = (b) => b < 1073741824 ? (b / 1048576 < 10 ? (b / 1048576).toFixed(1) : Math.round(b / 1048576)) + " MB" : (b / 1073741824).toFixed(1) + " GB";
+  const note = (cls, text) => el("div", "box " + cls, text);
+  function reveal(node) { if (node && node.scrollIntoView) node.scrollIntoView({ block: "nearest" }); }
+
+  const pending = {};
+  let seq = 0;
+  window.__bpReply = function (id, json) {
+    const done = pending[id];
+    delete pending[id];
+    if (done) { let data = {}; try { data = JSON.parse(json); } catch (e) { data = { error: "The app sent a bad answer." }; } done(data); }
+  };
+  function api(path, body) {
+    return new Promise((resolve) => {
+      const id = ++seq;
+      pending[id] = resolve;
+      try { BP.request(id, path, body === undefined ? "" : JSON.stringify(body)); }
+      catch (e) { delete pending[id]; resolve({ error: "The app couldn't take that request." }); }
+    });
+  }
+  function refreshButtons() {
+    $("check").disabled = busy || !toolsReady;
+    $("build").disabled = busy || !toolsReady || !assessedKey;
+  }
+
+  // ---------- static bits
+  $("cap").textContent = CFG.maxGb;
+  $("cite").textContent = "Data: " + CFG.citation;
+  $("gdalver").textContent = CFG.appVersion;
+  CFG.crs.forEach((c) => { const o = el("option", "", c.label); o.value = c.key; $("crs").appendChild(o); });
+  CFG.zones.forEach((z) => {
+    const lab = el("label", "zone");
+    const cb = el("input"); cb.type = "checkbox"; cb.value = z.key; cb.checked = true;
+    cb.addEventListener("change", markDirty);
+    lab.appendChild(cb);
+    lab.appendChild(el("span", "", z.label));
+    const r = el("span", "zres"); r.dataset.res = z.key; lab.appendChild(r);
+    $("zones").appendChild(lab);
+  });
+
+  // ---------- map
+  const map = L.map("map", { zoomControl: false, minZoom: 3, maxBounds: [[-68, 60], [2, 180]], maxBoundsViscosity: 1.0 });
+  const street = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+    { maxZoom: 19, attribution: "&copy; OpenStreetMap contributors" });
+  const sat = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+    { maxZoom: 19, maxNativeZoom: 18, attribution: "Tiles &copy; Esri &mdash; Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community" });
+  map.fitBounds([[-44, 112], [-10, 154]]);
+  sat.addTo(map);
+  L.control.zoom({ position: "topright" }).addTo(map);
+  L.control.layers({ "Satellite": sat, "Street map": street }, null, { position: "topright" }).addTo(map);
+  const Toggle = L.Control.extend({
+    options: { position: "topright" },
+    onAdd: function () {
+      const b = L.DomUtil.create("button", "maptoggle");
+      b.type = "button"; b.textContent = "Panel";
+      L.DomEvent.disableClickPropagation(b);
+      b.addEventListener("click", () => panel.classList.toggle("collapsed"));
+      return b;
+    }
+  });
+  new Toggle().addTo(map);
+
+  // ---------- the box
+  let box = { w: 131, s: -28, e: 137, n: -23 };
+  const rect = L.rectangle([[box.s, box.w], [box.n, box.e]],
+    { color: "#b3267a", weight: 2, fillColor: "#b3267a", fillOpacity: 0.1 }).addTo(map);
+  const mk = (cls) => L.marker([0, 0], { draggable: true, keyboard: false,
+    icon: L.divIcon({ className: "handle " + cls, iconSize: [26, 26], iconAnchor: [13, 13] }) }).addTo(map);
+  const hSW = mk("c"), hSE = mk("c"), hNE = mk("c"), hNW = mk("c"), hMove = mk("m");
+  const tag = L.marker([0, 0], { interactive: false, keyboard: false,
+    icon: L.divIcon({ className: "tagwrap", html: '<div class="tag"></div>', iconSize: [0, 0] }) }).addTo(map);
+
+  let lastEstimate = "";
+  function dims() {
+    const mid = (box.s + box.n) / 2;
+    return [(box.e - box.w) * 111.32 * Math.cos(mid * Math.PI / 180), (box.n - box.s) * 111.32];
+  }
+  function refreshTag() {
+    const d = dims();
+    const fmt = (v) => (v >= 100 ? v.toFixed(0) : v.toFixed(1));
+    const node = tag.getElement();
+    if (node && node.firstChild) node.firstChild.textContent = fmt(d[0]) + " \u00d7 " + fmt(d[1]) + " km" + lastEstimate;
+  }
+  function syncInputs(force) {
+    [["n", box.n], ["s", box.s], ["w", box.w], ["e", box.e]].forEach(([k, v]) => {
+      const input = $("in-" + k);
+      if (force || document.activeElement !== input) input.value = v.toFixed(4);
+    });
+  }
+  function place(skip) {
+    rect.setBounds([[box.s, box.w], [box.n, box.e]]);
+    if (skip !== hSW) hSW.setLatLng([box.s, box.w]);
+    if (skip !== hSE) hSE.setLatLng([box.s, box.e]);
+    if (skip !== hNE) hNE.setLatLng([box.n, box.e]);
+    if (skip !== hNW) hNW.setLatLng([box.n, box.w]);
+    if (skip !== hMove) hMove.setLatLng([(box.s + box.n) / 2, (box.w + box.e) / 2]);
+    tag.setLatLng([box.n, (box.w + box.e) / 2]);
+    refreshTag();
+    syncInputs(false);
+  }
+  function wireCorner(h, fx, fy) {
+    h.on("drag", () => {
+      const p = h.getLatLng();
+      if (fx === "w") box.w = clamp(Math.min(p.lng, box.e - MIN_SPAN), -180, 180); else box.e = clamp(Math.max(p.lng, box.w + MIN_SPAN), -180, 180);
+      if (fy === "s") box.s = clamp(Math.min(p.lat, box.n - MIN_SPAN), -90, 90); else box.n = clamp(Math.max(p.lat, box.s + MIN_SPAN), -90, 90);
+      place(h); markDirty();
+    });
+    h.on("dragend", () => place());
+  }
+  wireCorner(hSW, "w", "s"); wireCorner(hSE, "e", "s"); wireCorner(hNE, "e", "n"); wireCorner(hNW, "w", "n");
+  let half = null;
+  hMove.on("dragstart", () => { half = { x: (box.e - box.w) / 2, y: (box.n - box.s) / 2 }; });
+  hMove.on("drag", () => {
+    const c = hMove.getLatLng();
+    const cx = clamp(c.lng, -180 + half.x, 180 - half.x), cy = clamp(c.lat, -90 + half.y, 90 - half.y);
+    box = { w: cx - half.x, e: cx + half.x, s: cy - half.y, n: cy + half.y };
+    place(hMove); markDirty();
+  });
+  hMove.on("dragend", () => place());
+
+  function visibleBounds(frac) {
+    const m = $("map").getBoundingClientRect();
+    const open = !panel.classList.contains("collapsed");
+    const p = open ? panel.getBoundingClientRect() : null;
+    let left = 0, top = 0, right = m.width, bottom = m.height;
+    if (p) { if (window.innerWidth >= 820) left = p.right - m.left + 8; else bottom = p.top - m.top - 8; }
+    const dx = (right - left) * frac, dy = (bottom - top) * frac;
+    const nw = map.containerPointToLatLng([left + dx, top + dy]);
+    const se = map.containerPointToLatLng([right - dx, bottom - dy]);
+    return { w: clamp(nw.lng, -180, 180), n: clamp(nw.lat, -90, 90), e: clamp(se.lng, -180, 180), s: clamp(se.lat, -90, 90) };
+  }
+  $("fit").addEventListener("click", () => { box = visibleBounds(0.12); place(); markDirty(); });
+
+  ["n", "s", "w", "e"].forEach((k) => $("in-" + k).addEventListener("change", () => {
+    const v = {}; let good = true;
+    ["n", "s", "w", "e"].forEach((q) => { const raw = $("in-" + q).value; v[q] = Number(raw); if (raw === "" || !Number.isFinite(v[q])) good = false; });
+    if (!good) { syncInputs(true); return; }
+    if (!(v.w < v.e && v.s < v.n)) { alert("West must be less than east, and south less than north."); syncInputs(true); return; }
+    box = v; place(); markDirty();
+    map.fitBounds(rect.getBounds().pad(0.35));
+  }));
+  $("preset").addEventListener("change", () => {
+    const val = $("preset").value; if (!val) return;
+    const [w, s, e, n] = val.split(",").map(Number);
+    box = { w, s, e, n }; place(); markDirty();
+    map.fitBounds(rect.getBounds().pad(0.25));
+    $("preset").value = "";
+  });
+  ["res", "crs", "resamp"].forEach((id) => $(id).addEventListener("change", markDirty));
+
+  // ---------- assess
+  function payload() {
+    return {
+      bbox: [box.w, box.s, box.e, box.n],
+      zones: Array.from(document.querySelectorAll("#zones input:checked")).map((c) => c.value),
+      crs: $("crs").value, resolution: $("res").value, resampling: $("resamp").value, out_dir: $("outdir").value.trim()
+    };
+  }
+  function markDirty() {
+    assessedKey = null;
+    $("assess").classList.add("stale");
+    lastEstimate = ""; refreshTag(); refreshButtons();
+  }
+  function renderAssess(a, body) {
+    const out = $("assess");
+    out.textContent = ""; out.classList.remove("stale");
+    if (a.error) { out.appendChild(note("err", a.error)); reveal(out.lastElementChild); return; }
+    (a.zones || []).forEach((z) => {
+      const s = document.querySelector('[data-res="' + z.key + '"]');
+      if (s) s.textContent = z.covered ? (z.native_res_m + " m") : "no coverage";
+    });
+    if (a.res_m) {
+      const t = el("table");
+      const add = (k, v) => { const tr = el("tr"); tr.appendChild(el("th", "", k)); tr.appendChild(el("td", "", v)); t.appendChild(tr); };
+      add("Box", a.box_km[0] + " \u00d7 " + a.box_km[1] + " km");
+      add("Detail", a.res_m + " m. " + a.res_note);
+      add("Output", a.output_px[0].toLocaleString() + " \u00d7 " + a.output_px[1].toLocaleString() + " pixels, " + a.crs_label);
+      add("Size", "up to " + sz(a.est_bytes) + " uncompressed. The finished file is usually 2\u20134\u00d7 smaller.");
+      add("Format", a.format);
+      add("Save in", a.out_dir);
+      const b = el("div", "box"); b.appendChild(t); out.appendChild(b);
+      lastEstimate = " \u00b7 \u2264 " + sz(a.est_bytes); refreshTag();
+    }
+    (a.errors || []).forEach((m) => out.appendChild(note("err", m)));
+    (a.warnings || []).forEach((m) => out.appendChild(note("warn", m)));
+    if (a.ok) assessedKey = JSON.stringify(body);
+    refreshButtons();
+    reveal(out.lastElementChild);
+  }
+  $("check").addEventListener("click", async () => {
+    const body = payload();
+    $("check").disabled = true; $("check").textContent = "Checking\u2026";
+    const a = await api("/api/assess", body);
+    $("check").textContent = "Check size";
+    renderAssess(a, body);
+  });
+
+  // ---------- build
+  let timer = null, lastState = "idle";
+  function showJob(s) {
+    const jobBox = $("job"), res = $("result");
+    const changed = s.state !== lastState; lastState = s.state;
+    if (s.state === "idle") { jobBox.hidden = true; return; }
+    if (s.state === "running") {
+      jobBox.hidden = false; res.textContent = "";
+      $("jobtext").textContent = s.stage + " \u2014 " + Math.round(s.percent) + "%" + (s.passes > 1 ? " (pass " + s.passes + ", the GeoTIFF is being finished)" : "") + ", " + Math.round(s.elapsed) + " s";
+      $("bar").value = s.percent;
+      $("joblog").textContent = (s.log || []).join("\n");
+      $("cancel").disabled = false;
+      busy = true; refreshButtons();
+      if (changed) reveal(jobBox);
+      return;
+    }
+    jobBox.hidden = true; busy = false;
+    res.textContent = "";
+    if (s.state === "error") { res.appendChild(note("err", s.error || "The build failed.")); const d = el("details"); d.appendChild(el("summary", "", "Details")); d.appendChild(el("pre", "", (s.log || []).join("\n"))); res.appendChild(d); }
+    else if (s.state === "cancelled") { res.appendChild(note("warn", "Cancelled. Nothing was saved.")); }
+    else if (s.state === "done" && s.result) {
+      const r = s.result, b = el("div", "box ok");
+      b.appendChild(el("p", "", "Saved " + r.name + " (" + sz(r.bytes) + ")"));
+      const t = el("table"); t.style.marginTop = "6px";
+      const add = (k, v) => { const tr = el("tr"); tr.appendChild(el("th", "", k)); tr.appendChild(el("td", "", v)); t.appendChild(tr); };
+      add("Where", r.path);
+      if (r.size_px) add("Size", r.size_px[0].toLocaleString() + " \u00d7 " + r.size_px[1].toLocaleString() + " px at " + r.res_m + " m");
+      if (r.min !== null && r.max !== null) add("Values", r.min.toFixed(1) + " to " + r.max.toFixed(1));
+      if (r.valid_percent !== null) add("Has data", r.valid_percent.toFixed(0) + "% of the box");
+      b.appendChild(t);
+      if (r.valid_percent !== null && r.valid_percent < 1) b.appendChild(el("p", "", "Almost all of this box is empty. It may be land or outside Australian waters."));
+      if (r.uri) {
+        const row = el("div", "row"); row.style.marginTop = "8px";
+        const open = el("button", "primary", "Open"); open.type = "button";
+        open.addEventListener("click", () => BP.open(r.uri));
+        const share = el("button", "", "Share"); share.type = "button";
+        share.addEventListener("click", () => BP.share(r.uri));
+        row.appendChild(open); row.appendChild(share); b.appendChild(row);
+      }
+      b.appendChild(el("p", "", "In SeaBathy, import it by browsing to Download/BathyPicker under This device, not Recent."));
+      res.appendChild(b);
+    }
+    refreshButtons();
+    if (changed) reveal(res.lastElementChild);
+  }
+  async function poll() {
+    const s = await api("/api/status");
+    if (s.error) { $("result").textContent = ""; $("result").appendChild(note("err", s.error)); stopPolling(); busy = false; refreshButtons(); return; }
+    showJob(s);
+    if (s.state !== "running") stopPolling();
+  }
+  function stopPolling() { if (timer) { clearInterval(timer); timer = null; } }
+  function startPolling() { stopPolling(); poll(); timer = setInterval(poll, 1500); }
+
+  $("build").addEventListener("click", async () => {
+    const body = payload();
+    if (!assessedKey || assessedKey !== JSON.stringify(body)) { markDirty(); return; }
+    busy = true; refreshButtons();
+    const r = await api("/api/download", body);
+    if (r.error) { busy = false; refreshButtons(); $("result").textContent = ""; $("result").appendChild(note("err", r.error)); return; }
+    startPolling();
+  });
+  $("cancel").addEventListener("click", async () => { $("cancel").disabled = true; await api("/api/cancel", {}); });
+
+  place(); syncInputs(true); refreshButtons();
+  api("/api/status").then((s) => { if (s && s.state === "running") startPolling(); else if (s && s.state && s.state !== "idle") showJob(s); });
+})();
+</script>
+</body>
+</html>

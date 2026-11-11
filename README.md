@@ -5,7 +5,7 @@ Draw a box, get one depth GeoTIFF, up to 10 m detail. Free and open source.</p>
 
 <p align="center">
   <img alt="Version 1.0" src="https://img.shields.io/badge/version-1.0-0f766e">
-  <img alt="Windows, macOS or Linux" src="https://img.shields.io/badge/runs%20on-Windows%20%7C%20macOS%20%7C%20Linux-0078d4">
+  <img alt="Windows, macOS, Linux or Android" src="https://img.shields.io/badge/runs%20on-Windows%20%7C%20macOS%20%7C%20Linux%20%7C%20Android-0078d4">
   <img alt="Python 3.8+" src="https://img.shields.io/badge/Python-3.8%2B-3776ab?logo=python&logoColor=white">
   <img alt="Data IMAS CC BY 4.0" src="https://img.shields.io/badge/data-IMAS%20CC%20BY%204.0-orange">
   <img alt="MIT licence" src="https://img.shields.io/badge/licence-MIT-blue">
@@ -19,7 +19,8 @@ about 94 GB in 8 huge files. BathyPicker lets you draw a box on a map and downlo
 that area**, merging every depth zone into one ready-to-use GeoTIFF. A bay takes seconds.
 
 The result opens in [SeaBathy](https://github.com/SeaBathy/seabathy-android), QGIS and
-most mapping software.
+most mapping software. It runs on a computer, or as an [Android app](#android-app) that
+builds the file right on your phone.
 
 > **Not for navigation.** This is survey data for planning and interest, not a nautical chart.
 
@@ -27,6 +28,7 @@ most mapping software.
 
 - [Features](#features)
 - [Download and run](#download-and-run)
+- [Android app](#android-app)
 - [How to make a GeoTIFF](#how-to-make-a-geotiff)
 - [What you get](#what-you-get)
 - [Command line](#command-line)
@@ -42,7 +44,7 @@ most mapping software.
 | ⚡ **Only what you need** | Streams just your box from the IMAS servers, never the whole 94 GB. |
 | 📏 **Sensible sizes** | *Check size* shows the pixels and file size first. *Automatic* detail picks the finest that fits under 8 GB. |
 | 🧭 **Your choice of coordinates** | WGS84 lat/long (what SeaBathy and most apps read) or GDA2020 Australian Albers (metres). |
-| 📱 **From a phone too** | Run it on a PC and open the page from a phone on the same network. |
+| 📱 **Android app** | The same map as a phone app. Builds the GeoTIFF on the phone, saves it to Downloads and opens it straight in SeaBathy. |
 | 🔧 **Nothing to install** | A single Windows exe, or one Python file with no packages. GDAL is set up for you the first time. |
 
 ## Download and run
@@ -53,6 +55,9 @@ most mapping software.
 - The first time, Windows may say *"Windows protected your PC"*, because the exe isn't
   signed by a big company. Click **More info**, then **Run anyway**.
 - To stop it, close the black window.
+
+**Android:** download **[`BathyPicker.apk`](download/BathyPicker.apk)** on your phone and tap it.
+See [Android app](#android-app) below.
 
 **macOS, Linux or Windows with Python 3.8 or newer:**
 
@@ -74,6 +79,34 @@ MB, once, about a minute, with no admin rights needed. It goes in its own folder
 Or install GDAL yourself: `sudo apt install gdal-bin` (Ubuntu/Debian), `brew install gdal`
 (macOS), or QGIS / OSGeo4W (Windows).
 </details>
+
+## Android app
+
+The same page as a phone app, for Android 7.0 or newer. Draw your box, press *Check size*,
+then *Build GeoTIFF*. The file is saved in **Download/BathyPicker**, and *Open* or *Share*
+sends it straight to SeaBathy or anywhere else.
+
+<p align="center">
+  <img src="screenshots/android-check.jpg" width="270" alt="BathyPicker on Android: the Whitsundays box with Check size showing 10 m detail and 142 MB">
+  <img src="screenshots/android-done.jpg" width="270" alt="BathyPicker on Android: the finished GeoTIFF with Open and Share buttons">
+</p>
+
+- **Install:** download [`BathyPicker.apk`](download/BathyPicker.apk) on the phone and tap it.
+  Android asks to allow installs from your browser or file app the first time: tap
+  **Settings**, turn on **Allow from this source**, go back and tap **Install**. If Play Protect
+  says it doesn't recognise the app (it isn't from the Play Store), tap **More details**, then
+  **Install anyway**.
+- **No GDAL needed.** The app has its own small engine that reads just your box from IMAS,
+  reprojects it and merges the depth zones the same way `gdalwarp` does. Its files were checked
+  pixel by pixel against `gdalwarp` and match.
+- **Size limit 3 GB** (8 GB on a computer). *Automatic* detail picks the finest that fits.
+- **Keeps going in the background** with a progress notification, even with the screen off.
+  *Cancel* leaves nothing behind.
+- In SeaBathy, import the file by browsing to **Download/BathyPicker** under *This device*.
+
+The source and how to build it are in [`android/`](android). You can also still run BathyPicker
+on a computer and open its page from your phone with `--host 0.0.0.0` (see
+[Command line](#command-line)).
 
 ## How to make a GeoTIFF
 
@@ -148,8 +181,8 @@ keeps the window open after an error so it can be read.
   [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/): credit IMAS when you share
   files you make with it. The page shows this citation with every build.
 - **Map in the page:** Esri World Imagery and OpenStreetMap, credited on the map, drawn with
-  [Leaflet](https://leafletjs.com) (BSD 2-Clause).
-- **GDAL** (MIT), downloaded on first use if needed, not included here.
+  [Leaflet](https://leafletjs.com) (BSD 2-Clause), which is included in the Android app.
+- **GDAL** (MIT), downloaded on first use if needed, not included here. The Android app doesn't use it.
 - **The exe** is built with [PyInstaller](https://pyinstaller.org) and includes Python (PSF licence).
 - **BathyPicker's code:** MIT licence, see [LICENSE](LICENSE).
 - **Full licence texts and notices** for everything above: [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) and the [`licenses`](licenses) folder.

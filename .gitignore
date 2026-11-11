@@ -11,3 +11,9 @@ dist/
 # Anywhere
 .DS_Store
 Thumbs.db
+
+# Android build output and the app's signing key (never commit the key)
+android/build/
+android/keystore/
+android/BathyPicker.apk
+*.idsig
