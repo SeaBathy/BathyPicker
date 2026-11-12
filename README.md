@@ -24,6 +24,8 @@ builds the file right on your phone.
 
 > **Not for navigation.** This is survey data for planning and interest, not a nautical chart.
 
+**New here?** The [how-to guide](https://seabathy.com/guide) shows the whole path in a few minutes: get a free depth file with BathyPicker, open it on your phone or PC, and put it on your chartplotter with AT5 Chart Maker.
+
 ## Contents
 
 - [Features](#features)
@@ -31,6 +33,7 @@ builds the file right on your phone.
 - [Android app](#android-app)
 - [How to make a GeoTIFF](#how-to-make-a-geotiff)
 - [What you get](#what-you-get)
+- [Use your GeoTIFF](#use-your-geotiff)
 - [Command line](#command-line)
 - [Build the exe yourself](#build-the-exe-yourself)
 - [Data, credits and licences](#data-credits-and-licences)
@@ -142,6 +145,19 @@ gdal_translate stack.vrt with-land.tif
 
 Only seafloor inside Australian waters has data. Land and other countries' waters are left
 empty (NoData).
+
+## Use your GeoTIFF
+
+| Where | How |
+|---|---|
+| **Phone** | [SeaBathy for Android](https://github.com/SeaBathy/seabathy-android): **Settings → Load GeoTIFF**, then pick it from *Download/BathyPicker*. Or press **Open** in the BathyPicker app. Colour it by depth, fly over it in 3D, use it offline. |
+| **PC** | [SeaBathy Desktop](https://github.com/SeaBathy/seabathy-desktop): drag the file onto the window. |
+| **Chartplotter** | [AT5 Chart Maker](https://github.com/SeaBathy/AT5-Chart-Maker): drag the file in, press **Convert**, copy the folder to the SD card. Simrad, Lowrance and B&G units get a shaded depth picture and contour lines. |
+| **GIS** | QGIS, ArcGIS, Global Mapper and anything else that reads GeoTIFF. |
+
+For the plotter, a small depth range (such as 0–30 m) in AT5 Chart Maker shows reefs in the most
+detail. For the phone, files up to a few hundred MB open quickly; bigger ones use SeaBathy's
+built-in GDAL on 64-bit phones.
 
 ## Command line
 
