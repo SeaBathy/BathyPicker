@@ -40,8 +40,9 @@ use GDAL.
 | Data | Credit | Terms |
 | --- | --- | --- |
 | Depth data | Flukes, E. (2026). *Multi-resolution bathymetry composite surface for Australian waters (EEZ)* [Data set]. Institute for Marine and Antarctic Studies. https://doi.org/10.25959/Y9VF-V723 | [CC BY 4.0](licenses/CC-BY-4.0.txt): credit IMAS when you share files you make with it. Not for navigation. |
-| Satellite map in the page | Esri World Imagery: "Tiles © Esri — Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community", shown on the map | Viewed online only, never downloaded in bulk |
+| Satellite map in the page | Sentinel-2 cloudless by EOX: "Sentinel-2 cloudless – s2maps.eu by EOX IT Services GmbH (contains modified Copernicus Sentinel data 2024)", shown on the map | [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/): non-commercial use with the credit. Viewed online only |
+| Your own map link (optional) | Whatever map you add; Esri links are shown with "Powered by Esri" | That provider's own terms, which are up to you to check |
 | Street map in the page | © OpenStreetMap contributors, shown on the map | Viewed online only, under the [OpenStreetMap tile usage policy](https://operations.osmfoundation.org/policies/tiles/) |
 
 BathyPicker is an independent project, not made or endorsed by IMAS, the University of
-Tasmania, Esri or the OpenStreetMap Foundation.
+Tasmania, EOX, Esri or the OpenStreetMap Foundation.

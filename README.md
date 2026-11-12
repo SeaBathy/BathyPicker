@@ -4,7 +4,7 @@
 Draw a box, get one depth GeoTIFF, up to 10 m detail. Free and open source.</p>
 
 <p align="center">
-  <img alt="Version 1.0" src="https://img.shields.io/badge/version-1.0-0f766e">
+  <img alt="Version 1.1" src="https://img.shields.io/badge/version-1.1-0f766e">
   <img alt="Windows, macOS, Linux or Android" src="https://img.shields.io/badge/runs%20on-Windows%20%7C%20macOS%20%7C%20Linux%20%7C%20Android-0078d4">
   <img alt="Python 3.8+" src="https://img.shields.io/badge/Python-3.8%2B-3776ab?logo=python&logoColor=white">
   <img alt="Data IMAS CC BY 4.0" src="https://img.shields.io/badge/data-IMAS%20CC%20BY%204.0-orange">
@@ -196,8 +196,10 @@ keeps the window open after an error so it can be read.
   https://doi.org/10.25959/Y9VF-V723. Licensed
   [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/): credit IMAS when you share
   files you make with it. The page shows this citation with every build.
-- **Map in the page:** Esri World Imagery and OpenStreetMap, credited on the map, drawn with
-  [Leaflet](https://leafletjs.com) (BSD 2-Clause), which is included in the Android app.
+- **Map in the page:** Sentinel-2 cloudless by EOX (CC BY-NC-SA 4.0) and OpenStreetMap, credited on
+  the map, drawn with [Leaflet](https://leafletjs.com) (BSD 2-Clause), which is included in the Android
+  app. **Your own map link** in the map's layer menu adds any other tile map (Esri's, for example) under
+  your own terms with that provider.
 - **GDAL** (MIT), downloaded on first use if needed, not included here. The Android app doesn't use it.
 - **The exe** is built with [PyInstaller](https://pyinstaller.org) and includes Python (PSF licence).
 - **BathyPicker's code:** MIT licence, see [LICENSE](LICENSE).

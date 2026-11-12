@@ -1378,12 +1378,40 @@ dialog::backdrop{background:rgba(8,38,48,.55)}
   const map = L.map("map", { zoomControl: false, minZoom: 3, maxBounds: [[-68, 60], [2, 180]], maxBoundsViscosity: 1.0 });
   const street = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",
     { maxZoom: 19, attribution: "&copy; OpenStreetMap contributors" });
-  const sat = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-    { maxZoom: 19, maxNativeZoom: 18, attribution: "Tiles &copy; Esri &mdash; Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community" });
+  // Sentinel-2 cloudless (10 m, CC BY-NC-SA 4.0): free to use with its credit.
+  const sat = L.tileLayer("https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2024_3857/default/g/{z}/{y}/{x}.jpg",
+    { maxZoom: 19, maxNativeZoom: 14, attribution: 'Sentinel-2 cloudless &ndash; <a href="https://s2maps.eu">s2maps.eu</a> by EOX IT Services GmbH (contains modified Copernicus Sentinel data 2024)' });
+  // Any other tile map, for example Esri World Imagery, under your own terms with that provider.
+  const own = L.tileLayer("", { maxZoom: 19 });
+  const OWN_KEY = "bathypicker-map-link";
+  let ownCredit = "";   // shown only while your own map is on screen
+  own.on("remove", () => { if (ownCredit) map.attributionControl.removeAttribution(ownCredit); ownCredit = ""; });
+  function useOwnLink() {
+    let url = "";
+    try { url = localStorage.getItem(OWN_KEY) || ""; } catch (e) {}
+    const typed = prompt("Your own map link: a tile address with {z}, {x} and {y} in it, for example from Esri or another " +
+      "provider whose terms allow your use.", url);
+    if (typed === null) return false;
+    url = typed.trim();
+    if (!/^https?:\/\//i.test(url) || !/\{z\}/.test(url) || !/\{x\}/.test(url) || !/\{y\}/.test(url)) {
+      if (url) alert("That link needs to start with http:// or https:// and have {z}, {x} and {y} in it.");
+      return false;
+    }
+    try { localStorage.setItem(OWN_KEY, url); } catch (e) {}
+    if (ownCredit) map.attributionControl.removeAttribution(ownCredit);
+    ownCredit = /arcgis/i.test(url) ? "Your map link &middot; Powered by Esri" : "Your map link";
+    map.attributionControl.addAttribution(ownCredit);
+    own.setUrl(url);
+    return true;
+  }
   map.fitBounds([[-44, 112], [-10, 154]]);
   sat.addTo(map);
   L.control.zoom({ position: "topright" }).addTo(map);
-  L.control.layers({ "Satellite": sat, "Street map": street }, null, { position: "topright" }).addTo(map);
+  L.control.layers({ "Satellite (Sentinel-2)": sat, "Street map": street, "Your own map link\u2026": own }, null, { position: "topright" }).addTo(map);
+  map.on("baselayerchange", (e) => {
+    // Cancelled or not a link: back to Sentinel-2, once the layer menu has finished handling the click.
+    if (e.layer === own && !useOwnLink()) setTimeout(() => { map.removeLayer(own); sat.addTo(map); }, 0);
+  });
   const Toggle = L.Control.extend({
     options: { position: "topright" },
     onAdd: function () {

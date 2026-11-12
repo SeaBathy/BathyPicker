@@ -53,5 +53,6 @@ resampling, zones (`all` or a comma list), output file.
 ## Licences
 
 Leaflet 1.9.4 is bundled in `assets/leaflet` (BSD 2-Clause, `assets/leaflet/LICENSE`).
-Map tiles are Esri World Imagery and OpenStreetMap, credited on the map. Depth data is IMAS,
+Map tiles are Sentinel-2 cloudless (EOX) and OpenStreetMap, credited on the map; the layer menu's
+"Your own map link" adds any other tile map under that provider's terms. Depth data is IMAS,
 CC BY 4.0, and the page shows the citation. BathyPicker's code is MIT.
