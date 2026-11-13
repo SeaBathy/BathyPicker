@@ -1,13 +1,14 @@
 <h1 align="center">BathyPicker</h1>
 
 <p align="center"><b>High-detail seabed maps of anywhere in Australian waters.</b><br>
-Draw a box, get one depth GeoTIFF, up to 10 m detail. Free and open source.</p>
+Draw a box, get one depth GeoTIFF: 10 m detail along the coast, and down to 0.5 m wherever an
+original survey exists. Free and open source.</p>
 
 <p align="center">
-  <img alt="Version 1.1" src="https://img.shields.io/badge/version-1.1-0f766e">
+  <img alt="Version 1.2" src="https://img.shields.io/badge/version-1.2-0f766e">
   <img alt="Windows, macOS, Linux or Android" src="https://img.shields.io/badge/runs%20on-Windows%20%7C%20macOS%20%7C%20Linux%20%7C%20Android-0078d4">
   <img alt="Python 3.8+" src="https://img.shields.io/badge/Python-3.8%2B-3776ab?logo=python&logoColor=white">
-  <img alt="Data IMAS CC BY 4.0" src="https://img.shields.io/badge/data-IMAS%20CC%20BY%204.0-orange">
+  <img alt="Data IMAS and AusSeabed, CC BY 4.0" src="https://img.shields.io/badge/data-IMAS%20%2B%20AusSeabed%20CC%20BY%204.0-orange">
   <img alt="MIT licence" src="https://img.shields.io/badge/licence-MIT-blue">
 </p>
 
@@ -17,6 +18,10 @@ The Institute for Marine and Antarctic Studies (IMAS) has published depth data f
 Australia's waters, down to 10 m detail along the coast. It's a superb dataset, but it's
 about 94 GB in 8 huge files. BathyPicker lets you draw a box on a map and downloads **just
 that area**, merging every depth zone into one ready-to-use GeoTIFF. A bay takes seconds.
+
+**New in 1.2:** where the original multibeam survey is finer than IMAS (about 120 surveys around
+Australia, 0.2–7 m), BathyPicker lays it on top, so reefs, ledges and gutters show at full detail.
+The survey's edges are blended into IMAS, so there's no step where it ends.
 
 The result opens in [SeaBathy](https://github.com/SeaBathy/seabathy-android), QGIS and
 most mapping software. It runs on a computer, or as an [Android app](#android-app) that
@@ -32,6 +37,7 @@ builds the file right on your phone.
 - [Download and run](#download-and-run)
 - [Android app](#android-app)
 - [How to make a GeoTIFF](#how-to-make-a-geotiff)
+- [Original surveys on top](#original-surveys-on-top)
 - [What you get](#what-you-get)
 - [Use your GeoTIFF](#use-your-geotiff)
 - [Command line](#command-line)
@@ -44,10 +50,13 @@ builds the file right on your phone.
 |---|---|
 | 🗺️ **Pick on a map** | Drag a box over any Australian waters on a satellite or street map, type the corners, or jump to a preset. |
 | 🧩 **One merged file** | All 8 depth zones (shallow, mesophotic, rariphotic, upper, mid and lower slope, abyss, hadal) merged into a single Cloud-Optimized GeoTIFF. |
-| ⚡ **Only what you need** | Streams just your box from the IMAS servers, never the whole 94 GB. |
+| 🔍 **Original surveys on top** | Where a finer survey exists (0.2–7 m), it goes on top of IMAS. You choose which, and in what order. Desktop only. |
+| 🪡 **No steps at survey edges** | Each survey fades into what's underneath over 200–500 m at its edges, so there's no cliff where it ends. Further in, its depths are exact. |
+| ⚡ **Only what you need** | Streams just your box from the IMAS and AusSeabed servers, never whole files. |
 | 📏 **Sensible sizes** | *Check size* shows the pixels and file size first. *Automatic* detail picks the finest that fits under 8 GB. |
+| 📝 **Credits included** | Every GeoTIFF gets a `_sources.txt` file listing the data used, for the CC BY 4.0 credit. |
 | 🧭 **Your choice of coordinates** | WGS84 lat/long (what SeaBathy and most apps read) or GDA2020 Australian Albers (metres). |
-| 📱 **Android app** | The same map as a phone app. Builds the GeoTIFF on the phone, saves it to Downloads and opens it straight in SeaBathy. |
+| 📱 **Android app** | The same map as a phone app. Builds the GeoTIFF on the phone, saves it to Downloads and opens it straight in SeaBathy. It uses the IMAS composite only (no original surveys yet). |
 | 🔧 **Nothing to install** | A single Windows exe, or one Python file with no packages. GDAL is set up for you the first time. |
 
 ## Download and run
@@ -85,7 +94,9 @@ Or install GDAL yourself: `sudo apt install gdal-bin` (Ubuntu/Debian), `brew ins
 
 ## Android app
 
-The same page as a phone app, for Android 7.0 or newer. Draw your box, press *Check size*,
+The same page as a phone app, for Android 7.0 or newer. **It uses the IMAS composite only:** the
+original surveys (see [below](#original-surveys-on-top)) are on the computer version for now.
+Draw your box, press *Check size*,
 then *Build GeoTIFF*. The file is saved in **Download/BathyPicker**, and *Open* or *Share*
 sends it straight to SeaBathy or anywhere else.
 
@@ -116,11 +127,49 @@ on a computer and open its page from your phone with `--host 0.0.0.0` (see
 | | |
 |---|---|
 | **1. Draw your box.** The map opens on the whole of Australia. Drag the box over any waters by its round handle and pull the corners, or pick a place from *Jump to*. Untick any depth zones you don't want. | <img src="screenshots/start.jpg" width="420"> |
-| **2. Press *Check size*.** It shows the detail, pixels, file size and where the file will be saved. Big areas step down in detail by themselves. | <img src="screenshots/check.jpg" width="420"> |
+| **2. Press *Check size*.** It shows the detail, pixels, file size and where the file will be saved. Big areas step down in detail by themselves. If original surveys cover the box, they're listed too (see [below](#original-surveys-on-top)). | <img src="screenshots/check.jpg" width="420"> |
 | **3. Press *Build GeoTIFF*.** A small area takes seconds. The result shows the file, its depth range and how much of the box has data. | <img src="screenshots/done.jpg" width="420"> |
 
 Files are saved in `bathy_exports` in your user folder unless you choose another folder on
-the page.
+the page. Next to each GeoTIFF is a `_sources.txt` file with the credits for the data in it.
+
+## Original surveys on top
+
+IMAS is 10 m at best. Many places around Australia were surveyed in much finer detail, and
+those surveys are free to use (CC BY 4.0) on [AusSeabed](https://www.ausseabed.gov.au)'s public
+download site. BathyPicker keeps a list of about 120 of them that are finer than IMAS and lays
+the ones in your box on top. It reads just your box from each survey; nothing is stored by
+SeaBathy. This is on the computer version (Windows exe or Python); the Android app uses IMAS only.
+
+<p align="center"><img src="screenshots/surveys-before-after.jpg" width="860" alt="Middleton Reef in the Coral Sea: on the left the IMAS composite alone, a smooth blur at 10 m; on the right with the 2 m survey on top, showing every pool and patch of the reef, blended into IMAS at its edges"></p>
+
+<p align="center"><img src="screenshots/surveys.jpg" width="860" alt="Check size listing the original surveys in the box, with tick boxes, up and down arrows, their outlines on the map and the Blend survey edges option"></p>
+
+**In *Check size*:**
+- **The surveys in your box are listed**, with their detail, how much of the box they cover and
+  how much will be downloaded. Their outlines show on the map; hover a row to highlight it.
+- **The top of the list wins** where surveys overlap. Finest and newest come first; use the
+  **↑ ↓** arrows to change the order.
+- **Untick** any survey you don't want. A few are unticked to start with (copies of another
+  survey, or ones whose depth reference is uncertain); tick them if you want them.
+- **IMAS composite (underneath)** fills everything the surveys don't. Untick it for surveys only.
+- **Blend survey edges** (on by default): each survey fades in from what's underneath over
+  200–500 m at its edges and gaps, so there's no step where it ends. Small surveys get a narrower
+  band so their middle stays as surveyed. Beyond the band, the survey's depths are used exactly.
+  Untick it for hard edges. Blending needs GDAL 3.11 or newer; the copy BathyPicker downloads is.
+- Your choices are remembered for next time.
+
+**Depth reference.** Surveys and IMAS are both meant to be on mean sea level, but not every file
+is. Surveys that say they're on sea level (MSL, AHD or EGM2008) are used as they are. A few that
+don't say are shifted to match IMAS, and the list shows by how much. Where a survey and IMAS
+disagree by a metre or more, a note on its row says so. With blending on, that difference is
+spread over the edge band instead of showing as a step.
+
+**Detail.** With a survey ticked, *Detail* goes down to 0.5 m. *Automatic* picks the finest that
+fits under the size limit, so big boxes still come out coarser.
+
+**Something looks wrong?** Each row has a *report a problem* link that opens a GitHub issue with
+the survey and your box filled in.
 
 ## What you get
 
@@ -178,16 +227,32 @@ python3 bathy_picker.py --help                                     # every optio
 | `--out` | Folder for finished files |
 | `--max-gb` | Size limit, default 8 |
 | `--host 0.0.0.0` | Open the page from a phone on the same network (it prints a private link) |
+| `--surveys` | With `--bbox`: `default` (the usual picks), `none` (IMAS only), or survey ids separated by commas, top first |
+| `--no-base` | With `--bbox`: surveys only, no IMAS underneath |
+| `--no-blend` | With `--bbox`: hard survey edges instead of blended ones |
+| `--catalogue` | Use this survey list file instead of the online one |
+
+Without `--yes`, a `--bbox` run prints the surveys in the box with their ids, so you can copy
+them into `--surveys`:
+
+```bash
+python3 bathy_picker.py --bbox 148.30 -42.18 148.36 -42.14 --res 1          # list what's there
+python3 bathy_picker.py --bbox 148.30 -42.18 148.36 -42.14 --res 1 --yes    # build it
+```
 
 ## Build the exe yourself
 
 ```bash
 pip install pyinstaller
-pyinstaller --onefile --console --name BathyPicker launcher.py
+pyinstaller --onefile --console --name BathyPicker --add-data "catalogue/surveys.json;catalogue" launcher.py
 ```
 
 `launcher.py` starts `bathy_picker.py` unchanged. It only adds what a single exe needs, and
-keeps the window open after an error so it can be read.
+keeps the window open after an error so it can be read. The survey list goes inside the exe, so
+it works offline; when online, BathyPicker fetches the newest list from this repository.
+
+The survey list itself is made with `tools/build_catalogue.py`; see
+[`tools/CATALOGUE.md`](tools/CATALOGUE.md).
 
 ## Data, credits and licences
 
@@ -196,6 +261,9 @@ keeps the window open after an error so it can be read.
   https://doi.org/10.25959/Y9VF-V723. Licensed
   [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/): credit IMAS when you share
   files you make with it. The page shows this citation with every build.
+- **Original surveys:** © Commonwealth of Australia (Geoscience Australia) and the survey's
+  makers, from AusSeabed, licensed [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+  Each GeoTIFF's `_sources.txt` names every survey used, with its link. Not for navigation.
 - **Map in the page:** Sentinel-2 cloudless by EOX (CC BY-NC-SA 4.0) and OpenStreetMap, credited on
   the map, drawn with [Leaflet](https://leafletjs.com) (BSD 2-Clause), which is included in the Android
   app. **Your own map link** in the map's layer menu adds any other tile map (Esri's, for example) under
@@ -205,8 +273,8 @@ keeps the window open after an error so it can be read.
 - **BathyPicker's code:** MIT licence, see [LICENSE](LICENSE).
 - **Full licence texts and notices** for everything above: [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) and the [`licenses`](licenses) folder.
 
-BathyPicker is an independent project, not made or endorsed by IMAS or the University of
-Tasmania.
+BathyPicker is an independent project, not made or endorsed by IMAS, the University of
+Tasmania, Geoscience Australia or AusSeabed.
 
 Also from SeaBathy: [SeaBathy for Android](https://github.com/SeaBathy/seabathy-android),
 [SeaBathy Desktop](https://github.com/SeaBathy/seabathy-desktop) and

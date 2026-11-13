@@ -32,7 +32,7 @@ use GDAL.
 
 | Component | Licence | Source |
 | --- | --- | --- |
-| GDAL (`libgdal-core` from conda-forge), with its dependencies | MIT, with each dependency under its own licence | https://gdal.org, https://conda-forge.org |
+| GDAL (`libgdal-core` from conda-forge), with its dependencies; its `gdalinfo`, `gdalwarp` and `gdal` commands are used | MIT, with each dependency under its own licence | https://gdal.org, https://conda-forge.org |
 | micromamba (fetches GDAL) | BSD 3-Clause | https://github.com/mamba-org/mamba |
 
 ## Maps and data
@@ -40,9 +40,10 @@ use GDAL.
 | Data | Credit | Terms |
 | --- | --- | --- |
 | Depth data | Flukes, E. (2026). *Multi-resolution bathymetry composite surface for Australian waters (EEZ)* [Data set]. Institute for Marine and Antarctic Studies. https://doi.org/10.25959/Y9VF-V723 | [CC BY 4.0](licenses/CC-BY-4.0.txt): credit IMAS when you share files you make with it. Not for navigation. |
+| Original surveys (desktop, on top of the depth data) | © Commonwealth of Australia (Geoscience Australia). AusSeabed bathymetry data. Each GeoTIFF's `_sources.txt` names every survey used, with its link | [CC BY 4.0](licenses/CC-BY-4.0.txt): keep the credit when you share files made with them. Read straight from AusSeabed's public download site; not hosted or changed by BathyPicker, apart from a stated depth shift to sea level where the list says so. Not for navigation. |
 | Satellite map in the page | Sentinel-2 cloudless by EOX: "Sentinel-2 cloudless – s2maps.eu by EOX IT Services GmbH (contains modified Copernicus Sentinel data 2024)", shown on the map | [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/): non-commercial use with the credit. Viewed online only |
 | Your own map link (optional) | Whatever map you add; Esri links are shown with "Powered by Esri" | That provider's own terms, which are up to you to check |
 | Street map in the page | © OpenStreetMap contributors, shown on the map | Viewed online only, under the [OpenStreetMap tile usage policy](https://operations.osmfoundation.org/policies/tiles/) |
 
 BathyPicker is an independent project, not made or endorsed by IMAS, the University of
-Tasmania, EOX, Esri or the OpenStreetMap Foundation.
+Tasmania, Geoscience Australia, AusSeabed, EOX, Esri or the OpenStreetMap Foundation.

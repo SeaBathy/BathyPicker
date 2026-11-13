@@ -8,6 +8,8 @@ dist/
 # GeoTIFFs you make
 *.tif
 *.tiff
+# Survey catalogue builder cache (tools/build_catalogue.py)
+catalogue/.cache/
 # Anywhere
 .DS_Store
 Thumbs.db

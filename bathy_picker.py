@@ -60,13 +60,21 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, unquote, urlparse
 
-APP_VERSION = "1.1"
+APP_VERSION = "1.2"
 BASE_URL = "https://data.imas.utas.edu.au/attachments/69e9ac91-babe-47ed-8c37-0ef08f29338a/bathymetry/"
 DOI_URL = "https://doi.org/10.25959/Y9VF-V723"
 CITATION = (
     "Flukes, E. (2026). Multi-resolution bathymetry composite surface for Australian waters (EEZ) "
     "[Data set]. Institute for Marine and Antarctic Studies. " + DOI_URL
 )
+# Original surveys finer than the composite (built by tools/build_catalogue.py). The newest list is
+# read from the repo; a copy is cached in the GDAL home and one ships next to this script.
+CATALOGUE_URL = "https://raw.githubusercontent.com/SeaBathy/BathyPicker/main/catalogue/surveys.json"
+SURVEY_HOSTS = ("https://ausseabed-public-bathymetry.s3.ap-southeast-2.amazonaws.com/",)
+REPORT_URL = "https://github.com/SeaBathy/BathyPicker/issues/new"
+# Blending survey edges into IMAS: band width in metres (wider where the survey and IMAS differ more).
+BLEND_MIN_M, BLEND_MAX_M = 200.0, 500.0
+BLEND_NODATA = -99999.0  # marks empty pixels in the temporary blend files
 # Official "latest micromamba" address from the mamba docs; {plat} is e.g. linux-64, osx-arm64, win-64.
 MAMBA_API = "https://micro.mamba.pm/api/micromamba/{plat}/latest"
 
@@ -91,7 +99,7 @@ M_PER_DEG = 111_320.0
 GB = 1024 ** 3
 DEFAULT_MAX_GB = 8.0
 SETUP_FREE_BYTES = int(1.5 * GB)
-RES_LADDER = [10, 15, 20, 25, 30, 50, 100, 200, 250, 500, 1000, 2000, 5000]
+RES_LADDER = [0.5, 1, 2, 5, 10, 15, 20, 25, 30, 50, 100, 200, 250, 500, 1000, 2000, 5000]
 LOOPBACK = {"127.0.0.1", "localhost", "[::1]", "::1"}
 FILE_NAME_RE = re.compile(r"^IMAS-bathymetry_[A-Za-z0-9._-]+\.tif$")
 BAD_FOLDER_CHARS = re.compile(r'[\\/:*?"<>|\x00-\x1f]')
@@ -178,7 +186,7 @@ def choose_resolution(bbox, finest_m: float, crs: str, mode: str, cap_bytes: flo
     return ladder[-1], "Even the coarsest option is over the size limit."
 
 
-def make_filename(bbox, res_m: float, crs: str) -> str:
+def make_filename(bbox, res_m: float, crs: str, n_surveys: int = 0) -> str:
     w, s, e, n = bbox
 
     def lat(v):
@@ -189,6 +197,8 @@ def make_filename(bbox, res_m: float, crs: str) -> str:
 
     res = f"{res_m:g}".replace(".", "p")
     suffix = "" if crs == "wgs84" else "_albers"
+    if n_surveys:
+        suffix += f"_plus{n_surveys}survey{'s' if n_surveys > 1 else ''}"
     stamp = time.strftime("%Y%m%d-%H%M%S")
     return f"IMAS-bathymetry_{lat(s)}-{lat(n)}_{lon(w)}-{lon(e)}_{res}m{suffix}_{stamp}.tif"
 
@@ -197,7 +207,7 @@ def gdal_env() -> dict:
     env = dict(os.environ)
     env.update({
         "GDAL_DISABLE_READDIR_ON_OPEN": "EMPTY_DIR",
-        "CPL_VSIL_CURL_ALLOWED_EXTENSIONS": ".tif",
+        "CPL_VSIL_CURL_ALLOWED_EXTENSIONS": ".tif,.tiff",
         "GDAL_HTTP_MAX_RETRY": "6",
         "GDAL_HTTP_RETRY_DELAY": "3",
         "GDAL_HTTP_TIMEOUT": "120",
@@ -218,6 +228,7 @@ class Tools:
     version: str
     env: dict = field(default_factory=dict)
     managed: bool = False  # True when it's the private copy this script downloaded
+    gdal_cli: str = ""     # the "gdal" command (GDAL 3.11+), needed to blend survey edges; "" if missing
 
 
 def probe_tools(gi: str, gw: str, env: dict, managed: bool = False):
@@ -234,7 +245,22 @@ def probe_tools(gi: str, gw: str, env: dict, managed: bool = False):
         has_cog = bool(re.search(r"^\s*COG\b", r2.stdout, re.M))
     except (OSError, subprocess.SubprocessError):
         pass
-    return Tools(gi, gw, has_cog, version, env, managed)
+    return Tools(gi, gw, has_cog, version, env, managed, find_gdal_cli(gw, env))
+
+
+def find_gdal_cli(gw: str, env: dict) -> str:
+    """The "gdal" command next to gdalwarp, if it has raster calc and proximity (GDAL 3.11+)."""
+    cand = Path(gw).with_name("gdal.exe" if os.name == "nt" else "gdal")
+    if not cand.exists():
+        return ""
+    try:
+        for sub in ("calc", "proximity"):
+            r = subprocess.run([str(cand), "raster", sub, "--help"], capture_output=True, text=True, timeout=60, env=env)
+            if r.returncode != 0:
+                return ""
+    except (OSError, subprocess.SubprocessError):
+        return ""
+    return str(cand)
 
 
 def find_in_prefix(prefix: Path, name: str):
@@ -327,7 +353,9 @@ def read_zone_info(tools: Tools, zone: dict) -> dict:
     m = re.match(r'\s*\w+\["([^"]+)"', (info.get("coordinateSystem") or {}).get("wkt", ""))
     if m:
         crs_name = m.group(1)
-    return {"px_m": px, "size": info.get("size"), "extent": extent, "crs": crs_name}
+    nodata = ((info.get("bands") or [{}])[0]).get("noDataValue")
+    return {"px_m": px, "size": info.get("size"), "extent": extent, "crs": crs_name,
+            "nodata": nodata if isinstance(nodata, (int, float)) else None}
 
 
 class ZoneInfoCache:
@@ -346,6 +374,209 @@ class ZoneInfoCache:
                         self._data[z["key"]] = info
         with self._lock:
             return {z["key"]: self._data[z["key"]] for z in zones}
+
+
+# --------------------------------------------------------------------------- original surveys
+
+def gdal_version_tuple(tools: Tools) -> tuple:
+    m = re.search(r"(\d+)\.(\d+)", tools.version or "")
+    return (int(m.group(1)), int(m.group(2))) if m else (0, 0)
+
+
+def bundled_catalogue_path() -> Path:
+    base = Path(getattr(sys, "_MEIPASS", Path(__file__).resolve().parent))
+    return base / "catalogue" / "surveys.json"
+
+
+def clean_survey(s: dict):
+    """Keep a catalogue entry only if it is well-formed and points at a known public host."""
+    try:
+        files = []
+        for f in s["files"]:
+            url = str(f["url"])
+            if not url.startswith(SURVEY_HOSTS) or any(c in url for c in ' "<>\\?#&'):
+                return None
+            fb = [float(v) for v in f["bbox"]]
+            # Rectangles where the file really has data (from its tile sizes); the file's box if unknown.
+            cells = [[float(v) for v in c] for c in (f.get("cells") or [fb])[:600] if len(c) == 4]
+            files.append({"url": url, "bytes": max(0, int(f.get("bytes", 0))), "bbox": fb,
+                          "cells": cells or [fb], "tiled": bool(f.get("tiled", True))})
+        sign = int(s.get("sign", 1))
+        shift = float(s.get("shift_m", 0))
+        res = float(s["res_m"])
+        bbox = [float(v) for v in s["bbox"]]
+        if sign not in (1, -1) or abs(shift) > 10 or not (0.05 <= res <= 10000) or not files:
+            return None
+        year = s.get("year")
+        return {
+            "id": str(s["id"])[:120], "name": str(s.get("name") or s["id"])[:120],
+            "year": int(year) if isinstance(year, int) else None, "res_m": res, "files": files, "bbox": bbox,
+            "sign": sign, "shift_m": shift, "stated_datum": s.get("stated_datum"),
+            "verdict": str((s.get("check") or {}).get("verdict", ""))[:200],
+            "updated": str(s.get("updated", ""))[:10], "credit": str(s.get("credit", ""))[:300],
+            "source": str(s.get("source", ""))[:120], "licence": str(s.get("licence", ""))[:40],
+            "default_off": bool(s.get("default_off")), "note": str(s.get("note") or "")[:300],
+            "step_m": step_estimate(s.get("check") or {}, shift),
+        }
+    except (KeyError, TypeError, ValueError):
+        return None
+
+
+def step_estimate(check: dict, shift: float) -> float:
+    """Rough size of the depth step between a survey (after its shift) and IMAS, in metres (0-3)."""
+    try:
+        diff, spread = float(check.get("median_diff_m", 0)), abs(float(check.get("mad_m", 0)))
+    except (TypeError, ValueError):
+        return 0.0
+    left = min(abs(diff - shift), abs(diff + shift)) if shift else abs(diff)
+    return round(min(3.0, left + spread), 2)
+
+
+def blend_band_m(s: dict, res_m: float) -> float:
+    """How far into a survey its edge fades from IMAS: 200 m, up to 500 m where the step is bigger,
+    and never less than a few output pixels."""
+    return max(4 * res_m, min(BLEND_MAX_M, BLEND_MIN_M + 100.0 * s.get("step_m", 0.0)))
+
+
+class SurveyCatalogue:
+    """The list of original surveys. Starts from the cached or bundled copy, then refreshes online."""
+
+    def __init__(self, home: Path, override: Path = None):
+        self.cache_path = home / "surveys.json"
+        self.surveys, self.built, self.origin = [], "", "none"
+        self.lock = threading.Lock()
+        if override:
+            self._use(json.loads(Path(override).read_text(encoding="utf-8")), "file " + str(override))
+            return
+        for path, origin in ((self.cache_path, "cached"), (bundled_catalogue_path(), "bundled")):
+            try:
+                data = json.loads(path.read_text(encoding="utf-8"))
+            except (OSError, ValueError):
+                continue
+            if self._use(data, origin):
+                break
+        threading.Thread(target=self.refresh, daemon=True).start()
+
+    def _use(self, data: dict, origin: str) -> bool:
+        if not isinstance(data, dict) or data.get("schema") != "bathypicker-surveys/v1":
+            return False
+        built = str(data.get("built", ""))
+        if self.surveys and built and built < self.built:
+            return False  # never go back to an older list
+        surveys = [c for c in (clean_survey(s) for s in data.get("surveys", []) if isinstance(s, dict)) if c]
+        with self.lock:
+            self.surveys, self.built, self.origin = surveys, built, origin
+        return True
+
+    def refresh(self):
+        try:
+            with urllib.request.urlopen(CATALOGUE_URL, timeout=20) as r:
+                raw = r.read(5_000_000)
+            data = json.loads(raw)
+        except (OSError, ValueError):
+            return
+        if self._use(data, "online"):
+            try:
+                self.cache_path.parent.mkdir(parents=True, exist_ok=True)
+                self.cache_path.write_bytes(raw)
+            except OSError:
+                pass
+
+    def in_box(self, bbox) -> list:
+        with self.lock:
+            surveys = list(self.surveys)
+        out = []
+        for s in surveys:
+            if not boxes_intersect(bbox, s["bbox"]):
+                continue
+            files = [f for f in s["files"] if any(boxes_intersect(bbox, c) for c in f["cells"])]
+            if files:
+                out.append({**s, "files": files})
+        return out
+
+
+def overlap_fraction(a, b) -> float:
+    """Share of box a covered by box b (lon/lat rectangles)."""
+    w, s, e, n = max(a[0], b[0]), max(a[1], b[1]), min(a[2], b[2]), min(a[3], b[3])
+    if e <= w or n <= s:
+        return 0.0
+    return (e - w) * (n - s) / max(1e-12, (a[2] - a[0]) * (a[3] - a[1]))
+
+
+def cells_cover(bbox, f: dict) -> float:
+    """Share of the box where this file has data (its data rectangles don't overlap each other)."""
+    return sum(overlap_fraction(bbox, c) for c in f["cells"])
+
+
+def survey_read_bytes(bbox, f: dict) -> float:
+    """Rough bytes read from one survey file for this box (tiled files: the area; strips: whole rows)."""
+    fb = f["bbox"]
+    if not f["tiled"]:
+        n, s = min(bbox[3], fb[3]), max(bbox[1], fb[1])
+        return f["bytes"] * max(0.0, n - s) / max(1e-12, fb[3] - fb[1])
+    # Bytes sit where the data is, so share them out by data area, not by the whole file's box.
+    area = sum((c[2] - c[0]) * (c[3] - c[1]) for c in f["cells"]) or 1e-12
+    inside = sum(overlap_fraction(c, bbox) * (c[2] - c[0]) * (c[3] - c[1]) for c in f["cells"])
+    return f["bytes"] * inside / area
+
+
+def survey_source(f: dict, s: dict) -> str:
+    """The gdalwarp input for one survey file; shifted or flipped surveys go through vrt://."""
+    src = "/vsicurl/" + f["url"]
+    if s["sign"] == 1 and s["shift_m"] == 0:
+        return src
+    lo, hi = s["shift_m"], s["shift_m"] + s["sign"]  # value -> shift + sign * value
+    return f"vrt://{src}?scale=0,1,{lo:g},{hi:g}"
+
+
+def default_survey_order(surveys: list) -> list:
+    """Top of the list wins: finest detail, then newest survey, then newest upload."""
+    return sorted(surveys, key=lambda s: (s["res_m"], -(s["year"] or 0), tuple(-ord(c) for c in s["updated"])))
+
+
+def blended_note(note: str) -> str:
+    """The catalogue's step warnings, reworded for when survey edges are blended into IMAS."""
+    note = note.replace("; expect small steps at its edges.", "; its edges are blended into IMAS.")
+    if "IMAS may not be on sea level at this spot." in note:
+        note += " The edge is blended into IMAS, so there's no step, and the middle of the survey stays as surveyed."
+    return note
+
+
+def plan_surveys(p: dict, app, bbox, imas_res) -> tuple:
+    """Returns (rows for the page, chosen surveys top-to-bottom, warnings)."""
+    cat = app.catalogue
+    if cat is None or p["surveys"] == "none":
+        return [], [], []
+    found = default_survey_order(cat.in_box(bbox))
+    order = p["survey_order"]
+    if order:
+        pos = {sid: i for i, sid in enumerate(order)}
+        found.sort(key=lambda s: (pos.get(s["id"], len(pos)),))
+    can_vrt = gdal_version_tuple(app.tools) >= (3, 7)
+    rows, chosen, warnings = [], [], []
+    for s in found:
+        needs_vrt = s["sign"] != 1 or s["shift_m"] != 0
+        usable = can_vrt or not needs_vrt
+        coarser = imas_res is not None and s["res_m"] >= imas_res * 0.99
+        default_on = not s["default_off"] and not coarser
+        on = usable and bool(p["survey_prefs"].get(s["id"], default_on))
+        extra = sum(survey_read_bytes(bbox, f) for f in s["files"])
+        rows.append({
+            "id": s["id"], "name": s["name"], "year": s["year"], "res_m": s["res_m"], "on": on,
+            "default_on": default_on, "usable": usable, "shift_m": s["shift_m"],
+            "note": blended_note(s["note"]) if p["blend"] and imas_res else s["note"],
+            "stated_datum": s["stated_datum"], "verdict": s["verdict"], "bbox": s["bbox"],
+            "cells": [c for f in s["files"] for c in f["cells"] if boxes_intersect(bbox, c)][:200],
+            "cover_pct": round(100 * sum(cells_cover(bbox, f) for f in s["files"]), 1),
+            "read_bytes": int(extra), "coarser": coarser,
+        })
+        if on:
+            chosen.append(s)
+        if not usable:
+            warnings.append(f"{s['name']} needs GDAL 3.7 or newer (its depths have to be shifted), so it's left out.")
+    for r in rows:
+        r["cover_pct"] = min(100.0, r["cover_pct"])
+    return rows, chosen, warnings
 
 
 # --------------------------------------------------------------------------- folders
@@ -448,8 +679,18 @@ def parse_params(raw: dict, app) -> dict:
     bad = [k for k in wanted if k not in known]
     if bad:
         raise ValueError("Unknown depth layer: " + ", ".join(map(str, bad)))
-    keys = [z["key"] for z in ZONES if z["key"] in wanted]
-    if not keys:
+    # "base": false leaves the IMAS composite out (surveys only).
+    keys = [z["key"] for z in ZONES if z["key"] in wanted] if raw.get("base", True) is not False else []
+    surveys = raw.get("surveys", "default")
+    if surveys not in ("default", "none"):
+        raise ValueError("surveys must be default or none.")
+    prefs = raw.get("survey_prefs") or {}
+    order = raw.get("survey_order") or []
+    if not isinstance(prefs, dict) or not isinstance(order, list) or len(prefs) > 2000 or len(order) > 2000:
+        raise ValueError("The survey choices weren't understood.")
+    prefs = {str(k): bool(v) for k, v in prefs.items()}
+    order = [str(v) for v in order]
+    if not keys and surveys == "none":
         raise ValueError("Pick at least one depth layer.")
     crs = raw.get("crs", "wgs84")
     if crs not in CRS_CODES:
@@ -460,14 +701,16 @@ def parse_params(raw: dict, app) -> dict:
             r = float(resolution)
         except ValueError:
             raise ValueError("Resolution must be auto, finest, or a number of metres.")
-        if not (1 <= r <= 20000):
-            raise ValueError("Resolution must be between 1 and 20000 metres.")
+        if not (0.5 <= r <= 20000):
+            raise ValueError("Resolution must be between 0.5 and 20000 metres.")
         resolution = f"{r:g}"
     resampling = raw.get("resampling", "auto")
     if resampling not in RESAMPLING:
         raise ValueError("Unknown resampling method.")
     return {"bbox": (w, s, e, n), "zones": keys, "crs": crs, "resolution": resolution,
-            "resampling": resampling, "out_dir": resolve_out_dir(raw.get("out_dir"), app)}
+            "resampling": resampling, "out_dir": resolve_out_dir(raw.get("out_dir"), app),
+            "surveys": surveys, "survey_prefs": prefs, "survey_order": order,
+            "blend": raw.get("blend", True) is not False}
 
 
 def assess(p: dict, app) -> dict:
@@ -475,7 +718,7 @@ def assess(p: dict, app) -> dict:
     if tools is None or cache is None:
         raise NotReady("GDAL isn't set up yet. Use the setup card first.")
     zones = [z for z in ZONES if z["key"] in p["zones"]]
-    infos = cache.get_many(zones)
+    infos = cache.get_many(zones) if zones else {}
     bbox, crs = p["bbox"], p["crs"]
     bw_m, bh_m = box_metres(bbox)
     cap_bytes = app.max_gb * GB
@@ -491,16 +734,36 @@ def assess(p: dict, app) -> dict:
         })
         if hit:
             covered.append((z, info))
-    if not covered:
-        errors.append("This box is outside the area the dataset covers (Australia's exclusive economic zone).")
-        return {"ok": False, "errors": errors, "warnings": warnings, "zones": rows}
+    imas_res = min(info["px_m"] for _, info in covered) if covered else None
+    survey_rows, chosen, survey_warn = plan_surveys(p, app, bbox, imas_res)
+    if not covered and not chosen:
+        if zones:
+            errors.append("This box is outside the area the dataset covers (Australia's exclusive economic zone).")
+        else:
+            errors.append("Tick the IMAS composite or at least one survey.")
+        return {"ok": False, "errors": errors, "warnings": warnings, "zones": rows, "surveys": survey_rows}
 
-    finest = min(info["px_m"] for _, info in covered)
+    finest = min(([imas_res] if imas_res else []) + [s["res_m"] for s in chosen])
     res_m, note = choose_resolution(bbox, finest, crs, p["resolution"], cap_bytes)
     nx, ny = output_pixels(bbox, res_m, crs)
     est = nx * ny * 4
     if p["resolution"] not in ("auto", "finest") and res_m < finest * 0.99:
         warnings.append(f"{res_m:g} m is finer than the data itself ({round(finest, 1):g} m). The file gets bigger with no extra detail.")
+    warnings += survey_warn
+    blend = bool(p["blend"] and chosen and covered and tools.gdal_cli)
+    bands = {s["id"]: blend_band_m(s, res_m) for s in chosen} if blend else {}
+    if chosen:
+        cover = min(100.0, sum(r["cover_pct"] for r in survey_rows if r["on"]))
+        rest = f" The rest is the IMAS composite at {imas_res:g} m." if imas_res else " The rest stays empty."
+        if blend:
+            edge = (f" Survey edges and gaps are blended into what's underneath over up to {max(bands.values()):.0f} m, "
+                    "so there's no step; "
+                    "further in, the survey is used exactly.")
+        elif p["blend"] and covered and not tools.gdal_cli:
+            edge = " Survey edges may show a small step (blending them needs GDAL 3.11 or newer)."
+        else:
+            edge = " Survey edges may show a small step."
+        warnings.append(f"The surveys you ticked cover up to {cover:.0f}% of the box.{rest}{edge}")
     if est > cap_bytes:
         errors.append(
             f"About {fmt_bytes(est)} is over the {app.max_gb:g} GB limit. Pick a smaller box or a coarser resolution "
@@ -522,7 +785,21 @@ def assess(p: dict, app) -> dict:
         warnings.append(f"Disk space is tight for {out_dir} ({fmt_bytes(free)} free).")
 
     ordered = sorted(covered, key=lambda zi: (-zi[1]["px_m"], -zi[0]["idx"]))  # coarse first, finest last = finest wins
+    # gdalwarp paints later inputs on top, so surveys go after IMAS, bottom of the list first.
+    survey_inputs = [survey_source(f, s) for s in reversed(chosen) for f in s["files"]]
+    # For blending, each survey is laid on separately, bottom of the list first.
+    survey_layers = [{"id": s["id"], "name": s["name"], "band_m": bands.get(s["id"], 0.0),
+                      "inputs": [survey_source(f, s) for f in s["files"]]} for s in reversed(chosen)]
+    cat = app.catalogue
     return {
+        "surveys": survey_rows, "survey_inputs": survey_inputs, "imas_res_m": imas_res,
+        "blend": blend, "survey_layers": survey_layers,
+        "nodata": next((info["nodata"] for _, info in covered if info.get("nodata") is not None), None),
+        "survey_used": [dict({k: s[k] for k in ("id", "name", "year", "res_m", "shift_m", "sign", "stated_datum",
+                                                "credit", "source", "licence")}, urls=[f["url"] for f in s["files"]])
+                        for s in chosen],
+        "catalogue": {"built": cat.built if cat else "", "origin": cat.origin if cat else "none",
+                      "count": len(cat.surveys) if cat else 0, "report_url": REPORT_URL},
         "ok": not errors, "errors": errors, "warnings": warnings, "zones": rows,
         "bbox": list(bbox), "box_km": [round(bw_m / 1000, 1), round(bh_m / 1000, 1)],
         "crs": crs, "crs_label": CRS_LABELS[crs],
@@ -530,30 +807,168 @@ def assess(p: dict, app) -> dict:
         "output_px": [nx, ny], "est_bytes": est, "cap_bytes": cap_bytes, "free_bytes": free,
         "format": "Cloud-Optimized GeoTIFF" if tools.has_cog else "tiled GeoTIFF (this GDAL has no COG driver)",
         "files": [z["file"] for z, _ in ordered],
-        "filename": make_filename(bbox, res_m, crs), "out_dir": str(out_dir),
+        "filename": make_filename(bbox, res_m, crs, len(chosen)), "out_dir": str(out_dir),
     }
 
 
-def build_warp_cmd(tools: Tools, plan: dict, resampling: str, out_path: Path) -> list:
+def warp_base_args(tools: Tools, plan: dict, resampling: str) -> list:
+    """gdalwarp's options for the output grid: box, coordinate system, detail and resampling."""
     w, s, e, n = plan["bbox"]
     crs_key = plan["crs"]
     res = plan["res_m"] / M_PER_DEG if crs_key == "wgs84" else plan["res_m"]
     if resampling == "auto":
         resampling = "near" if plan["res_m"] <= plan["finest_res_m"] * 1.01 else "average"
-    cmd = [
+        # Surveys finer than IMAS: the 10 m composite underneath would show as blocks with "near".
+        if plan.get("survey_inputs") and plan.get("imas_res_m") and plan["res_m"] < plan["imas_res_m"] * 0.99:
+            resampling = "bilinear"
+    return [
         tools.gdalwarp, "-overwrite", "-multi", "-wo", "NUM_THREADS=ALL_CPUS", "-wm", "512",
         "-te", f"{w:.8f}", f"{s:.8f}", f"{e:.8f}", f"{n:.8f}", "-te_srs", "EPSG:4326",
         "-t_srs", CRS_CODES[crs_key], "-tr", f"{res:.12f}", f"{res:.12f}", "-r", resampling,
     ]
+
+
+def output_format(tools: Tools) -> tuple:
+    """(driver, creation options) for the finished GeoTIFF."""
     if tools.has_cog:
-        cmd += ["-of", "COG", "-co", "COMPRESS=DEFLATE", "-co", "PREDICTOR=3", "-co", "BLOCKSIZE=256",
-                "-co", "RESAMPLING=AVERAGE", "-co", "BIGTIFF=IF_SAFER", "-co", "NUM_THREADS=ALL_CPUS"]
-    else:
-        cmd += ["-of", "GTiff", "-co", "TILED=YES", "-co", "COMPRESS=DEFLATE", "-co", "PREDICTOR=3",
-                "-co", "BIGTIFF=IF_SAFER", "-co", "NUM_THREADS=ALL_CPUS"]
+        return "COG", ["COMPRESS=DEFLATE", "PREDICTOR=3", "BLOCKSIZE=256", "RESAMPLING=AVERAGE",
+                       "BIGTIFF=IF_SAFER", "NUM_THREADS=ALL_CPUS"]
+    return "GTiff", ["TILED=YES", "COMPRESS=DEFLATE", "PREDICTOR=3", "BIGTIFF=IF_SAFER", "NUM_THREADS=ALL_CPUS"]
+
+
+def build_warp_cmd(tools: Tools, plan: dict, resampling: str, out_path: Path) -> list:
+    driver, opts = output_format(tools)
+    cmd = warp_base_args(tools, plan, resampling) + ["-of", driver]
+    for o in opts:
+        cmd += ["-co", o]
     cmd += ["/vsicurl/" + BASE_URL + f for f in plan["files"]]
+    cmd += plan.get("survey_inputs", [])
     cmd.append(str(out_path))
     return cmd
+
+
+# Temporary files of a blended build: tiled, quick to write, no NoData tag (gdal raster calc would
+# turn tagged NoData into 0; empty pixels are BLEND_NODATA instead).
+TMP_CO = ["TILED=YES", "COMPRESS=DEFLATE", "ZLEVEL=1", "BIGTIFF=YES", "NUM_THREADS=ALL_CPUS"]
+FAR = 1e9  # "further than we looked" in the distance files
+
+
+def smoothstep(t: str) -> str:
+    """muparser text for a smooth 0..1 ramp (no kink where the blend starts or ends)."""
+    return f"(({t})*({t})*(3-2*({t})))"
+
+
+def blend_cmds(tools: Tools, plan: dict, resampling: str, tmp: Path, part: Path) -> list:
+    """The steps of a blended build, as (stage text, command, shows progress) tuples.
+
+    IMAS is laid down first, then each ticked survey from the bottom of the list up. Where a survey
+    meets what's underneath (its outer edge, and gaps inside it), its depths fade in from the layer
+    below over a band (200-500 m, narrower for small surveys): a smooth ramp on the distance from
+    the survey's data edge. Further in, the survey's own values are used exactly. Edges against
+    empty areas (land, outside the box) are left as they are."""
+    G, nd = tools.gdal_cli, f"{BLEND_NODATA:g}"
+    warp = warp_base_args(tools, plan, resampling) + ["-dstnodata", nd, "-of", "GTiff"]
+    for o in TMP_CO + ["PREDICTOR=3"]:
+        warp += ["-co", o]
+
+    def co(extra=()):
+        out = []
+        for o in list(TMP_CO) + list(extra):
+            out += ["--co", o]
+        return out
+
+    def untag(path):
+        return [G, "raster", "edit", "--nodata", "none", str(path)]
+
+    steps = [("Reading the IMAS composite", warp + ["/vsicurl/" + BASE_URL + f for f in plan["files"]] + [str(tmp / "c0.tif")], True),
+             ("", untag(tmp / "c0.tif"), False)]
+    res_px_m = plan["res_m"]
+    layers = plan["survey_layers"]
+    for i, lay in enumerate(layers, 1):
+        cur, nxt = tmp / f"c{i - 1}.tif", tmp / f"c{i}.tif"
+        s, m, d, k = tmp / f"s{i}.tif", tmp / f"m{i}.tif", tmp / f"d{i}.tif", tmp / f"k{i}.tif"
+        band_px = max(1.0, lay["band_m"] / res_px_m)
+        look = 2 * band_px
+        tag = f"survey {i} of {len(layers)}" if len(layers) > 1 else "the survey"
+        steps += [
+            (f"Reading {tag}: {lay['name']}", warp + lay["inputs"] + [str(s)], True),
+            ("", untag(s), False),
+            # Where the layer below has data but this survey doesn't: its outer edge and its gaps.
+            (f"Finding the edges of {tag}", [G, "raster", "calc", "-i", f"C={cur}", "-i", f"S={s}", "--calc",
+              f"(S == {nd} && C != {nd}) ? 1 : 0", "--ot", "UInt8", "--nodata", "none", "-f", "GTiff",
+              *co(), "-o", str(m), "--overwrite", "-q"], False),
+            (f"Measuring distances in {tag}", [G, "raster", "proximity", "-i", str(m), "-o", str(d), "--target-values", "1",
+              "--distance-units", "pixel", "--max-distance", f"{look:g}", "--nodata", f"{FAR:g}", "-f", "GTiff",
+              *co(["PREDICTOR=3"]), "--overwrite", "-q"], False),
+            ("", untag(d), False),
+            # How deep into the survey its middle is (capped): small surveys get a narrower band.
+            (f"Measuring distances in {tag}", [G, "raster", "calc", "-i", f"S={s}", "-i", f"D={d}", "--calc",
+              f"S == {nd} ? 0 : min(D, {look:g})", "--ot", "Float32", "--nodata", "none", "-f", "GTiff",
+              *co(["PREDICTOR=3"]), "-o", str(k), "--overwrite", "-q"], False),
+            ("@blend", {"cur": cur, "nxt": nxt, "s": s, "d": d, "k": k, "band_px": band_px, "tag": tag, "i": i - 1}, False),
+        ]
+    # The finished file, on the same grid (so "near" copies every value as is), with IMAS's own NoData
+    # value, which gdal raster calc can't always write exactly (e.g. 3.4e+38).
+    final_nd = plan.get("nodata")
+    final_nd = BLEND_NODATA if final_nd is None else final_nd
+    driver, opts = output_format(tools)
+    fin = warp_base_args(tools, plan, "near") + ["-srcnodata", nd, "-dstnodata", repr(final_nd), "-of", driver]
+    for o in opts:
+        fin += ["-co", o]
+    steps.append(("Writing the GeoTIFF", fin + [str(tmp / f"c{len(layers)}.tif"), str(part)], True))
+    return steps
+
+
+def blend_calc(tools: Tools, b: dict, inner_px: float) -> list:
+    """The calc step that lays one survey on what's underneath, fading in across its edge band."""
+    nd = f"{BLEND_NODATA:g}"
+    band = max(1.0, min(b["band_px"], 0.5 * inner_px))
+    t = f"(D / {band:g})"
+    expr = (f"S == {nd} ? C : (C == {nd} ? S : (D >= {band:g} ? S : C + (S - C) * {smoothstep(t)}))")
+    cmd = [tools.gdal_cli, "raster", "calc", "-i", f"C={b['cur']}", "-i", f"S={b['s']}", "-i", f"D={b['d']}",
+           "--calc", expr, "--ot", "Float32", "--nodata", "none", "-f", "GTiff"]
+    for o in TMP_CO + ["PREDICTOR=3"]:
+        cmd += ["--co", o]
+    return cmd + ["-o", str(b["nxt"]), "--overwrite", "-q"], band
+
+
+def raster_max(tools: Tools, path: Path) -> float:
+    code, out, _ = run_capture([tools.gdalinfo, "-json", "-stats", "-nomd", str(path)], env=tools.env, timeout=3600)
+    try:
+        Path(str(path) + ".aux.xml").unlink()
+    except OSError:
+        pass
+    if code != 0:
+        raise RuntimeError("couldn't measure the survey's size")
+    band = (json.loads(out).get("bands") or [{}])[0]
+    return float(band.get("maximum", 0.0))
+
+
+def sources_text(plan: dict, final_name: str) -> str:
+    """Credits for everything that went into one GeoTIFF (CC BY 4.0 asks for them)."""
+    lines = [f"Sources for {final_name}", f"Made with BathyPicker {APP_VERSION} on {time.strftime('%Y-%m-%d')}. Not for navigation.", ""]
+    if plan["files"]:
+        lines += ["Base layer:", "  " + CITATION, "  Licence: CC BY 4.0", ""]
+    used = plan.get("survey_used") or []
+    if used:
+        lines.append("Original surveys on top (first one wins where they overlap):")
+        if plan.get("blend"):
+            bands_used = [lay.get("band_used_m", lay["band_m"]) for lay in plan["survey_layers"]]
+            lines.append("  Each survey's edges and gaps fade in from the layer underneath over a band of up to "
+                         f"{max(bands_used):.0f} m (narrower for small surveys), so there is no step; further in, "
+                         "the survey's own depths are used exactly.")
+        for s in used:
+            how = "depths used as stated" if s["shift_m"] == 0 and s["sign"] == 1 else \
+                f"depths {'flipped and ' if s['sign'] < 0 else ''}shifted {s['shift_m']:+g} m to match sea level"
+            lines.append(f"  {s['name']} ({s['year'] or 'year unknown'}), {s['res_m']:g} m, {how}"
+                         f"{', stated datum ' + s['stated_datum'] if s['stated_datum'] else ''}.")
+            credit = s["credit"] or s["source"]
+            lic = s["licence"] or "see source"
+            lines.append(f"    {credit}" + ("" if lic in credit else f" Licence: {lic}."))
+            for u in s["urls"]:
+                lines.append(f"    {u}")
+        lines.append("")
+    return "\n".join(lines)
 
 
 # --------------------------------------------------------------------------- jobs
@@ -675,6 +1090,55 @@ def cleanup_partials(out_dir: Path, filename: str):
             pass
 
 
+def run_step(job: Job, tools: Tools, cmd: list, stage: str = "", progress: bool = True):
+    """Run one GDAL command for a build. Returns its exit code, or None if it couldn't start."""
+    job.add_log("$ " + " ".join(cmd))
+    if stage:
+        job.update(stage=stage, percent=0.0 if progress else -1.0)
+    try:
+        proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, env=tools.env)
+    except OSError as exc:
+        job.update(state="error", error=f"Could not start {Path(cmd[0]).name}: {exc}", ended=time.time())
+        return None
+    job.update(proc=proc)
+    if job.cancel_requested and proc.poll() is None:
+        proc.terminate()
+    reader = threading.Thread(target=pump_output, args=(proc, job), daemon=True)
+    reader.start()
+    rc = proc.wait()
+    reader.join(timeout=5)
+    return rc
+
+
+def run_blended(app, job: Job, plan: dict, resampling: str, part: Path):
+    """A build with survey edges blended into IMAS (see blend_cmds). Returns an exit code like run_step."""
+    tools = app.tools
+    tmp = part.with_name(part.name + "-blend")
+    shutil.rmtree(tmp, ignore_errors=True)
+    tmp.mkdir(parents=True)
+    try:
+        for stage, cmd, progress in blend_cmds(tools, plan, resampling, tmp, part):
+            if job.cancel_requested:
+                return 1
+            if stage == "@blend":
+                try:
+                    inner = raster_max(tools, cmd["k"])
+                except (RuntimeError, ValueError, OSError, subprocess.SubprocessError) as exc:
+                    job.add_log(f"Blend: {exc}")
+                    return 1
+                calc, band = blend_calc(tools, cmd, inner)
+                plan["survey_layers"][cmd["i"]]["band_used_m"] = band * plan["res_m"]
+                job.add_log(f"Blending {cmd['tag']} over {band * plan['res_m']:.0f} m")
+                rc = run_step(job, tools, calc, f"Blending the edges of {cmd['tag']}", False)
+            else:
+                rc = run_step(job, tools, cmd, stage, progress)
+            if rc is None or rc != 0:
+                return rc
+        return 0
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
+
 def run_build(app, job: Job, p: dict, plan: dict):
     out_dir = p["out_dir"]
     final = out_dir / plan["filename"]
@@ -684,21 +1148,15 @@ def run_build(app, job: Job, p: dict, plan: dict):
         out_dir.mkdir(parents=True, exist_ok=True)
         app.remember_dir(out_dir)
         cleanup_partials(out_dir, plan["filename"])
-        cmd = build_warp_cmd(tools, plan, p["resampling"], part)
-        job.add_log("$ " + " ".join(cmd))
-        job.update(stage="Reading from IMAS and merging the depth layers")
-        try:
-            proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, env=tools.env)
-        except OSError as exc:
-            job.update(state="error", error=f"Could not start gdalwarp: {exc}", ended=time.time())
+        if plan.get("blend"):
+            rc = run_blended(app, job, plan, p["resampling"], part)
+        else:
+            cmd = build_warp_cmd(tools, plan, p["resampling"], part)
+            n_sv = len(plan.get("survey_used") or [])
+            rc = run_step(job, tools, cmd, "Reading from IMAS and merging the depth layers" if not n_sv else
+                          f"Reading from IMAS and {n_sv} original survey{'s' if n_sv > 1 else ''}, and merging them")
+        if rc is None:
             return
-        job.update(proc=proc)
-        if job.cancel_requested and proc.poll() is None:
-            proc.terminate()
-        reader = threading.Thread(target=pump_output, args=(proc, job), daemon=True)
-        reader.start()
-        rc = proc.wait()
-        reader.join(timeout=5)
 
         if job.cancel_requested:
             cleanup_partials(out_dir, plan["filename"])
@@ -708,12 +1166,19 @@ def run_build(app, job: Job, p: dict, plan: dict):
             cleanup_partials(out_dir, plan["filename"])
             tail = [ln for ln in job.snapshot()["log"] if not ln.startswith("$ ")][-3:]
             job.update(state="error", ended=time.time(),
-                       error="gdalwarp failed: " + (" | ".join(tail) if tail else f"exit code {rc}"))
+                       error="GDAL failed: " + (" | ".join(tail) if tail else f"exit code {rc}"))
             return
 
         os.replace(part, final)
         job.update(stage="Checking the result")
+        sources_path = final.with_name(final.stem + "_sources.txt")
+        try:
+            sources_path.write_text(sources_text(plan, final.name), encoding="utf-8")
+        except OSError:
+            sources_path = None
         result = {
+            "sources_path": str(sources_path) if sources_path else None,
+            "surveys_used": [s["name"] for s in plan.get("survey_used") or []],
             "name": final.name, "path": str(final), "bytes": final.stat().st_size,
             "bbox": plan["bbox"], "res_m": plan["res_m"], "crs_label": plan["crs_label"],
             "format": plan["format"], "min": None, "max": None, "valid_percent": None, "size_px": None,
@@ -947,6 +1412,7 @@ class App:
         self.lock = threading.Lock()
         self.tools = None
         self.cache = None
+        self.catalogue = None  # SurveyCatalogue, set by main()
         if tools:
             self.install_tools(tools)
 
@@ -1194,6 +1660,19 @@ dialog::backdrop{background:rgba(8,38,48,.55)}
 .handle.m{border-radius:50%;background:var(--mark)}
 .handle.m::after{content:"";position:absolute;inset:5px;border:2px solid #fff;border-radius:50%}
 .tagwrap .tag{position:absolute;transform:translate(-50%,-140%);background:var(--mark);color:#fff;padding:3px 9px;border-radius:3px;font:600 12px/1.3 "Avenir Next","Segoe UI",system-ui,sans-serif;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.35)}
+.layers{margin-top:10px;border:1px solid var(--line);border-radius:6px;background:#fff}
+.layers .lt{padding:8px 10px;font-size:13px;color:var(--ink-2);border-bottom:1px solid var(--line)}
+.lyr{display:grid;grid-template-columns:auto 1fr auto;gap:4px 8px;align-items:start;padding:8px 10px;border-bottom:1px solid var(--line)}
+.lyr:last-child{border-bottom:0}
+.lyr.off .ln{color:var(--ink-2)}
+.lyr.hi{background:#f2e3ec}
+.lyr input{width:18px;height:18px;margin:2px 0 0;accent-color:var(--sea)}
+.lyr .ln{font-size:14px;font-weight:600;line-height:1.3}
+.lyr .lm{grid-column:2;font-size:12px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.lyr .lnote{grid-column:2/4;font-size:12px;color:var(--shoal)}
+.lyr .mv{display:flex;gap:4px}
+.lyr .mv button{min-height:30px;width:30px;padding:0;font-size:14px;line-height:1}
+.lyr a{font-size:12px;color:var(--ink-2)}
 .maptoggle{display:none;min-height:36px;padding:0 12px;background:var(--paper);border:1px solid var(--line);color:var(--ink);border-radius:6px}
 @media (max-width:819px){.maptoggle{display:block}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
@@ -1257,6 +1736,7 @@ dialog::backdrop{background:rgba(8,38,48,.55)}
         <select id="res">
           <option value="auto">Automatic</option>
           <option value="finest">Full detail</option>
+          <option value="0.5">0.5 m</option><option value="1">1 m</option><option value="2">2 m</option><option value="5">5 m</option>
           <option value="10">10 m</option><option value="20">20 m</option><option value="30">30 m</option>
           <option value="50">50 m</option><option value="100">100 m</option><option value="250">250 m</option>
           <option value="500">500 m</option><option value="1000">1 km</option>
@@ -1544,11 +2024,120 @@ dialog::backdrop{background:rgba(8,38,48,.55)}
   });
 
   // ---------- assess
+  // Original surveys: a layer list, the top of the list wins where they overlap. (This sits after
+  // the "assess" marker on purpose: android/tools/make_page.py cuts everything above it up to the
+  // folder chooser.) The phone app sends no survey list, so none of this shows there.
+  const PREFS_KEY = "bathypicker-survey-prefs", ORDER_KEY = "bathypicker-survey-order";
+  function loadJson(key, fallback) { try { const v = JSON.parse(localStorage.getItem(key) || "null"); return v || fallback; } catch (e) { return fallback; } }
+  function saveJson(key, v) { try { localStorage.setItem(key, JSON.stringify(v)); } catch (e) {} }
+  let surveyPrefs = loadJson(PREFS_KEY, {});   // only what the user changed: id -> on/off
+  let surveyOrder = loadJson(ORDER_KEY, []);   // ids, top first, once the user has reordered
+  let baseOn = true;
+  const BLEND_KEY = "bathypicker-blend";
+  let blendOn = loadJson(BLEND_KEY, "on") !== "off";
+  const outlines = L.layerGroup().addTo(map);
+  const outlineOf = {};
+  function lyrStyle(on, hi) {
+    return { color: on ? "#0a5c6b" : "#6d8790", weight: hi ? 3 : 1.5, dashArray: on ? null : "4 4",
+             fillColor: on ? "#0a5c6b" : "#6d8790", fillOpacity: hi ? 0.3 : (on ? 0.12 : 0.04) };
+  }
+  function drawOutlines(rows) {
+    outlines.clearLayers();
+    Object.keys(outlineOf).forEach((k) => delete outlineOf[k]);
+    rows.slice().reverse().forEach((s) => {
+      const g = L.featureGroup();
+      (s.cells || []).forEach((c) => L.rectangle([[c[1], c[0]], [c[3], c[2]]], lyrStyle(s.on, false)).addTo(g));
+      g.bindTooltip(s.name + " (" + s.res_m + " m)", { sticky: true });
+      g.addTo(outlines);
+      outlineOf[s.id] = g;
+    });
+  }
+  function highlight(id, on, state) {
+    const g = outlineOf[id];
+    if (g) { g.setStyle(lyrStyle(on, state)); if (state) g.bringToFront(); }
+  }
+  function rerun() { markDirty(); $("check").click(); }
+  function moveSurvey(rows, i, d) {
+    const ids = rows.map((r) => r.id);
+    const j = i + d;
+    if (j < 0 || j >= ids.length) return;
+    [ids[i], ids[j]] = [ids[j], ids[i]];
+    surveyOrder = ids.concat(surveyOrder.filter((x) => !ids.includes(x)));
+    saveJson(ORDER_KEY, surveyOrder);
+    rerun();
+  }
+  function renderSurveys(a, out) {
+    const rows = a.surveys || [];
+    drawOutlines(rows);
+    if (!rows.length) return;
+    const wrap = el("div", "layers");
+    wrap.appendChild(el("div", "lt", "Original surveys in this box. The top of the list wins where they overlap. " +
+      "Untick any you don't want; the arrows change the order."));
+    rows.forEach((s, i) => {
+      const row = el("div", "lyr" + (s.on ? "" : " off"));
+      const cb = el("input"); cb.type = "checkbox"; cb.checked = s.on; cb.disabled = !s.usable || busy;
+      cb.setAttribute("aria-label", "Use " + s.name);
+      cb.addEventListener("change", () => {
+        if (cb.checked === s.default_on) delete surveyPrefs[s.id]; else surveyPrefs[s.id] = cb.checked;
+        saveJson(PREFS_KEY, surveyPrefs);
+        rerun();
+      });
+      row.appendChild(cb);
+      row.appendChild(el("div", "ln", s.name + (s.year && !s.name.includes(String(s.year)) ? " " + s.year : "")));
+      const mv = el("div", "mv");
+      [["↑", -1, "Move up"], ["↓", 1, "Move down"]].forEach(([t, d, lab]) => {
+        const b = el("button", "", t); b.type = "button"; b.title = lab; b.setAttribute("aria-label", lab + ": " + s.name);
+        b.disabled = busy || (i + d < 0) || (i + d >= rows.length);
+        b.addEventListener("click", () => moveSurvey(rows, i, d));
+        mv.appendChild(b);
+      });
+      row.appendChild(mv);
+      const bits = [s.res_m + " m", "up to " + Math.round(s.cover_pct) + "% of box", "reads ~" + sz(s.read_bytes)];
+      if (s.shift_m) bits.push("shifted " + (s.shift_m > 0 ? "+" : "") + s.shift_m + " m");
+      if (s.coarser) bits.push("coarser than IMAS here");
+      const meta = el("div", "lm", bits.join(" · ") + " · ");
+      const rep = el("a", "", "report a problem");
+      rep.href = (a.catalogue && a.catalogue.report_url || "") + "?title=" + encodeURIComponent("Survey: " + s.name + " (" + s.res_m + " m)") +
+        "&body=" + encodeURIComponent("Survey id: " + s.id + "\nBox: " + (a.bbox || [box.w, box.s, box.e, box.n]).map((v) => v.toFixed(4)).join(", ") + "\n\nWhat looks wrong:\n");
+      rep.target = "_blank"; rep.rel = "noopener";
+      meta.appendChild(rep);
+      row.appendChild(meta);
+      if (s.note) row.appendChild(el("div", "lnote", s.note));
+      if (!s.usable) row.appendChild(el("div", "lnote", "Needs GDAL 3.7 or newer."));
+      row.addEventListener("mouseenter", () => { row.classList.add("hi"); highlight(s.id, s.on, true); });
+      row.addEventListener("mouseleave", () => { row.classList.remove("hi"); highlight(s.id, s.on, false); });
+      wrap.appendChild(row);
+    });
+    const base = el("div", "lyr" + (baseOn ? "" : " off"));
+    const bcb = el("input"); bcb.type = "checkbox"; bcb.checked = baseOn; bcb.disabled = busy;
+    bcb.setAttribute("aria-label", "Use the IMAS composite underneath");
+    bcb.addEventListener("change", () => { baseOn = bcb.checked; rerun(); });
+    base.appendChild(bcb);
+    base.appendChild(el("div", "ln", "IMAS composite (underneath)"));
+    base.appendChild(el("div"));
+    base.appendChild(el("div", "lm", (a.imas_res_m ? a.imas_res_m + " m" : "") + " · fills everywhere the surveys don't. Untick for surveys only."));
+    wrap.appendChild(base);
+    if (baseOn) {
+      const bl = el("div", "lyr" + (blendOn ? "" : " off"));
+      const lcb = el("input"); lcb.type = "checkbox"; lcb.checked = blendOn; lcb.disabled = busy;
+      lcb.setAttribute("aria-label", "Blend survey edges into the layer underneath");
+      lcb.addEventListener("change", () => { blendOn = lcb.checked; saveJson(BLEND_KEY, blendOn ? "on" : "off"); rerun(); });
+      bl.appendChild(lcb);
+      bl.appendChild(el("div", "ln", "Blend survey edges"));
+      bl.appendChild(el("div"));
+      bl.appendChild(el("div", "lm", "Fades each survey in from what's underneath over 200\u2013500 m at its edges and gaps, " +
+        "so there's no step. Further in, the survey is used exactly. Untick for hard edges."));
+      wrap.appendChild(bl);
+    }
+    out.appendChild(wrap);
+  }
+
   function payload() {
     return {
       bbox: [box.w, box.s, box.e, box.n],
       zones: Array.from(document.querySelectorAll("#zones input:checked")).map((c) => c.value),
-      crs: $("crs").value, resolution: $("res").value, resampling: $("resamp").value, out_dir: $("outdir").value.trim()
+      crs: $("crs").value, resolution: $("res").value, resampling: $("resamp").value, out_dir: $("outdir").value.trim(),
+      base: baseOn, survey_prefs: surveyPrefs, survey_order: surveyOrder, blend: blendOn
     };
   }
   function markDirty() {
@@ -1564,6 +2153,7 @@ dialog::backdrop{background:rgba(8,38,48,.55)}
       const s = document.querySelector('[data-res="' + z.key + '"]');
       if (s) s.textContent = z.covered ? (z.native_res_m + " m") : "no coverage";
     });
+    renderSurveys(a, out);
     if (a.res_m) {
       const t = el("table");
       const add = (k, v) => { const tr = el("tr"); tr.appendChild(el("th", "", k)); tr.appendChild(el("td", "", v)); t.appendChild(tr); };
@@ -1619,6 +2209,8 @@ dialog::backdrop{background:rgba(8,38,48,.55)}
       if (r.size_px) add("Size", r.size_px[0].toLocaleString() + " \u00d7 " + r.size_px[1].toLocaleString() + " px at " + r.res_m + " m");
       if (r.min !== null && r.max !== null) add("Values", r.min.toFixed(1) + " to " + r.max.toFixed(1));
       if (r.valid_percent !== null) add("Has data", r.valid_percent.toFixed(0) + "% of the box");
+      if (r.surveys_used && r.surveys_used.length) add("Surveys", r.surveys_used.join(", "));
+      if (r.sources_path) add("Credits", r.sources_path);
       b.appendChild(t);
       if (r.valid_percent !== null && r.valid_percent < 1) b.appendChild(el("p", "", "Almost all of this box is empty. It may be land or outside Australian waters."));
       const dl = el("a", "", "Save a copy to this device");
@@ -1771,9 +2363,17 @@ def run_setup_cli(app: App, assume_yes: bool) -> int:
 
 def run_cli(args, app: App) -> int:
     zones = "all" if args.zones == "all" else [z.strip() for z in args.zones.split(",") if z.strip()]
+    raw = {"bbox": args.bbox, "zones": zones, "crs": args.crs, "resolution": args.res,
+           "resampling": args.resampling, "out_dir": args.out, "base": not args.no_base, "blend": not args.no_blend}
+    if args.surveys in ("default", "none"):
+        raw["surveys"] = args.surveys
+    else:  # a list of survey ids: just those, in this order (first wins)
+        ids = [v.strip() for v in args.surveys.split(",") if v.strip()]
+        known = [s["id"] for s in (app.catalogue.surveys if app.catalogue else [])]
+        raw["survey_prefs"] = dict({k: False for k in known}, **{k: True for k in ids})
+        raw["survey_order"] = ids
     try:
-        p = parse_params({"bbox": args.bbox, "zones": zones, "crs": args.crs, "resolution": args.res,
-                          "resampling": args.resampling, "out_dir": None}, app)
+        p = parse_params(raw, app)
         plan = assess(p, app)
     except (ValueError, RuntimeError, NotReady) as exc:
         print("Error: " + str(exc))
@@ -1781,6 +2381,12 @@ def run_cli(args, app: App) -> int:
     print(f"Box        : {plan.get('box_km', ['?', '?'])[0]} x {plan.get('box_km', ['?', '?'])[1]} km")
     for z in plan["zones"]:
         print(f"  {z['label']:<24} {z['native_res_m']:>8} m  {'' if z['covered'] else '(no coverage)'}")
+    if plan.get("surveys"):
+        print("Surveys    : (top wins; * = used)")
+        for s in plan["surveys"]:
+            extra = f"shift {s['shift_m']:+g} m" if s["shift_m"] else ""
+            print(f"  {'*' if s['on'] else ' '} {s['id']:<52} {s['res_m']:>5g} m  {s['cover_pct']:>5.1f}% of box  "
+                  f"~{fmt_bytes(s['read_bytes'])} read  {extra}{'  ' + s['note'] if s['note'] else ''}")
     if "res_m" in plan:
         print(f"Detail     : {plan['res_m']:g} m. {plan['res_note']}")
         print(f"Output     : {plan['output_px'][0]} x {plan['output_px'][1]} px, up to {fmt_bytes(plan['est_bytes'])} uncompressed ({plan['format']})")
@@ -1791,7 +2397,11 @@ def run_cli(args, app: App) -> int:
         print("Error      : " + msg)
     if not plan["ok"]:
         return 2
-    if not args.yes and input("Build it? [y/N] ").strip().lower() not in ("y", "yes"):
+    try:
+        answer = "y" if args.yes else input("Build it? [y/N] ")
+    except EOFError:
+        answer = ""
+    if answer.strip().lower() not in ("y", "yes"):
         print("Cancelled.")
         return 1
     job = app.job
@@ -1813,6 +2423,8 @@ def run_cli(args, app: App) -> int:
     if snap["state"] == "done":
         r = snap["result"]
         print(f"Saved {r['path']} ({fmt_bytes(r['bytes'])})")
+        if r.get("sources_path"):
+            print(f"Credits {r['sources_path']}")
         if r["min"] is not None:
             print(f"Values {r['min']:.1f} to {r['max']:.1f}" + (f", data in {r['valid_percent']:.0f}% of the box" if r["valid_percent"] is not None else ""))
         return 0
@@ -1836,6 +2448,12 @@ def main(argv=None) -> int:
     ap.add_argument("--crs", choices=list(CRS_CODES), default="wgs84")
     ap.add_argument("--res", default="auto", help="auto, finest, or metres")
     ap.add_argument("--resampling", choices=RESAMPLING, default="auto")
+    ap.add_argument("--surveys", default="default",
+                    help="with --bbox: default (the usual picks), none, or survey ids separated by commas (first wins)")
+    ap.add_argument("--no-base", action="store_true", help="with --bbox: leave out the IMAS composite (surveys only)")
+    ap.add_argument("--no-blend", action="store_true",
+                    help="with --bbox: don't blend survey edges into IMAS (keep hard edges; needs GDAL 3.11+ to blend)")
+    ap.add_argument("--catalogue", help="use this surveys.json instead of the online list (testing)")
     ap.add_argument("--yes", action="store_true", help="don't ask for confirmation (with --bbox or --setup)")
     args = ap.parse_args(argv)
 
@@ -1844,6 +2462,10 @@ def main(argv=None) -> int:
     out = args.out or str(Path.home() / "bathy_exports")
     token = secrets.token_urlsafe(18)
     app = App(tools, home, out, args.max_gb, args.host, token)
+    try:
+        app.catalogue = SurveyCatalogue(home, Path(args.catalogue) if args.catalogue else None)
+    except (OSError, ValueError) as exc:
+        print(f"Survey list not loaded ({exc}); carrying on with the IMAS composite only.")
 
     if args.setup:
         if tools is not None:

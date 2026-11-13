@@ -1,0 +1,2290 @@
+{
+ "built": "2026-11-13",
+ "count": 556,
+ "files": [
+  {
+   "key": "L3/0124_MacquarieRidge_1994_eCat144418/32Bit_Geotifs/Macquarie_Ridge_01_1994_128m_MSL_hs.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/0124_MacquarieRidge_1994_eCat144418/32Bit_Geotifs/Macquarie_Ridge_02_1994_128m_MSL_hs.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/0124_MacquarieRidge_1994_eCat144418/32Bit_Geotifs/Macquarie_Ridge_03_1994_128m_MSL_hs.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/0276_CarpReefs_eCat146180/32Bit_Geotifs/ga-0276_carpentaria_reefs_ausseabed_swath_angle_04m_egm2008_epsg-32753_20211214_01.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/0276_CarpReefs_eCat146180/32Bit_Geotifs/ga-0276_carpentaria_reefs_ausseabed_swath_angle_04m_egm2008_epsg-32754_20211214_04.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/0276_CarpReefs_eCat146180/32Bit_Geotifs/ga-0276_carpentaria_reefs_ausseabed_swath_angle_05m_egm2008_epsg-32754_20211214_03.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/0276_CarpReefs_eCat146180/32Bit_Geotifs/ga-0276_carpentaria_reefs_ausseabed_swath_angle_07m_egm2008_epsg-32753_20211214_02.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/0333_DarwinHarbour_2011_GeoCat74915/imagery/geotiff/darwin_01m_edit_cube_8bit_Interp.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/0333_DarwinHarbour_2011_GeoCat74915/imagery/geotiff/darwin_01m_edit_cube_interp_img.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/0348_4415_GeoCAT_eCAT100885/04_IMAGERY/GA-0348_GA-4415_CaseyStation_map.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/0349_Houtman2D_2014_15_GeoCAT_89855/04_Imagery/GA-0349_1_15m_600dpi_Map.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/0349_Houtman2D_2014_15_GeoCAT_89855/04_Imagery/GA-0349_2_15m_600dpi_Map.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/0349_Houtman2D_2014_15_GeoCAT_89855/04_Imagery/GA-0349_3_25m_600dpi_Map.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/0349_Houtman2D_2014_15_GeoCAT_89855/04_Imagery/GA-0349_4_25m_600dpi_Map.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/0349_Houtman2D_2014_15_GeoCAT_89855/04_Imagery/GA-0349_Trans1_15m_600dpi_Map.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/0349_Houtman2D_2014_15_GeoCAT_89855/04_Imagery/GA-0349_Trans2_15m_600dpi_Map.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/0349_Houtman2D_2014_15_GeoCAT_89855/04_Imagery/GA-0349_Trans3_15m_600dpi_Map.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/0357_0360_DavisHarbour_2017_eCat127451/03_ESRI_RASTER/Hillshade/HS.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/0357_0360_DavisHarbour_2017_eCat127451/05_Imagery/GA-357_360_2m_Map.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/0363_LHR2D_KR1715_2017_eCat123889/05_IMAGERY/GA-0363_LHR_Z56_90m_map.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/0363_LHR2D_KR1715_2017_eCat123889/05_IMAGERY/GA-0363_LHR_Z56_Transit1_73m_map.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/0363_LHR2D_KR1715_2017_eCat123889/05_IMAGERY/GA-0363_LHR_Z56_Transit2_70m_map.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/0363_LHR2D_KR1715_2017_eCat123889/05_IMAGERY/GA-0363_LHR_Z56_Transit3_83m_map.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/0363_LHR2D_KR1715_2017_eCat123889/05_IMAGERY/GA-0363_LHR_Z57_90m_map.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/19940008S_PerthCanyon_KN145L4/32Bit_Geotiff/PerthCanyon_KN145L4_Bathymetry_SI50_Depth_210m_1994_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/19940008S_PerthCanyon_KN145L4/32Bit_Geotiff/PerthCanyon_KN145L4_Bathymetry_SJ50_Depth_128m_1994_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/19960003S_FremantleSoutheastIndianRidgetoPortHedland_BMRG06MV/32Bit_Geotiff/FremantleSoutheastIndianRidgetoPortHedland_BMRG06MV_bathymetry_depth_128m_SG49_1996_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/19960003S_FremantleSoutheastIndianRidgetoPortHedland_BMRG06MV/32Bit_Geotiff/FremantleSoutheastIndianRidgetoPortHedland_BMRG06MV_bathymetry_depth_128m_SG50_1996_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/19960003S_FremantleSoutheastIndianRidgetoPortHedland_BMRG06MV/32Bit_Geotiff/FremantleSoutheastIndianRidgetoPortHedland_BMRG06MV_bathymetry_depth_128m_SI45_1996_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/19960003S_FremantleSoutheastIndianRidgetoPortHedland_BMRG06MV/32Bit_Geotiff/FremantleSoutheastIndianRidgetoPortHedland_BMRG06MV_bathymetry_depth_128m_SI46_1996_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/19960003S_FremantleSoutheastIndianRidgetoPortHedland_BMRG06MV/32Bit_Geotiff/FremantleSoutheastIndianRidgetoPortHedland_BMRG06MV_bathymetry_depth_128m_SI50_1996_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/19960003S_FremantleSoutheastIndianRidgetoPortHedland_BMRG06MV/32Bit_Geotiff/FremantleSoutheastIndianRidgetoPortHedland_BMRG06MV_bathymetry_depth_128m_SJ44_1996_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/19960003S_FremantleSoutheastIndianRidgetoPortHedland_BMRG06MV/32Bit_Geotiff/FremantleSoutheastIndianRidgetoPortHedland_BMRG06MV_bathymetry_depth_128m_SJ45_1996_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/19960003S_FremantleSoutheastIndianRidgetoPortHedland_BMRG06MV/32Bit_Geotiff/FremantleSoutheastIndianRidgetoPortHedland_BMRG06MV_bathymetry_depth_128m_SJ50_1996_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/19960003S_FremantleSoutheastIndianRidgetoPortHedland_BMRG06MV/32Bit_Geotiff/FremantleSoutheastIndianRidgetoPortHedland_BMRG06MV_bathymetry_depth_128m_SK43_1996_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/19960003S_FremantleSoutheastIndianRidgetoPortHedland_BMRG06MV/32Bit_Geotiff/FremantleSoutheastIndianRidgetoPortHedland_BMRG06MV_bathymetry_depth_128m_SK44_1996_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/19960003S_FremantleSoutheastIndianRidgetoPortHedland_BMRG06MV/32Bit_Geotiff/FremantleSoutheastIndianRidgetoPortHedland_BMRG06MV_bathymetry_depth_210m_SG48_1996_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/19960003S_FremantleSoutheastIndianRidgetoPortHedland_BMRG06MV/32Bit_Geotiff/FremantleSoutheastIndianRidgetoPortHedland_BMRG06MV_bathymetry_depth_210m_SH47_1996_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/19960003S_FremantleSoutheastIndianRidgetoPortHedland_BMRG06MV/32Bit_Geotiff/FremantleSoutheastIndianRidgetoPortHedland_BMRG06MV_bathymetry_depth_210m_SH48_1996_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/19960003S_FremantleSoutheastIndianRidgetoPortHedland_BMRG06MV/32Bit_Geotiff/FremantleSoutheastIndianRidgetoPortHedland_BMRG06MV_bathymetry_depth_210m_SI47_1996_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/19960003S_FremantleSoutheastIndianRidgetoPortHedland_BMRG06MV/32Bit_Geotiff/FremantleSoutheastIndianRidgetoPortHedland_BMRG06MV_bathymetry_depth_210m_SJ43_1996_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/19960003S_FremantleSoutheastIndianRidgetoPortHedland_BMRG06MV/32Bit_Geotiff/FremantleSoutheastIndianRidgetoPortHedland_BMRG06MV_bathymetry_depth_210m_SJ48_1996_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/19960003S_FremantleSoutheastIndianRidgetoPortHedland_BMRG06MV/32Bit_Geotiff/FremantleSoutheastIndianRidgetoPortHedland_BMRG06MV_bathymetry_depth_210m_SJ49_1996_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/19960003S_FremantleSoutheastIndianRidgetoPortHedland_BMRG06MV/32Bit_Geotiff/FremantleSoutheastIndianRidgetoPortHedland_BMRG06MV_bathymetry_depth_210m_SK46_1996_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/19960003S_FremantleSoutheastIndianRidgetoPortHedland_BMRG06MV/32Bit_Geotiff/FremantleSoutheastIndianRidgetoPortHedland_BMRG06MV_bathymetry_depth_210m_SK47_1996_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/19960003S_FremantleSoutheastIndianRidgetoPortHedland_BMRG06MV/32Bit_Geotiff/FremantleSoutheastIndianRidgetoPortHedland_BMRG06MV_bathymetry_depth_210m_SK48_1996_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/19960003S_FremantleSoutheastIndianRidgetoPortHedland_BMRG06MV/32Bit_Geotiff/FremantleSoutheastIndianRidgetoPortHedland_BMRG06MV_bathymetry_depth_210m_SL43_1996_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/19960003S_FremantleSoutheastIndianRidgetoPortHedland_BMRG06MV/32Bit_Geotiff/FremantleSoutheastIndianRidgetoPortHedland_BMRG06MV_bathymetry_depth_210m_SL44_1996_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/19960003S_FremantleSoutheastIndianRidgetoPortHedland_BMRG06MV/32Bit_Geotiff/FremantleSoutheastIndianRidgetoPortHedland_BMRG06MV_bathymetry_depth_210m_SL45_1996_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/19960003S_FremantleSoutheastIndianRidgetoPortHedland_BMRG06MV/32Bit_Geotiff/FremantleSoutheastIndianRidgetoPortHedland_BMRG06MV_bathymetry_depth_210m_SL46_1996_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20130019S_HelensRock/32Bit_Geotiff/HelensRock_Bathymetry_Depth_2m_2013_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20140002S_HelensRockPatchTest/32Bit_Geotiff/HelenRockPatchTest_Bathymetry_Depth_1m_2014_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20140011S_MerriMarineSanctuary/32Bit_Geotiff/Merri_Bathymetry_Depth_1m_2014_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20150012S_HendersonPerthCanyontoHenderson_FK150301/32Bit_Geotiff/HendersonPerthCanyontoHenderson_FK150301_Bathymetry_SI50_Depth_16m_2015_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20150012S_HendersonPerthCanyontoHenderson_FK150301/32Bit_Geotiff/HendersonPerthCanyontoHenderson_FK150301_Bathymetry_SJ50_Depth_16m_2015_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20150022S_EM2040Ctests/32Bit_Geotiff/EM2040Ctests_Bathymetry_Depth_1m_2015_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20150035S_PortFairyWaveEnergy/32Bit_Geotiff/PortFairyWaveEnergy_Bathymetry_Depth_1m_2015_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20150044S_MacreadieSeagrass/32Bit_Geotiff/MacreadieSeagrass_Bathymetry_Depth_20cm_2015_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20170020S_PortPhillipBayDriftAlgae/32Bit_Geotiff/20170020S_PortPhillipBayDriftAlgae_Bathymetry_epsg32755_egm2008_Depth_2m_2017_20250714_.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20170020S_PortPhillipBayDriftAlgae/32Bit_Geotiff/PortPhillipBayDriftAlgae_Bathymetry_Depth_2m_2017_cog.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20170020S_PortPhillipBayDriftAlgae/32Bit_Geotiff/PortPhillipBayDriftAlgae_Bathymetry_Depth_2m_2017_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20170028S_NorthWollongongBellambiPointtoStanwellParkNSW/32Bit_Geotiff/20170028S_NorthWollongongBellambiPointtoStanwellParkNSW_bksct_5m_fmgt_epsg32756_20240617.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20170029S_SharkBay/32Bit_Geotiff/20170029S_bathymetry_10m_epsg32749_count_20240917.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20170029S_SharkBay/32Bit_Geotiff/20170029S_bathymetry_10m_epsg32749_depth_egm2008_20240917_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20170029S_SharkBay/32Bit_Geotiff/20170029S_bathymetry_10m_epsg32749_std_20240917.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20180002S_PopesEye/32Bit_Geotiff/PopesEye_Bathymetry_Depth_2m_2018_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20180003S_PortseaHolePortPhillipBay/32Bit_Geotiff/20180003S_PortseaHole_PortPhillipBay_Bathymetry_epsg32755_egm2008_Depth_2m_2018_20250714.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20180003S_PortseaHolePortPhillipBay/32Bit_Geotiff/PortseaHole_PortPhillipBay_Bathymetry_Depth_2m_2018_cog.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20180003S_PortseaHolePortPhillipBay/32Bit_Geotiff/PortseaHole_PortPhillipBay_Bathymetry_Depth_2m_2018_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20190018S_ForsterCapeHawketoBlackHeadNSW/32Bit_Geotiff/20190018S_ForsterCapeHawketoBlackHeadNSW_bksct_5m_fmgt_epsg32756_20240617.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20200021C_TorresStraitCompilation_eCat144348/image/ts30_02Jul20.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20210005S_PortFairyWaveEnergySite/32Bit_Geotiff/PortFairyWaveEnergy_Site_Bathymetry_Depth_50cm_2021_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20210010S_PortPhillipBayTieLinesSandringham-StLeonards/32Bit_Geotiff/20210010S_PortPhillipBayTieLinesSandringham_Bathymetry_epsg32755_egm2008_Depth_50cm_2021_20250714.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20210010S_PortPhillipBayTieLinesSandringham-StLeonards/32Bit_Geotiff/20210010S_PortPhillipBayTieLinesStLeonards_Bathyemtry_epsg32755_egm2008_Depth_50cm_2021_20250714.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20210010S_PortPhillipBayTieLinesSandringham-StLeonards/32Bit_Geotiff/PortPhillipBayTieLinesSandringham_Bathymetry_Depth_50cm_2021_cog.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20210010S_PortPhillipBayTieLinesSandringham-StLeonards/32Bit_Geotiff/PortPhillipBayTieLinesSandringham_Bathymetry_Depth_50cm_2021_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20210010S_PortPhillipBayTieLinesSandringham-StLeonards/32Bit_Geotiff/PortPhillipBayTieLinesStLeonards_Bathyemtry_Depth_50cm_2021_cog.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20210010S_PortPhillipBayTieLinesSandringham-StLeonards/32Bit_Geotiff/PortPhillipBayTieLinesStLeonards_Bathyemtry_Depth_50cm_2021_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220003S_KangarooIslandSouth-East_SI-1023/32Bit_Geotiff/SI1023_20230003S_KangarooIslandSouth-East_30m_epsg4326_MSL_20240906_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Density Check/density_failed_0_0.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Density Check/density_failed_0_2000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Density Check/density_failed_0_4000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Density Check/density_failed_0_6000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Density Check/density_failed_10000_0.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Density Check/density_failed_10000_2000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Density Check/density_failed_10000_4000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Density Check/density_failed_10000_6000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Density Check/density_failed_2000_0.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Density Check/density_failed_2000_2000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Density Check/density_failed_2000_4000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Density Check/density_failed_2000_6000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Density Check/density_failed_4000_0.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Density Check/density_failed_4000_2000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Density Check/density_failed_4000_4000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Density Check/density_failed_4000_6000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Density Check/density_failed_6000_0.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Density Check/density_failed_6000_2000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Density Check/density_failed_6000_4000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Density Check/density_failed_6000_6000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Density Check/density_failed_8000_0.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Density Check/density_failed_8000_2000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Density Check/density_failed_8000_4000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Density Check/density_failed_8000_6000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Total Vertical Uncertainty Check/allowable_uncertainty_0_0.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Total Vertical Uncertainty Check/allowable_uncertainty_0_2000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Total Vertical Uncertainty Check/allowable_uncertainty_0_4000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Total Vertical Uncertainty Check/allowable_uncertainty_0_6000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Total Vertical Uncertainty Check/allowable_uncertainty_10000_0.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Total Vertical Uncertainty Check/allowable_uncertainty_10000_2000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Total Vertical Uncertainty Check/allowable_uncertainty_10000_4000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Total Vertical Uncertainty Check/allowable_uncertainty_10000_6000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Total Vertical Uncertainty Check/allowable_uncertainty_2000_0.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Total Vertical Uncertainty Check/allowable_uncertainty_2000_2000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Total Vertical Uncertainty Check/allowable_uncertainty_2000_4000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Total Vertical Uncertainty Check/allowable_uncertainty_2000_6000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Total Vertical Uncertainty Check/allowable_uncertainty_4000_0.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Total Vertical Uncertainty Check/allowable_uncertainty_4000_2000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Total Vertical Uncertainty Check/allowable_uncertainty_4000_4000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Total Vertical Uncertainty Check/allowable_uncertainty_4000_6000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Total Vertical Uncertainty Check/allowable_uncertainty_6000_0.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Total Vertical Uncertainty Check/allowable_uncertainty_6000_2000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Total Vertical Uncertainty Check/allowable_uncertainty_6000_4000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Total Vertical Uncertainty Check/allowable_uncertainty_6000_6000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Total Vertical Uncertainty Check/allowable_uncertainty_8000_0.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Total Vertical Uncertainty Check/allowable_uncertainty_8000_2000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Total Vertical Uncertainty Check/allowable_uncertainty_8000_4000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Total Vertical Uncertainty Check/allowable_uncertainty_8000_6000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Total Vertical Uncertainty Check/failed_uncertainty_0_0.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Total Vertical Uncertainty Check/failed_uncertainty_0_2000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Total Vertical Uncertainty Check/failed_uncertainty_0_4000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Total Vertical Uncertainty Check/failed_uncertainty_0_6000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Total Vertical Uncertainty Check/failed_uncertainty_10000_0.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Total Vertical Uncertainty Check/failed_uncertainty_10000_2000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Total Vertical Uncertainty Check/failed_uncertainty_10000_4000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Total Vertical Uncertainty Check/failed_uncertainty_10000_6000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Total Vertical Uncertainty Check/failed_uncertainty_2000_0.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Total Vertical Uncertainty Check/failed_uncertainty_2000_2000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Total Vertical Uncertainty Check/failed_uncertainty_2000_4000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Total Vertical Uncertainty Check/failed_uncertainty_2000_6000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Total Vertical Uncertainty Check/failed_uncertainty_4000_0.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Total Vertical Uncertainty Check/failed_uncertainty_4000_2000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Total Vertical Uncertainty Check/failed_uncertainty_4000_4000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Total Vertical Uncertainty Check/failed_uncertainty_4000_6000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Total Vertical Uncertainty Check/failed_uncertainty_6000_0.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Total Vertical Uncertainty Check/failed_uncertainty_6000_2000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Total Vertical Uncertainty Check/failed_uncertainty_6000_4000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Total Vertical Uncertainty Check/failed_uncertainty_6000_6000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Total Vertical Uncertainty Check/failed_uncertainty_8000_0.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Total Vertical Uncertainty Check/failed_uncertainty_8000_2000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Total Vertical Uncertainty Check/failed_uncertainty_8000_4000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Total Vertical Uncertainty Check/failed_uncertainty_8000_6000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Density Check/density_failed_0_0.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Density Check/density_failed_0_2000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Density Check/density_failed_0_4000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Density Check/density_failed_0_6000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Density Check/density_failed_10000_0.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Density Check/density_failed_10000_2000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Density Check/density_failed_10000_4000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Density Check/density_failed_10000_6000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Density Check/density_failed_2000_0.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Density Check/density_failed_2000_2000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Density Check/density_failed_2000_4000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Density Check/density_failed_2000_6000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Density Check/density_failed_4000_0.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Density Check/density_failed_4000_2000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Density Check/density_failed_4000_4000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Density Check/density_failed_4000_6000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Density Check/density_failed_6000_0.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Density Check/density_failed_6000_2000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Density Check/density_failed_6000_4000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Density Check/density_failed_6000_6000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Density Check/density_failed_8000_0.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Density Check/density_failed_8000_2000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Density Check/density_failed_8000_4000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Density Check/density_failed_8000_6000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Total Vertical Uncertainty Check/allowable_uncertainty_0_0.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Total Vertical Uncertainty Check/allowable_uncertainty_0_2000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Total Vertical Uncertainty Check/allowable_uncertainty_0_4000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Total Vertical Uncertainty Check/allowable_uncertainty_0_6000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Total Vertical Uncertainty Check/allowable_uncertainty_10000_0.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Total Vertical Uncertainty Check/allowable_uncertainty_10000_2000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Total Vertical Uncertainty Check/allowable_uncertainty_10000_4000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Total Vertical Uncertainty Check/allowable_uncertainty_10000_6000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Total Vertical Uncertainty Check/allowable_uncertainty_2000_0.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Total Vertical Uncertainty Check/allowable_uncertainty_2000_2000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Total Vertical Uncertainty Check/allowable_uncertainty_2000_4000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Total Vertical Uncertainty Check/allowable_uncertainty_2000_6000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Total Vertical Uncertainty Check/allowable_uncertainty_4000_0.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Total Vertical Uncertainty Check/allowable_uncertainty_4000_2000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Total Vertical Uncertainty Check/allowable_uncertainty_4000_4000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Total Vertical Uncertainty Check/allowable_uncertainty_4000_6000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Total Vertical Uncertainty Check/allowable_uncertainty_6000_0.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Total Vertical Uncertainty Check/allowable_uncertainty_6000_2000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Total Vertical Uncertainty Check/allowable_uncertainty_6000_4000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Total Vertical Uncertainty Check/allowable_uncertainty_6000_6000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Total Vertical Uncertainty Check/allowable_uncertainty_8000_0.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Total Vertical Uncertainty Check/allowable_uncertainty_8000_2000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Total Vertical Uncertainty Check/allowable_uncertainty_8000_4000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Total Vertical Uncertainty Check/allowable_uncertainty_8000_6000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Total Vertical Uncertainty Check/failed_uncertainty_0_0.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Total Vertical Uncertainty Check/failed_uncertainty_0_2000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Total Vertical Uncertainty Check/failed_uncertainty_0_4000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Total Vertical Uncertainty Check/failed_uncertainty_0_6000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Total Vertical Uncertainty Check/failed_uncertainty_10000_0.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Total Vertical Uncertainty Check/failed_uncertainty_10000_2000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Total Vertical Uncertainty Check/failed_uncertainty_10000_4000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Total Vertical Uncertainty Check/failed_uncertainty_10000_6000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Total Vertical Uncertainty Check/failed_uncertainty_2000_0.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Total Vertical Uncertainty Check/failed_uncertainty_2000_2000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Total Vertical Uncertainty Check/failed_uncertainty_2000_4000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Total Vertical Uncertainty Check/failed_uncertainty_2000_6000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Total Vertical Uncertainty Check/failed_uncertainty_4000_0.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Total Vertical Uncertainty Check/failed_uncertainty_4000_2000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Total Vertical Uncertainty Check/failed_uncertainty_4000_4000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Total Vertical Uncertainty Check/failed_uncertainty_4000_6000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Total Vertical Uncertainty Check/failed_uncertainty_6000_0.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Total Vertical Uncertainty Check/failed_uncertainty_6000_2000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Total Vertical Uncertainty Check/failed_uncertainty_6000_4000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Total Vertical Uncertainty Check/failed_uncertainty_6000_6000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Total Vertical Uncertainty Check/failed_uncertainty_8000_0.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Total Vertical Uncertainty Check/failed_uncertainty_8000_2000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Total Vertical Uncertainty Check/failed_uncertainty_8000_4000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Total Vertical Uncertainty Check/failed_uncertainty_8000_6000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/image/kerg100_06Nov22.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Density Check/density_failed_0_0.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Density Check/density_failed_0_2000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Density Check/density_failed_0_4000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Density Check/density_failed_0_6000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Density Check/density_failed_2000_0.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Density Check/density_failed_2000_2000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Density Check/density_failed_2000_4000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Density Check/density_failed_2000_6000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Density Check/density_failed_4000_0.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Density Check/density_failed_4000_2000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Density Check/density_failed_4000_4000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Density Check/density_failed_4000_6000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Density Check/density_failed_6000_0.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Density Check/density_failed_6000_2000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Density Check/density_failed_6000_4000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Density Check/density_failed_6000_6000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Density Check/density_failed_8000_0.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Density Check/density_failed_8000_2000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Density Check/density_failed_8000_4000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Density Check/density_failed_8000_6000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Total Vertical Uncertainty Check/allowable_uncertainty_0_0.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Total Vertical Uncertainty Check/allowable_uncertainty_0_2000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Total Vertical Uncertainty Check/allowable_uncertainty_0_4000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Total Vertical Uncertainty Check/allowable_uncertainty_0_6000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Total Vertical Uncertainty Check/allowable_uncertainty_2000_0.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Total Vertical Uncertainty Check/allowable_uncertainty_2000_2000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Total Vertical Uncertainty Check/allowable_uncertainty_2000_4000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Total Vertical Uncertainty Check/allowable_uncertainty_2000_6000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Total Vertical Uncertainty Check/allowable_uncertainty_4000_0.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Total Vertical Uncertainty Check/allowable_uncertainty_4000_2000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Total Vertical Uncertainty Check/allowable_uncertainty_4000_4000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Total Vertical Uncertainty Check/allowable_uncertainty_4000_6000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Total Vertical Uncertainty Check/allowable_uncertainty_6000_0.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Total Vertical Uncertainty Check/allowable_uncertainty_6000_2000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Total Vertical Uncertainty Check/allowable_uncertainty_6000_4000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Total Vertical Uncertainty Check/allowable_uncertainty_6000_6000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Total Vertical Uncertainty Check/allowable_uncertainty_8000_0.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Total Vertical Uncertainty Check/allowable_uncertainty_8000_2000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Total Vertical Uncertainty Check/allowable_uncertainty_8000_4000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Total Vertical Uncertainty Check/allowable_uncertainty_8000_6000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Total Vertical Uncertainty Check/failed_uncertainty_0_0.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Total Vertical Uncertainty Check/failed_uncertainty_0_2000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Total Vertical Uncertainty Check/failed_uncertainty_0_4000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Total Vertical Uncertainty Check/failed_uncertainty_0_6000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Total Vertical Uncertainty Check/failed_uncertainty_2000_0.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Total Vertical Uncertainty Check/failed_uncertainty_2000_2000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Total Vertical Uncertainty Check/failed_uncertainty_2000_4000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Total Vertical Uncertainty Check/failed_uncertainty_2000_6000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Total Vertical Uncertainty Check/failed_uncertainty_4000_0.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Total Vertical Uncertainty Check/failed_uncertainty_4000_2000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Total Vertical Uncertainty Check/failed_uncertainty_4000_4000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Total Vertical Uncertainty Check/failed_uncertainty_4000_6000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Total Vertical Uncertainty Check/failed_uncertainty_6000_0.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Total Vertical Uncertainty Check/failed_uncertainty_6000_2000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Total Vertical Uncertainty Check/failed_uncertainty_6000_4000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Total Vertical Uncertainty Check/failed_uncertainty_6000_6000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Total Vertical Uncertainty Check/failed_uncertainty_8000_0.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Total Vertical Uncertainty Check/failed_uncertainty_8000_2000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Total Vertical Uncertainty Check/failed_uncertainty_8000_4000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Total Vertical Uncertainty Check/failed_uncertainty_8000_6000.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/image/wr100_06Nov22.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220008S_ClarenceStraittoDundasStrait_SI-1027/32Bit_Geotiff/SI1027_20220008S_ClarenceStraittoDundasStrait_30m_epsg4326_MSL_20240906_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220013S_EclipseShoalstoLombadinaPointKimberleyregion_SI-1025/32Bit_Geotiff/EclipseShoalstoLombadinaPointKimberleyregion_SI1025_Bathymetry_Depth_30m_2022_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220020S_CocosKeelingMarinePark_EOMAP_20220329.0835/32Bit_Geotiff/SDB_AUS_CocosIsland_EOMAP_20220701_20220708_2m_MSL_geotiff_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220020S_CocosKeelingMarinePark_EOMAP_20220329.0835/32Bit_Geotiff/SDB_AUS_NorthKeeling_EOMAP_20190623T035912_2m_MSL_geotiff_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20220021S_ChristmasIslandMarinePark_EOMAP_20220329.0835/32Bit_Geotiff/SDB_AUS_ChristmasIsland_EOMAP_20190212_20220117_2m_MSL_geotiff_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20230002S_AdolphusChanneltoGreatNorthEastChannel_SI-1028/32Bit_Geotiff/AdolphusChanneltoGreatNorthEastChannel_SI1028_Bathymetry_Depth_30m_2023_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20230002S_AdolphusChanneltoGreatNorthEastChannel_SI-1028/32Bit_Geotiff/old/AdolphusChanneltoGreatNorthEastChannel_SI1028_Bathymetry_Depth_30m_2023_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20230004C_AusBathyTopo250m/hillshade/aus250_29Aug23_hillshade.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20230004C_AusBathyTopo250m/hillshade/ausbathytopo2009_hillshade.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20230006C_AusBathyTopo_TorresStraitCompilation_30m/hillshade/ausbathytopo2009_hillshade.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20230006C_AusBathyTopo_TorresStraitCompilation_30m/hillshade/ts30_29Sep23_hillshade.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20230007S_HowardChannel_SI-1046/32Bit_Geotiff/SI1046_20230007S_HowardChannel_30m_epsg4326_MSL_20240906_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20230015S_VarzinPassagetoMerkaraShoal_SI-1017/32Bit_Geotiff/SI1017_20230015S_VarzinPassagetoMerkaraShoal_30m_epsg4326_LAT_20240906_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20230015S_VarzinPassagetoMerkaraShoal_SI-1017/32Bit_Geotiff/SI1017_20230015S_VarzinPassagetoMerkaraShoal_30m_epsg4326_MSL_20240906_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20230016S_CapeFourcroyWest_SI-1043/32Bit_Geotiff/SI1043_20230016S_CapeFourcroyWest_30m_epsg4326_MSL_20240906_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20230018S_ApproachestoMortonBay_SI-1021/32Bit_Geotiff/ApproachestoMortonBay_SI1021_Bathymetry_Depth_30m_2023_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20230020S_BassPyramidtoWrightBlock_SI-1030/32Bit_Geotiff/SI1030_20230020S_BassPyramidtoWrightBlock_30m_epsg4326_LAT_20240906_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20230020S_BassPyramidtoWrightBlock_SI-1030/32Bit_Geotiff/SI1030_20230020S_BassPyramidtoWrightBlock_30m_epsg4326_MSL_20240906_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20230021S_LordMayorShoaltoPittShoals_SI-1042/32Bit_Geotiff/SI1042_20230021S_LordMayorShoaltoPittShoals_30m_epsg4326_MSL_20240906_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20230050S_ClarenceStraittoDundasStrait_SI-1027/32Bit_Geotiff/SI1027_20220008S_ClarenceStraittoDundasStrait_30m_epsg4326_MSL_20240906_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20240001S_ApolloMarinePark-ShallowWaters_SSCN-SEGMENT-2-C/32Bit_Geotiff/ApolloMarinePark-ShallowWaters_Bathymetry_Depth_5m_2024_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20240002S_BeagleMarinePark-ShallowWaters_SSCN-SEGMENT-2-E/32Bit_Geotiff/BeagleMarinePark-ShallowWaters_Bathymetry_Depth_5m_2024_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20240003S_DampierMarineParkSouth_SI-1037/32Bit_Geotiff/DampierMarineParkSouth_SI1037_Bathymetry_Depth_30m_2024_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20240007S_CapeFourcroyNorth-West_SI-1049/32Bit_Geotiff/CapeFourcroyNorthWest_SI1049_Bathymetry_Depth_30m_2024_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20240011C_AusBathyTopo250m/32Bit_Geotiff/20240011C_AusBathyTopo_250m-epsg4326_MSL_20241129_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20240012S_EasternRechercheMarinePark_SSCN-SEGMENT-2-B/32Bit_Geotiff/20240012S_EasternRechercheMarinePark_SSCN-SEGMENT-2-B_100m_epsg4326_MSL_20250212_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20240013S_GreatAustralianBightMarinePark_SSCN-SEGMENT-2-B/32Bit_Geotiff/20240013S_GreatAustralianBightMarinePark_SSCN-SEGMENT-2-B_100m_epsg4326_MSL_20250212_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20240014S_South-westCornerMarinePark_SSCN-SEGMENT-2-B/32Bit_Geotiff/20240014S_South-westCornerMarinePark_SSCN-SEGMENT-2-B-IUCN-II-1_100m_epsg4326_MSL_20250212_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20240014S_South-westCornerMarinePark_SSCN-SEGMENT-2-B/32Bit_Geotiff/20240014S_South-westCornerMarinePark_SSCN-SEGMENT-2-B-IUCN-II-2_100m_epsg4326_MSL_20250212_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20240014S_South-westCornerMarinePark_SSCN-SEGMENT-2-B/32Bit_Geotiff/20240014S_South-westCornerMarinePark_SSCN-SEGMENT-2-B-IUCN-VI_100m_epsg4326_MSL_20250212_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20240015S_WesternEyreMarinePark_SSCN-SEGMENT-2-B/32Bit_Geotiff/20240015S_WesternEyreMarinePark_SSCN-SEGMENT-2-B_100m_epsg4326_MSL_20250212_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20240016S_MurrayMarinePark_SSCN-SEGMENT-2-C/32Bit_Geotiff/20240016S_MurrayMarinePark_SSCN-SEGMENT-2-C_100m_epsg4326_MSL_20250212_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20240017S_NelsonMarinePark_SSCN-SEGMENT-2-C/32Bit_Geotiff/20240017S_NelsonMarinePark_SSCN-SEGMENT-2-C_100m_epsg4326_MSL_20250212_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/20240018S_MudjimbaIslandBathymetry_DES1242402/32Bit_Geotiff/MudjimbaIslandBathymetry_DES1242402_Bathymetry_Depth_0.5m_2024_hs.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/2361_TOPASSeaTrials_GeoCAT75662/Imagery/GA-2361_1_5m_Interp.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/2361_TOPASSeaTrials_GeoCAT75662/Imagery/GA-2361_2_10m_Interp.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/2361_TOPASSeaTrials_GeoCAT75662/Imagery/GA-2361_3_40m_Interp.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/2361_TOPASSeaTrials_GeoCAT75662/Imagery/GA2361_ALL_600dpi.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/4452_bynoe_harbour/imagery/bathy4452_01m_image.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/4878_ShellharbourTharawal_2017_eCats_146307_and_146308/32Bit_Geotifs/ga-4878_nswenv20171130_ausseabed_bksct_5m_geocoder_epsg-32756_20220214.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/Apollo_Bay/arcgis/rasters/Apollo_CMR_Rugosity_2m_MGA54_AHD.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/Apollo_Bay/backscatter/Apollo_CMR_BS_1m_MGA54.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/Apollo_Bay/backscatter/Apollo_CMR_BS_1m_UTM54S.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/BassStrait_30m_Beaman_eCat147043/20190018S_ForsterCapeHawketoBlackHeadNSW/NSWENV_20201014_ForsterCapeHawkeBlackHead_MB/20190018S_ForsterCapeHawketoBlackHeadNSW_epsg4326_bksct_20240617.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/BassStrait_30m_Beaman_eCat147043/20190018S_ForsterCapeHawketoBlackHeadNSW/NSWENV_20201014_ForsterCapeHawkeBlackHead_MB/20190018S_ForsterCapeHawketoBlackHeadNSW_epsg4326_bksct_20240617.tiff",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/BassStrait_30m_Beaman_eCat147043/20190018S_ForsterCapeHawketoBlackHeadNSW/NSWENV_20201014_ForsterCapeHawkeBlackHead_MB/NSWENV_20201014_ForsterCapeHawkeBlackHead_MB_BKSGRD005_WGS84Z56_FMGT711_20240318_FV02.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/BassStrait_30m_Beaman_eCat147043/image/bs30_29Jan22_hillshade.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/GBR_100m_Beaman_eCat133163/04_GEOTIF/gbr100m_hs_map.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/GBR_30m_Beaman_eCAT_115066/04_GEOTIF/gbr30_all_hs0.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/GBR_30m_Beaman_eCAT_115066/04_GEOTIF/gbr30_all_hs0_map.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/GBR_30m_Beaman_eCAT_115066/04_GEOTIF/gbr30_all_map.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/GBR_30m_Beaman_eCAT_115066/05_Metadata/gbr30_All_map.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/GBR_30m_Beaman_eCAT_115066/05_Metadata/gbr30_all_hs0_map.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/Geographe_Marine_Park_eCat121158/05_IMAGERY/Geographe_MP_Morphological_Surfaces_Map.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/Geographe_Marine_Park_eCat121158/05_IMAGERY/Geographe_Marine_Park_5m_Inetrp_Map.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/Gifford_Marine_Park_eCat121193/03_ESRI_RASTER/Gifford_Clipped_30m_Hillshade/Hillshade_Gifford_Marine_Pa1.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/Gifford_Marine_Park_eCat121193/05_IMAGERY/Gifford_Marine_Park_30m_Interp_Map.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/Gifford_Marine_Park_eCat121193/05_IMAGERY/Gifford_Marine_Park_Morphological_Surfaces_Map.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/NorthAustralia_30m_Beaman_eCat121620/03_ESRI_Raster/Hillshade/nthaus30a_26May17_hill/nthaus30a_26May17.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/NorthAustralia_30m_Beaman_eCat121620/03_ESRI_Raster/Hillshade/nthaus30b_26May17_hill/nthaus30b_26May17.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/NorthAustralia_30m_Beaman_eCat121620/03_ESRI_Raster/Hillshade/nthaus30c_26May17_hill/nthaus30c_26May17.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/NorthAustralia_30m_Beaman_eCat121620/03_ESRI_Raster/Hillshade/nthaus30d_26May17_hill/nthaus30d_26May17.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/NorthAustralia_30m_Beaman_eCat121620/05_GEOTIF/nthaus30m_ALL_map.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/NorthAustralia_30m_Beaman_eCat121620/05_GEOTIF/nthaus30m_a_map.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/NorthAustralia_30m_Beaman_eCat121620/05_GEOTIF/nthaus30m_b_map.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/NorthAustralia_30m_Beaman_eCat121620/05_GEOTIF/nthaus30m_c_map.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/NorthAustralia_30m_Beaman_eCat121620/05_GEOTIF/nthaus30m_d_map.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/Perth_Canyon_Marine_Park_eCat121172/05_IMAGERY/Perth_Canyon_MP_Bathymetry_40m_Map.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/Perth_Canyon_Marine_Park_eCat121172/05_IMAGERY/Perth_Canyon_MP_Morphological_Surfaces_40m_Map.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/backscatter_30m/backscatter_30m_all_3857.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/backscatter_30m/backscatter_30m_hs_3857.tif",
+   "reason": "not a depth grid (by name)"
+  },
+  {
+   "key": "L3/0293_MentelleBasin_2005_eCat75235/06_Imagery/GA-0293_50m_600dpi.tif",
+   "reason": "not a single-band depth grid (3 bands, uint8)"
+  },
+  {
+   "key": "L3/0345_0346_CaswellSubBasin_2014_eCat83696/Metadata/GA-0345_GA-0346_KML_ALL.tif",
+   "reason": "can't read header: no CRS"
+  },
+  {
+   "key": "L3/0348_4415_GeoCAT_eCAT100885/04_IMAGERY/GA-0348_GA-4415_CaseyStation.tif",
+   "reason": "not a single-band depth grid (3 bands, uint8)"
+  },
+  {
+   "key": "L3/0348_4415_GeoCAT_eCAT100885/32Bit_Geotifs/Casey_ALL_MSL_GA-0348_4415_1m_Interp.tiff",
+   "reason": "outside Australian waters"
+  },
+  {
+   "key": "L3/0348_CaseyStation_2015_AU355_GeoCAT_83224/04_IMAGERY/GA-0348_1m.tif",
+   "reason": "not a single-band depth grid (3 bands, uint8)"
+  },
+  {
+   "key": "L3/0348_CaseyStation_2015_AU355_GeoCAT_83224/04_IMAGERY/GA-0348_1m_ramp.tif",
+   "reason": "can't read header: no CRS"
+  },
+  {
+   "key": "L3/0348_CaseyStation_2015_AU355_GeoCAT_83224/32Bit_Geotifs/GA-0348_CaseyStation_2015_1m.tiff",
+   "reason": "outside Australian waters"
+  },
+  {
+   "key": "L3/0348_casey_station_2015/ga-0348_casey_station_cube_04m_epsg-4326_egm2008_20210428.tiff",
+   "reason": "outside Australian waters"
+  },
+  {
+   "key": "L3/0349_Houtman2D_2014_15_GeoCAT_89855/04_Imagery/GA-0349_1_15m_600dpi.tif",
+   "reason": "not a single-band depth grid (3 bands, uint8)"
+  },
+  {
+   "key": "L3/0349_Houtman2D_2014_15_GeoCAT_89855/04_Imagery/GA-0349_2_15m_600dpi.tif",
+   "reason": "not a single-band depth grid (3 bands, uint8)"
+  },
+  {
+   "key": "L3/0349_Houtman2D_2014_15_GeoCAT_89855/04_Imagery/GA-0349_3_25m_600dpi.tif",
+   "reason": "not a single-band depth grid (3 bands, uint8)"
+  },
+  {
+   "key": "L3/0349_Houtman2D_2014_15_GeoCAT_89855/04_Imagery/GA-0349_4_25m_600dpi.tif",
+   "reason": "not a single-band depth grid (3 bands, uint8)"
+  },
+  {
+   "key": "L3/0349_Houtman2D_2014_15_GeoCAT_89855/04_Imagery/GA-0349_Trans1_15m_600dpi.tif",
+   "reason": "not a single-band depth grid (3 bands, uint8)"
+  },
+  {
+   "key": "L3/0349_Houtman2D_2014_15_GeoCAT_89855/04_Imagery/GA-0349_Trans2_15m_600dpi.tif",
+   "reason": "not a single-band depth grid (3 bands, uint8)"
+  },
+  {
+   "key": "L3/0349_Houtman2D_2014_15_GeoCAT_89855/04_Imagery/GA-0349_Trans3_15m_600dpi.tif",
+   "reason": "not a single-band depth grid (3 bands, uint8)"
+  },
+  {
+   "key": "L3/0351_DarwinHarbour_2015_eCat144544/32bit_geotiff/ga-0351_SOL6187_ausseabed_cube_02m_ellipsoid_epsg-4326_20201202.tiff",
+   "reason": "heights above the ellipsoid (tens of metres off sea level)"
+  },
+  {
+   "key": "L3/0357_0360_DavisHarbour_2017_eCat127451/03_ESRI_RASTER/Davis_GA-357_360_2m_Geotif.tiff",
+   "reason": "outside Australian waters"
+  },
+  {
+   "key": "L3/0357_0360_DavisHarbour_2017_eCat127451/05_Imagery/GA-357_360_2m.tif",
+   "reason": "not a single-band depth grid (3 bands, uint8)"
+  },
+  {
+   "key": "L3/0357_0360_DavisHarbour_2017_eCat127451/09_GEOTIFS/Davis_GA-357_360_2017_2m.tiff",
+   "reason": "outside Australian waters"
+  },
+  {
+   "key": "L3/0357_DavisCoastSurvey_2017_eCat145276/GA-0357_davis_coast_survey_bathymetry_egm2008_2017_11m_epsg-4326_20210322V1.tiff",
+   "reason": "outside Australian waters"
+  },
+  {
+   "key": "L3/0363_LHR2D_KR1715_2017_eCat123889/05_IMAGERY/GA-0363_LHR_Z56_90m.tif",
+   "reason": "can't read header: no CRS"
+  },
+  {
+   "key": "L3/0363_LHR2D_KR1715_2017_eCat123889/05_IMAGERY/GA-0363_LHR_Z56_Transit1_73m.tif",
+   "reason": "can't read header: no CRS"
+  },
+  {
+   "key": "L3/0363_LHR2D_KR1715_2017_eCat123889/05_IMAGERY/GA-0363_LHR_Z56_Transit2_70m.tif",
+   "reason": "can't read header: no CRS"
+  },
+  {
+   "key": "L3/0363_LHR2D_KR1715_2017_eCat123889/05_IMAGERY/GA-0363_LHR_Z56_Transit3_83m.tif",
+   "reason": "can't read header: no CRS"
+  },
+  {
+   "key": "L3/0363_LHR2D_KR1715_2017_eCat123889/05_IMAGERY/GA-0363_LHR_Z57_90m.tif",
+   "reason": "can't read header: no CRS"
+  },
+  {
+   "key": "L3/0363_LHR2D_KR1715_2017_eCat123889/05_IMAGERY/GA-0363_LHR_Z57_ALL_90m.tif",
+   "reason": "can't read header: no CRS"
+  },
+  {
+   "key": "L3/0364_BeagleMarinePark_2018_eCat130301/old/0364_beagle_park/esri_grid/ga-0364_ausseabed_cube_03m_epsg-4326_20200824_ellipsoid.tiff",
+   "reason": "heights above the ellipsoid (tens of metres off sea level)"
+  },
+  {
+   "key": "L3/0364_BeagleMarinePark_2018_eCat130301/old/0364_beagle_park/esri_grid/grid0_ellipsoid_cube_noaa_1m.tiff",
+   "reason": "heights above the ellipsoid (tens of metres off sea level)"
+  },
+  {
+   "key": "L3/0364_BeagleMarinePark_2018_eCat130301/old/0364_beagle_park/esri_grid/grid10_ellipsoid_cube_noaa_1m.tiff",
+   "reason": "heights above the ellipsoid (tens of metres off sea level)"
+  },
+  {
+   "key": "L3/0364_BeagleMarinePark_2018_eCat130301/old/0364_beagle_park/esri_grid/grid12_ellipsoid_cube_noaa_1m.tiff",
+   "reason": "heights above the ellipsoid (tens of metres off sea level)"
+  },
+  {
+   "key": "L3/0364_BeagleMarinePark_2018_eCat130301/old/0364_beagle_park/esri_grid/grid1_ellipsoid_cube_noaa_1m.tiff",
+   "reason": "heights above the ellipsoid (tens of metres off sea level)"
+  },
+  {
+   "key": "L3/0364_BeagleMarinePark_2018_eCat130301/old/0364_beagle_park/esri_grid/grid2_ellipsoid_cube_noaa_1m.tiff",
+   "reason": "heights above the ellipsoid (tens of metres off sea level)"
+  },
+  {
+   "key": "L3/0364_BeagleMarinePark_2018_eCat130301/old/0364_beagle_park/esri_grid/grid3_ellipsoid_cube_noaa_1m.tiff",
+   "reason": "heights above the ellipsoid (tens of metres off sea level)"
+  },
+  {
+   "key": "L3/0364_BeagleMarinePark_2018_eCat130301/old/0364_beagle_park/esri_grid/grid4_ellipsoid_cube_noaa_1m.tiff",
+   "reason": "heights above the ellipsoid (tens of metres off sea level)"
+  },
+  {
+   "key": "L3/0364_BeagleMarinePark_2018_eCat130301/old/0364_beagle_park/esri_grid/grid5_ellipsoid_cube_noaa_1m.tiff",
+   "reason": "heights above the ellipsoid (tens of metres off sea level)"
+  },
+  {
+   "key": "L3/0364_BeagleMarinePark_2018_eCat130301/old/0364_beagle_park/esri_grid/grid6_ellipsoid_cube_noaa_1m.tiff",
+   "reason": "heights above the ellipsoid (tens of metres off sea level)"
+  },
+  {
+   "key": "L3/0364_BeagleMarinePark_2018_eCat130301/old/0364_beagle_park/esri_grid/grid8_ellipsoid_cube_noaa_1m.tiff",
+   "reason": "heights above the ellipsoid (tens of metres off sea level)"
+  },
+  {
+   "key": "L3/0364_BeagleMarinePark_2018_eCat130301/old/0364_beagle_park/esri_grid/grid9_ellipsoid_cube_noaa_1m.tiff",
+   "reason": "heights above the ellipsoid (tens of metres off sea level)"
+  },
+  {
+   "key": "L3/0364_BeagleMarinePark_2018_eCat130301/old2/32Bit_Geotifs/ga-0364_tile-s39-5e147-0_bathymetry_egm2008_2018_2m_epsg-4326_20220510.tiff",
+   "reason": "not a single-band depth grid (3 bands, float32)"
+  },
+  {
+   "key": "L3/0364_beagle_park/esri_grid/ga-0364_ausseabed_cube_03m_epsg-4326_20200824_ellipsoid.tiff",
+   "reason": "heights above the ellipsoid (tens of metres off sea level)"
+  },
+  {
+   "key": "L3/0364_beagle_park/esri_grid/grid0_ellipsoid_cube_noaa_1m.tiff",
+   "reason": "heights above the ellipsoid (tens of metres off sea level)"
+  },
+  {
+   "key": "L3/0364_beagle_park/esri_grid/grid10_ellipsoid_cube_noaa_1m.tiff",
+   "reason": "heights above the ellipsoid (tens of metres off sea level)"
+  },
+  {
+   "key": "L3/0364_beagle_park/esri_grid/grid12_ellipsoid_cube_noaa_1m.tiff",
+   "reason": "heights above the ellipsoid (tens of metres off sea level)"
+  },
+  {
+   "key": "L3/0364_beagle_park/esri_grid/grid1_ellipsoid_cube_noaa_1m.tiff",
+   "reason": "heights above the ellipsoid (tens of metres off sea level)"
+  },
+  {
+   "key": "L3/0364_beagle_park/esri_grid/grid2_ellipsoid_cube_noaa_1m.tiff",
+   "reason": "heights above the ellipsoid (tens of metres off sea level)"
+  },
+  {
+   "key": "L3/0364_beagle_park/esri_grid/grid3_ellipsoid_cube_noaa_1m.tiff",
+   "reason": "heights above the ellipsoid (tens of metres off sea level)"
+  },
+  {
+   "key": "L3/0364_beagle_park/esri_grid/grid4_ellipsoid_cube_noaa_1m.tiff",
+   "reason": "heights above the ellipsoid (tens of metres off sea level)"
+  },
+  {
+   "key": "L3/0364_beagle_park/esri_grid/grid5_ellipsoid_cube_noaa_1m.tiff",
+   "reason": "heights above the ellipsoid (tens of metres off sea level)"
+  },
+  {
+   "key": "L3/0364_beagle_park/esri_grid/grid6_ellipsoid_cube_noaa_1m.tiff",
+   "reason": "heights above the ellipsoid (tens of metres off sea level)"
+  },
+  {
+   "key": "L3/0364_beagle_park/esri_grid/grid8_ellipsoid_cube_noaa_1m.tiff",
+   "reason": "heights above the ellipsoid (tens of metres off sea level)"
+  },
+  {
+   "key": "L3/0364_beagle_park/esri_grid/grid9_ellipsoid_cube_noaa_1m.tiff",
+   "reason": "heights above the ellipsoid (tens of metres off sea level)"
+  },
+  {
+   "key": "L3/20210002S_VanderfordGlacier_eCat147241/32Bit_Geotifs/20210002S_casey_cube_5m_epsg-32749_egm2008_20220621_06.tiff",
+   "reason": "outside Australian waters"
+  },
+  {
+   "key": "L3/20210002S_VanderfordGlacier_eCat147241/32Bit_Geotifs/20210002S_davis_cube_16m_epsg-4326_egm2008_20220621_07.tiff",
+   "reason": "outside Australian waters"
+  },
+  {
+   "key": "L3/20210002S_VanderfordGlacier_eCat147241/32Bit_Geotifs/20210002S_vincennesbay_cube_5m_epsg-32749_egm2008_20220621_04.tiff",
+   "reason": "outside Australian waters"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C.tiff",
+   "reason": "not a single-band depth grid (3 bands, float32)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Resolution Check/failed_resolution_0_0.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Resolution Check/failed_resolution_0_2000.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Resolution Check/failed_resolution_0_4000.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Resolution Check/failed_resolution_0_6000.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Resolution Check/failed_resolution_10000_0.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Resolution Check/failed_resolution_10000_2000.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Resolution Check/failed_resolution_10000_4000.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Resolution Check/failed_resolution_10000_6000.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Resolution Check/failed_resolution_2000_0.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Resolution Check/failed_resolution_2000_2000.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Resolution Check/failed_resolution_2000_4000.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Resolution Check/failed_resolution_2000_6000.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Resolution Check/failed_resolution_4000_0.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Resolution Check/failed_resolution_4000_2000.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Resolution Check/failed_resolution_4000_4000.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Resolution Check/failed_resolution_4000_6000.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Resolution Check/failed_resolution_6000_0.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Resolution Check/failed_resolution_6000_2000.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Resolution Check/failed_resolution_6000_4000.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Resolution Check/failed_resolution_6000_6000.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Resolution Check/failed_resolution_8000_0.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Resolution Check/failed_resolution_8000_2000.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Resolution Check/failed_resolution_8000_4000.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/20220004C/Resolution Check/failed_resolution_8000_6000.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_deleteme_3bandsCaris.tiff",
+   "reason": "not a single-band depth grid (3 bands, float32)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_deleteme_3bandsQax.tiff",
+   "reason": "not a single-band depth grid (3 bands, float32)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010.tiff",
+   "reason": "not a single-band depth grid (3 bands, float32)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Resolution Check/failed_resolution_0_0.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Resolution Check/failed_resolution_0_2000.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Resolution Check/failed_resolution_0_4000.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Resolution Check/failed_resolution_0_6000.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Resolution Check/failed_resolution_10000_0.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Resolution Check/failed_resolution_10000_2000.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Resolution Check/failed_resolution_10000_4000.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Resolution Check/failed_resolution_10000_6000.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Resolution Check/failed_resolution_2000_0.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Resolution Check/failed_resolution_2000_2000.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Resolution Check/failed_resolution_2000_4000.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Resolution Check/failed_resolution_2000_6000.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Resolution Check/failed_resolution_4000_0.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Resolution Check/failed_resolution_4000_2000.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Resolution Check/failed_resolution_4000_4000.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Resolution Check/failed_resolution_4000_6000.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Resolution Check/failed_resolution_6000_0.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Resolution Check/failed_resolution_6000_2000.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Resolution Check/failed_resolution_6000_4000.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Resolution Check/failed_resolution_6000_6000.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Resolution Check/failed_resolution_8000_0.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Resolution Check/failed_resolution_8000_2000.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Resolution Check/failed_resolution_8000_4000.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220004C_KerguelenPlateau/QAX/kerg_dem_100m_2010/Resolution Check/failed_resolution_8000_6000.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C.tiff",
+   "reason": "not a single-band depth grid (3 bands, float32)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Resolution Check/failed_resolution_0_0.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Resolution Check/failed_resolution_0_2000.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Resolution Check/failed_resolution_0_4000.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Resolution Check/failed_resolution_0_6000.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Resolution Check/failed_resolution_2000_0.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Resolution Check/failed_resolution_2000_2000.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Resolution Check/failed_resolution_2000_4000.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Resolution Check/failed_resolution_2000_6000.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Resolution Check/failed_resolution_4000_0.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Resolution Check/failed_resolution_4000_2000.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Resolution Check/failed_resolution_4000_4000.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Resolution Check/failed_resolution_4000_6000.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Resolution Check/failed_resolution_6000_0.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Resolution Check/failed_resolution_6000_2000.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Resolution Check/failed_resolution_6000_4000.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Resolution Check/failed_resolution_6000_6000.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Resolution Check/failed_resolution_8000_0.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Resolution Check/failed_resolution_8000_2000.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Resolution Check/failed_resolution_8000_4000.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20220005C_WilliamsRidge/QAX/20220005C/Resolution Check/failed_resolution_8000_6000.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/20230017R_AHOReferenceSurfacesHobart/32Bit_Geotiff/20230017R_AHOReferenceSurfacesHobart_2023_Site1_50cm_itrf2014utmzone55s_ELL_20231214.tiff",
+   "reason": "heights above the ellipsoid (tens of metres off sea level)"
+  },
+  {
+   "key": "L3/20230017R_AHOReferenceSurfacesHobart/32Bit_Geotiff/20230017R_AHOReferenceSurfacesHobart_2023_Site2_1m_itrf2014utmzone55s_ELL_20231215.tiff",
+   "reason": "heights above the ellipsoid (tens of metres off sea level)"
+  },
+  {
+   "key": "L3/20230017R_AHOReferenceSurfacesHobart/32Bit_Geotiff/20230017R_AHOReferenceSurfacesHobart_2023_Site3_1m_epsg32755_ELL_20231215.tiff",
+   "reason": "heights above the ellipsoid (tens of metres off sea level)"
+  },
+  {
+   "key": "L3/20230017R_AHOReferenceSurfacesHobart/32Bit_Geotiff/20230017R_AHOReferenceSurfacesHobart_2023_Site3_1m_itrf2014utmzone55s_ELL_20231215.tiff",
+   "reason": "heights above the ellipsoid (tens of metres off sea level)"
+  },
+  {
+   "key": "L3/20230019R_AHOReferenceSurfacesRottnest/32Bit_Geotiff/20230019R_AHOReferenceSurfacesRottnest_2023_Site1_50cm_epsg32750_ELL_20240326.tiff",
+   "reason": "heights above the ellipsoid (tens of metres off sea level)"
+  },
+  {
+   "key": "L3/20230019R_AHOReferenceSurfacesRottnest/32Bit_Geotiff/20230019R_AHOReferenceSurfacesRottnest_2023_Site2_2m_epsg32750_ELL_20240326.tiff",
+   "reason": "heights above the ellipsoid (tens of metres off sea level)"
+  },
+  {
+   "key": "L3/2354_EM300Trials_GeoCAT75906/04_Imagery/GA-2354_01_10m.tif",
+   "reason": "not a single-band depth grid (3 bands, uint8)"
+  },
+  {
+   "key": "L3/2354_EM300Trials_GeoCAT75906/04_Imagery/GA-2354_02_40m.tif",
+   "reason": "not a single-band depth grid (3 bands, uint8)"
+  },
+  {
+   "key": "L3/2354_EM300Trials_GeoCAT75906/04_Imagery/GA-2354_ALL.tif",
+   "reason": "not a single-band depth grid (3 bands, uint8)"
+  },
+  {
+   "key": "L3/2413_NSWContinentalSlopes_2006_eCat75122/04_Imagery/GA-2413_50m_600dpi.tif",
+   "reason": "not a single-band depth grid (3 bands, uint8)"
+  },
+  {
+   "key": "L3/4301_DavisHarbour_2010_eCat76729/03_GEOTIFS/GA-4301_UTM43S_2m.tiff",
+   "reason": "outside Australian waters"
+  },
+  {
+   "key": "L3/4452_bynoe_harbour/V1/32Bit_Geotifs/ga-4452_sol6432_ausseabed_cube_02m_ellipsoid_epsg-4326_20201130.tiff",
+   "reason": "heights above the ellipsoid (tens of metres off sea level)"
+  },
+  {
+   "key": "L3/4848_middleton_reef/geotiff/ga-4848_ausseabed_cube_05m_ellipsoid_epsg-4326_20201020.tiff",
+   "reason": "heights above the ellipsoid (tens of metres off sea level)"
+  },
+  {
+   "key": "L3/Apollo_Bay/arcgis/rasters/Apollo_CMR_HsV3_2m_MGA54_AHD.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/Apollo_Bay/arcgis/rasters/Apollo_CMR_HsV5_2m_MGA54_AHD.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/Apollo_Bay/arcgis/rasters/City_of_Rayville_CMR_HsV3_2m_MGA54_AHD.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/BremerDenmarkSubBasins_eCat132281/06_Metadata/Bremer_Denmark_Overview_600dpi.tif",
+   "reason": "not a single-band depth grid (3 bands, uint8)"
+  },
+  {
+   "key": "L3/Bremer_Marine_Park_2018_eCat130839/Bremer_MP_100m_Interp_TIF.tif",
+   "reason": "can't read header: no CRS"
+  },
+  {
+   "key": "L3/DHJ_SAS_5m/DHJ_SAS_5m_WGS84.tif",
+   "reason": "not a single-band depth grid (1 bands, uint16)"
+  },
+  {
+   "key": "L3/Fugro_AUV_5m/Fugro_AUV_5m_WGS84.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/Fugro_DT_5m/Fugro_DT_5m_WGS84.tif",
+   "reason": "not a single-band depth grid (1 bands, uint8)"
+  },
+  {
+   "key": "L3/GBR_100m_Beaman_eCat133163/04_GEOTIF/Geotif_Hillshade_Image_18000x19000_pixels/Depth_Scale_TIFF.tif",
+   "reason": "can't read header: no CRS"
+  },
+  {
+   "key": "L3/GBR_100m_Beaman_eCat133163/04_GEOTIF/Geotif_Hillshade_Image_18000x19000_pixels/gbr100_02Sep17.tiff",
+   "reason": "not a single-band depth grid (4 bands, uint8)"
+  },
+  {
+   "key": "L3/GBR_30m_Beaman_eCAT_115066/04_GEOTIF/gbr30_all.tif",
+   "reason": "not a single-band depth grid (3 bands, uint8)"
+  },
+  {
+   "key": "L3/Geographe_Marine_Park_eCat121158/03_ESRI_RASTER/GeogBathy5m.tif",
+   "reason": "not a single-band depth grid (3 bands, uint8)"
+  },
+  {
+   "key": "L3/Geographe_Marine_Park_eCat121158/05_IMAGERY/Geographe_MP_Morphological_Surfaces.tif",
+   "reason": "not a single-band depth grid (3 bands, uint8)"
+  },
+  {
+   "key": "L3/Geographe_Marine_Park_eCat121158/05_IMAGERY/Geographe_MP_Surfaces.tif",
+   "reason": "not a single-band depth grid (3 bands, uint8)"
+  },
+  {
+   "key": "L3/Geographe_Marine_Park_eCat121158/05_IMAGERY/Geographe_Marine_Park_5m_Inetrp.tif",
+   "reason": "not a single-band depth grid (3 bands, uint8)"
+  },
+  {
+   "key": "L3/Gifford_Marine_Park_eCat121193/05_IMAGERY/Gifford_Marine_Park_30m_Interp.tif",
+   "reason": "not a single-band depth grid (3 bands, uint8)"
+  },
+  {
+   "key": "L3/Gifford_Marine_Park_eCat121193/05_IMAGERY/Gifford_Marine_Park_Morphological_Surfaces.tif",
+   "reason": "not a single-band depth grid (3 bands, uint8)"
+  },
+  {
+   "key": "L3/GoPhoenix_SAS_5m/GoPhoenix_SAS_5m_WGS84.tif",
+   "reason": "not a single-band depth grid (1 bands, uint16)"
+  },
+  {
+   "key": "L3/NorthAustralia_30m_Beaman_eCat121620/05_GEOTIF/nthaus30m_a.tif",
+   "reason": "not a single-band depth grid (3 bands, uint8)"
+  },
+  {
+   "key": "L3/NorthAustralia_30m_Beaman_eCat121620/05_GEOTIF/nthaus30m_b.tif",
+   "reason": "not a single-band depth grid (3 bands, uint8)"
+  },
+  {
+   "key": "L3/NorthAustralia_30m_Beaman_eCat121620/05_GEOTIF/nthaus30m_c.tif",
+   "reason": "not a single-band depth grid (3 bands, uint8)"
+  },
+  {
+   "key": "L3/NorthAustralia_30m_Beaman_eCat121620/05_GEOTIF/nthaus30m_d.tif",
+   "reason": "not a single-band depth grid (3 bands, uint8)"
+  },
+  {
+   "key": "L3/Perth_Canyon_Marine_Park_eCat121172/03_ESRI_RASTER/PerthBathy40m.tif",
+   "reason": "not a single-band depth grid (3 bands, uint16)"
+  },
+  {
+   "key": "L3/Perth_Canyon_Marine_Park_eCat121172/05_IMAGERY/Perth_Canyon_MP_Bathymetry_40m.tif",
+   "reason": "not a single-band depth grid (3 bands, uint8)"
+  },
+  {
+   "key": "L3/Perth_Canyon_Marine_Park_eCat121172/05_IMAGERY/Perth_Canyon_MP_Morphological_Surfaces_40m.tif",
+   "reason": "not a single-band depth grid (3 bands, uint8)"
+  },
+  {
+   "key": "L3/ga-4886_VanderfordGlacier/32Bit_Geotifs/GeoTIFFs/GA4886_Grid1_Three_Band.tiff",
+   "reason": "not a single-band depth grid (3 bands, float32)"
+  },
+  {
+   "key": "L3/ga-4886_VanderfordGlacier/32Bit_Geotifs/GeoTIFFs/GA4886_Grid1_Three_Band_Revision.tiff",
+   "reason": "not a single-band depth grid (3 bands, float32)"
+  },
+  {
+   "key": "L3/ga-4886_VanderfordGlacier/32Bit_Geotifs/GeoTIFFs/GA4886_Grid2_Three_Band.tiff",
+   "reason": "not a single-band depth grid (3 bands, float32)"
+  },
+  {
+   "key": "L3/ga-4886_VanderfordGlacier/32Bit_Geotifs/GeoTIFFs/GA4886_Grid3_Three_Band.tiff",
+   "reason": "not a single-band depth grid (3 bands, float32)"
+  },
+  {
+   "key": "L3/ga-4886_VanderfordGlacier/32Bit_Geotifs/ga-4866_vanderford_glacier_grid_cube_128m_epsg-32750_egm2008_20220621_3bands.tiff",
+   "reason": "not a single-band depth grid (3 bands, float32)"
+  },
+  {
+   "key": "L3/0364_BeagleMarinePark_2018_eCat130301/32Bit_Geotifs/ga-0364_beagle_nmp_tile-s40-0e146-0_cube_1m_egm2008_epsg-4326_20220604.tiff",
+   "reason": "no valid depths found in sample windows",
+   "median_diff_m": null,
+   "mad_m": null
+  },
+  {
+   "key": "L3/0364_BeagleMarinePark_2018_eCat130301/32Bit_Geotifs/ga-0364_beagle_nmp_tile-s40-0e147-0_cube_1m_egm2008_epsg-4326_20220604.tiff",
+   "reason": "no valid depths found in sample windows",
+   "median_diff_m": null,
+   "mad_m": null
+  },
+  {
+   "key": "L3/0364_BeagleMarinePark_2018_eCat130301/32Bit_Geotifs/ga-0364_beagle_nmp_tile-s40-5e145-5_cube_1m_egm2008_epsg-4326_20220604.tiff",
+   "reason": "no valid depths found in sample windows",
+   "median_diff_m": null,
+   "mad_m": null
+  },
+  {
+   "key": "L3/0364_BeagleMarinePark_2018_eCat130301/32Bit_Geotifs/ga-0364_beagle_nmp_tile-s41-0e145-5_cube_1m_egm2008_epsg-4326_20220604.tiff",
+   "reason": "no valid depths found in sample windows",
+   "median_diff_m": null,
+   "mad_m": null
+  },
+  {
+   "key": "L3/0364_BeagleMarinePark_2018_eCat130301/old2/32Bit_Geotifs/ga-0364_tile-s40-0e146-0_bathymetry_egm2008_2018_2m_epsg-4326_20220510.tiff",
+   "reason": "no valid depths found in sample windows",
+   "median_diff_m": null,
+   "mad_m": null
+  },
+  {
+   "key": "L3/0364_BeagleMarinePark_2018_eCat130301/old2/32Bit_Geotifs/ga-0364_tile-s40-5e145-5_bathymetry_egm2008_2018_2m_epsg-4326_20220511.tiff",
+   "reason": "no valid depths found in sample windows",
+   "median_diff_m": null,
+   "mad_m": null
+  },
+  {
+   "key": "L3/0364_BeagleMarinePark_2018_eCat130301/old2/32Bit_Geotifs/ga-0364_tile-s40-5e146-0_bathymetry_egm2008_2018_2m_epsg-4326_20220510.tiff",
+   "reason": "no valid depths found in sample windows",
+   "median_diff_m": null,
+   "mad_m": null
+  },
+  {
+   "key": "L3/0364_BeagleMarinePark_2018_eCat130301/old2/32Bit_Geotifs/ga-0364_tile-s41-0e145-0_bathymetry_egm2008_2018_2m_epsg-4326_20220510.tiff",
+   "reason": "no valid depths found in sample windows",
+   "median_diff_m": null,
+   "mad_m": null
+  },
+  {
+   "key": "L3/0366_Arafura_eCat145179/32Bit_Geotifs/ga-0366_arafura_marine_park_cube_06m_epsg-4326_egm2008_20210305.tiff",
+   "reason": "no valid depths found in sample windows",
+   "median_diff_m": null,
+   "mad_m": null
+  },
+  {
+   "key": "L3/2010_Cocos_Island_eCat_70663/04_32Bit_Geotifs/Cocos_10m_bathy_2010.tiff",
+   "reason": "doesn't match IMAS: median difference +0.9 m, spread 2.5 m",
+   "median_diff_m": 0.89,
+   "mad_m": 2.52
+  },
+  {
+   "key": "L3/20220017S_SolitaryIslandsGumbaynggirrYaeglMP/32Bit_Geotiff/20220017S_SolitaryIslandsGumbaynggirrYaeglMP_bckst_5m_fmgt_epsg32756_20240213.tiff",
+   "reason": "doesn't match IMAS: median difference +17.4 m, spread 3.0 m",
+   "median_diff_m": 17.43,
+   "mad_m": 3.03
+  },
+  {
+   "key": "L3/20220020S_CocosKeelingMarinePark_EOMAP_20220329.0835/32Bit_Geotiff/SDB_AUS_NorthKeeling_EOMAP_20190623T035912_2m_MSL_geotiff.tiff",
+   "reason": "doesn't match IMAS: median difference +6.3 m, spread 5.8 m",
+   "median_diff_m": 6.27,
+   "mad_m": 5.75
+  },
+  {
+   "key": "L3/20220020S_CocosKeelingMarinePark_EOMAP_20220329.0835/32Bit_Geotiff/SDB_AUS_NorthKeeling_EOMAP_20190623T035912_2m_MSL_geotiff_cog.tiff",
+   "reason": "doesn't match IMAS: median difference +31.1 m, spread 24.3 m",
+   "median_diff_m": 31.12,
+   "mad_m": 24.3
+  },
+  {
+   "key": "L3/20220021S_ChristmasIslandMarinePark_EOMAP_20220329.0835/32Bit_Geotiff/SDB_AUS_ChristmasIsland_EOMAP_20190212_20220117_2m_MSL_geotiff.tiff",
+   "reason": "doesn't match IMAS: median difference +26.3 m, spread 20.0 m",
+   "median_diff_m": 26.28,
+   "mad_m": 20.0
+  },
+  {
+   "key": "L3/20220021S_ChristmasIslandMarinePark_EOMAP_20220329.0835/32Bit_Geotiff/SDB_AUS_ChristmasIsland_EOMAP_20190212_20220117_2m_MSL_geotiff_cog.tiff",
+   "reason": "doesn't match IMAS: median difference -2.8 m, spread 19.3 m",
+   "median_diff_m": -2.79,
+   "mad_m": 19.26
+  },
+  {
+   "key": "L3/20220026C_MiddletonandElizabethReefsCoralSea/32Bit_Geotiff/20210026S_middletonandelizabethreefscoralsea_2m_msl_epsg32757_20230905_middleton.tif",
+   "reason": "doesn't match IMAS: median difference +3.8 m, spread 1.7 m",
+   "median_diff_m": 3.75,
+   "mad_m": 1.7
+  },
+  {
+   "key": "L3/20230017R_AHOReferenceSurfacesHobart/32Bit_Geotiff/20230017R_AHOReferenceSurfacesHobart_2023_Site2_1m_itrf2014utmzone55s_LAT_20231215.tiff",
+   "reason": "stated LAT but no plausible shift from IMAS (-2.6 m)",
+   "median_diff_m": -2.63,
+   "mad_m": 0.12
+  },
+  {
+   "key": "L3/4848_middleton_reef/geotiff/ga-4848_ausseabed_cube_05m_msl_epsg-4326_20201020.tiff",
+   "reason": "no valid depths found in sample windows",
+   "median_diff_m": null,
+   "mad_m": null
+  },
+  {
+   "key": "L3/4873_RaineIsland_FK210321_eCat145492/ga-4873_cube_2m_egm2008_epsg-32752_20210615_111000_01.tiff",
+   "reason": "no valid depths found in sample windows",
+   "median_diff_m": null,
+   "mad_m": null
+  },
+  {
+   "key": "L3/4873_RaineIsland_FK210321_eCat145492/ga-4873_cube_2m_egm2008_epsg-32754_20210710_222300_01.tiff",
+   "reason": "too few points overlap IMAS (0) to check the depth reference",
+   "median_diff_m": null,
+   "mad_m": null
+  },
+  {
+   "key": "L3/Apollo_Bay/arcgis/rasters/Apollo_CMR_VRM_2m_MGA54_AHD.tif",
+   "reason": "doesn't match IMAS: median difference +66.6 m, spread 0.5 m",
+   "median_diff_m": 66.59,
+   "mad_m": 0.45
+  },
+  {
+   "key": "L3/coral_sea/Products/L3/cs_01m.tiff",
+   "reason": "doesn't match IMAS: median difference -26.0 m, spread 31.6 m",
+   "median_diff_m": -25.99,
+   "mad_m": 31.63
+  },
+  {
+   "key": "L3/coral_sea/Products/L3/cs_01m_vt.tiff",
+   "reason": "doesn't match IMAS: median difference +3.2 m, spread 8.5 m",
+   "median_diff_m": 3.2,
+   "mad_m": 8.52
+  },
+  {
+   "key": "L3/coral_sea/Products/L3/cs_02m.tiff",
+   "reason": "doesn't match IMAS: median difference +0.3 m, spread 12.9 m",
+   "median_diff_m": 0.32,
+   "mad_m": 12.95
+  },
+  {
+   "key": "L3/coral_sea/Products/L3/cs_p5m.tiff",
+   "reason": "doesn't match IMAS: median difference -4.0 m, spread 25.3 m",
+   "median_diff_m": -4.01,
+   "mad_m": 25.3
+  },
+  {
+   "key": "L3/coral_sea/Products/L3/cs_p5m_vt.tiff",
+   "reason": "doesn't match IMAS: median difference +3.6 m, spread 7.2 m",
+   "median_diff_m": 3.61,
+   "mad_m": 7.18
+  },
+  {
+   "key": "L3/coral_sea/Products/L3/fn_03m_vt1.tiff",
+   "reason": "doesn't match IMAS: median difference +62.7 m, spread 16.7 m",
+   "median_diff_m": 62.69,
+   "mad_m": 16.7
+  },
+  {
+   "key": "L3/coral_sea/Products/L3/fn_03m_vt2.tiff",
+   "reason": "doesn't match IMAS: median difference +7.0 m, spread 4.5 m",
+   "median_diff_m": 6.96,
+   "mad_m": 4.52
+  },
+  {
+   "key": "L3/coral_sea/Products/L3/hc_03m_vt.tiff",
+   "reason": "doesn't match IMAS: median difference +7.6 m, spread 4.4 m",
+   "median_diff_m": 7.58,
+   "mad_m": 4.4
+  },
+  {
+   "key": "L3/coral_sea/Products/L3/mr_03m_vt.tiff",
+   "reason": "doesn't match IMAS: median difference +35.7 m, spread 11.9 m",
+   "median_diff_m": 35.68,
+   "mad_m": 11.92
+  }
+ ]
+}

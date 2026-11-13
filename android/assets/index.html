@@ -62,6 +62,19 @@ dialog::backdrop{background:rgba(8,38,48,.55)}
 .handle.m{border-radius:50%;background:var(--mark)}
 .handle.m::after{content:"";position:absolute;inset:5px;border:2px solid #fff;border-radius:50%}
 .tagwrap .tag{position:absolute;transform:translate(-50%,-140%);background:var(--mark);color:#fff;padding:3px 9px;border-radius:3px;font:600 12px/1.3 "Avenir Next","Segoe UI",system-ui,sans-serif;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.35)}
+.layers{margin-top:10px;border:1px solid var(--line);border-radius:6px;background:#fff}
+.layers .lt{padding:8px 10px;font-size:13px;color:var(--ink-2);border-bottom:1px solid var(--line)}
+.lyr{display:grid;grid-template-columns:auto 1fr auto;gap:4px 8px;align-items:start;padding:8px 10px;border-bottom:1px solid var(--line)}
+.lyr:last-child{border-bottom:0}
+.lyr.off .ln{color:var(--ink-2)}
+.lyr.hi{background:#f2e3ec}
+.lyr input{width:18px;height:18px;margin:2px 0 0;accent-color:var(--sea)}
+.lyr .ln{font-size:14px;font-weight:600;line-height:1.3}
+.lyr .lm{grid-column:2;font-size:12px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.lyr .lnote{grid-column:2/4;font-size:12px;color:var(--shoal)}
+.lyr .mv{display:flex;gap:4px}
+.lyr .mv button{min-height:30px;width:30px;padding:0;font-size:14px;line-height:1}
+.lyr a{font-size:12px;color:var(--ink-2)}
 .maptoggle{display:none;min-height:36px;padding:0 12px;background:var(--paper);border:1px solid var(--line);color:var(--ink);border-radius:6px}
 @media (max-width:819px){.maptoggle{display:block}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
@@ -353,11 +366,120 @@ dialog::backdrop{background:rgba(8,38,48,.55)}
   ["res", "crs", "resamp"].forEach((id) => $(id).addEventListener("change", markDirty));
 
   // ---------- assess
+  // Original surveys: a layer list, the top of the list wins where they overlap. (This sits after
+  // the "assess" marker on purpose: android/tools/make_page.py cuts everything above it up to the
+  // folder chooser.) The phone app sends no survey list, so none of this shows there.
+  const PREFS_KEY = "bathypicker-survey-prefs", ORDER_KEY = "bathypicker-survey-order";
+  function loadJson(key, fallback) { try { const v = JSON.parse(localStorage.getItem(key) || "null"); return v || fallback; } catch (e) { return fallback; } }
+  function saveJson(key, v) { try { localStorage.setItem(key, JSON.stringify(v)); } catch (e) {} }
+  let surveyPrefs = loadJson(PREFS_KEY, {});   // only what the user changed: id -> on/off
+  let surveyOrder = loadJson(ORDER_KEY, []);   // ids, top first, once the user has reordered
+  let baseOn = true;
+  const BLEND_KEY = "bathypicker-blend";
+  let blendOn = loadJson(BLEND_KEY, "on") !== "off";
+  const outlines = L.layerGroup().addTo(map);
+  const outlineOf = {};
+  function lyrStyle(on, hi) {
+    return { color: on ? "#0a5c6b" : "#6d8790", weight: hi ? 3 : 1.5, dashArray: on ? null : "4 4",
+             fillColor: on ? "#0a5c6b" : "#6d8790", fillOpacity: hi ? 0.3 : (on ? 0.12 : 0.04) };
+  }
+  function drawOutlines(rows) {
+    outlines.clearLayers();
+    Object.keys(outlineOf).forEach((k) => delete outlineOf[k]);
+    rows.slice().reverse().forEach((s) => {
+      const g = L.featureGroup();
+      (s.cells || []).forEach((c) => L.rectangle([[c[1], c[0]], [c[3], c[2]]], lyrStyle(s.on, false)).addTo(g));
+      g.bindTooltip(s.name + " (" + s.res_m + " m)", { sticky: true });
+      g.addTo(outlines);
+      outlineOf[s.id] = g;
+    });
+  }
+  function highlight(id, on, state) {
+    const g = outlineOf[id];
+    if (g) { g.setStyle(lyrStyle(on, state)); if (state) g.bringToFront(); }
+  }
+  function rerun() { markDirty(); $("check").click(); }
+  function moveSurvey(rows, i, d) {
+    const ids = rows.map((r) => r.id);
+    const j = i + d;
+    if (j < 0 || j >= ids.length) return;
+    [ids[i], ids[j]] = [ids[j], ids[i]];
+    surveyOrder = ids.concat(surveyOrder.filter((x) => !ids.includes(x)));
+    saveJson(ORDER_KEY, surveyOrder);
+    rerun();
+  }
+  function renderSurveys(a, out) {
+    const rows = a.surveys || [];
+    drawOutlines(rows);
+    if (!rows.length) return;
+    const wrap = el("div", "layers");
+    wrap.appendChild(el("div", "lt", "Original surveys in this box. The top of the list wins where they overlap. " +
+      "Untick any you don't want; the arrows change the order."));
+    rows.forEach((s, i) => {
+      const row = el("div", "lyr" + (s.on ? "" : " off"));
+      const cb = el("input"); cb.type = "checkbox"; cb.checked = s.on; cb.disabled = !s.usable || busy;
+      cb.setAttribute("aria-label", "Use " + s.name);
+      cb.addEventListener("change", () => {
+        if (cb.checked === s.default_on) delete surveyPrefs[s.id]; else surveyPrefs[s.id] = cb.checked;
+        saveJson(PREFS_KEY, surveyPrefs);
+        rerun();
+      });
+      row.appendChild(cb);
+      row.appendChild(el("div", "ln", s.name + (s.year && !s.name.includes(String(s.year)) ? " " + s.year : "")));
+      const mv = el("div", "mv");
+      [["↑", -1, "Move up"], ["↓", 1, "Move down"]].forEach(([t, d, lab]) => {
+        const b = el("button", "", t); b.type = "button"; b.title = lab; b.setAttribute("aria-label", lab + ": " + s.name);
+        b.disabled = busy || (i + d < 0) || (i + d >= rows.length);
+        b.addEventListener("click", () => moveSurvey(rows, i, d));
+        mv.appendChild(b);
+      });
+      row.appendChild(mv);
+      const bits = [s.res_m + " m", "up to " + Math.round(s.cover_pct) + "% of box", "reads ~" + sz(s.read_bytes)];
+      if (s.shift_m) bits.push("shifted " + (s.shift_m > 0 ? "+" : "") + s.shift_m + " m");
+      if (s.coarser) bits.push("coarser than IMAS here");
+      const meta = el("div", "lm", bits.join(" · ") + " · ");
+      const rep = el("a", "", "report a problem");
+      rep.href = (a.catalogue && a.catalogue.report_url || "") + "?title=" + encodeURIComponent("Survey: " + s.name + " (" + s.res_m + " m)") +
+        "&body=" + encodeURIComponent("Survey id: " + s.id + "\nBox: " + (a.bbox || [box.w, box.s, box.e, box.n]).map((v) => v.toFixed(4)).join(", ") + "\n\nWhat looks wrong:\n");
+      rep.target = "_blank"; rep.rel = "noopener";
+      meta.appendChild(rep);
+      row.appendChild(meta);
+      if (s.note) row.appendChild(el("div", "lnote", s.note));
+      if (!s.usable) row.appendChild(el("div", "lnote", "Needs GDAL 3.7 or newer."));
+      row.addEventListener("mouseenter", () => { row.classList.add("hi"); highlight(s.id, s.on, true); });
+      row.addEventListener("mouseleave", () => { row.classList.remove("hi"); highlight(s.id, s.on, false); });
+      wrap.appendChild(row);
+    });
+    const base = el("div", "lyr" + (baseOn ? "" : " off"));
+    const bcb = el("input"); bcb.type = "checkbox"; bcb.checked = baseOn; bcb.disabled = busy;
+    bcb.setAttribute("aria-label", "Use the IMAS composite underneath");
+    bcb.addEventListener("change", () => { baseOn = bcb.checked; rerun(); });
+    base.appendChild(bcb);
+    base.appendChild(el("div", "ln", "IMAS composite (underneath)"));
+    base.appendChild(el("div"));
+    base.appendChild(el("div", "lm", (a.imas_res_m ? a.imas_res_m + " m" : "") + " · fills everywhere the surveys don't. Untick for surveys only."));
+    wrap.appendChild(base);
+    if (baseOn) {
+      const bl = el("div", "lyr" + (blendOn ? "" : " off"));
+      const lcb = el("input"); lcb.type = "checkbox"; lcb.checked = blendOn; lcb.disabled = busy;
+      lcb.setAttribute("aria-label", "Blend survey edges into the layer underneath");
+      lcb.addEventListener("change", () => { blendOn = lcb.checked; saveJson(BLEND_KEY, blendOn ? "on" : "off"); rerun(); });
+      bl.appendChild(lcb);
+      bl.appendChild(el("div", "ln", "Blend survey edges"));
+      bl.appendChild(el("div"));
+      bl.appendChild(el("div", "lm", "Fades each survey in from what's underneath over 200\u2013500 m at its edges and gaps, " +
+        "so there's no step. Further in, the survey is used exactly. Untick for hard edges."));
+      wrap.appendChild(bl);
+    }
+    out.appendChild(wrap);
+  }
+
   function payload() {
     return {
       bbox: [box.w, box.s, box.e, box.n],
       zones: Array.from(document.querySelectorAll("#zones input:checked")).map((c) => c.value),
-      crs: $("crs").value, resolution: $("res").value, resampling: $("resamp").value, out_dir: $("outdir").value.trim()
+      crs: $("crs").value, resolution: $("res").value, resampling: $("resamp").value, out_dir: $("outdir").value.trim(),
+      base: baseOn, survey_prefs: surveyPrefs, survey_order: surveyOrder, blend: blendOn
     };
   }
   function markDirty() {
@@ -373,6 +495,7 @@ dialog::backdrop{background:rgba(8,38,48,.55)}
       const s = document.querySelector('[data-res="' + z.key + '"]');
       if (s) s.textContent = z.covered ? (z.native_res_m + " m") : "no coverage";
     });
+    renderSurveys(a, out);
     if (a.res_m) {
       const t = el("table");
       const add = (k, v) => { const tr = el("tr"); tr.appendChild(el("th", "", k)); tr.appendChild(el("td", "", v)); t.appendChild(tr); };
@@ -428,6 +551,8 @@ dialog::backdrop{background:rgba(8,38,48,.55)}
       if (r.size_px) add("Size", r.size_px[0].toLocaleString() + " \u00d7 " + r.size_px[1].toLocaleString() + " px at " + r.res_m + " m");
       if (r.min !== null && r.max !== null) add("Values", r.min.toFixed(1) + " to " + r.max.toFixed(1));
       if (r.valid_percent !== null) add("Has data", r.valid_percent.toFixed(0) + "% of the box");
+      if (r.surveys_used && r.surveys_used.length) add("Surveys", r.surveys_used.join(", "));
+      if (r.sources_path) add("Credits", r.sources_path);
       b.appendChild(t);
       if (r.valid_percent !== null && r.valid_percent < 1) b.appendChild(el("p", "", "Almost all of this box is empty. It may be land or outside Australian waters."));
       if (r.uri) {

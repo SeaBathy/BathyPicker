@@ -40,6 +40,9 @@ sub("The script pulls every depth layer for it from IMAS and merges them into on
     "The app pulls every depth layer for it from IMAS and merges them into one GeoTIFF.")
 sub("<h1>Seafloor GeoTIFF picker</h1>", "<h1>BathyPicker</h1>")
 
+# The phone engine reads the IMAS composite only (10 m at best), so no sub-10 m detail options.
+sub('          <option value="0.5">0.5 m</option><option value="1">1 m</option><option value="2">2 m</option><option value="5">5 m</option>\n', "")
+
 # No GDAL to set up.
 cut('  <section id="setup" hidden', '  <section aria-labelledby="h-area">')
 cut("  // ---------- one-time GDAL setup", "  place(); syncInputs(true); refreshButtons();")
