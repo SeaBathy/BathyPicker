@@ -46,6 +46,11 @@ public final class Credits {
             }
             lines.add("");
         }
+        // What CC BY 4.0 asks for besides the credits themselves (the same text as the desktop's).
+        lines.add("Changes: the data above was reprojected and resampled onto this file's grid and merged into one "
+                + "layer; surveys shifted to sea level or blended at their edges are noted above.");
+        lines.add("Licence for all data above: CC BY 4.0, https://creativecommons.org/licenses/by/4.0/");
+        lines.add("");
         return String.join("\n", lines);
     }
 }

@@ -2,7 +2,7 @@ package com.seabathy.bathypicker;
 
 /** Keep in step with versionName in AndroidManifest.xml. */
 final class BuildConfig {
-    static final String VERSION = "1.2";
+    static final String VERSION = "1.2.1";
 
     private BuildConfig() {}
 }

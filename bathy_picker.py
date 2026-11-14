@@ -60,7 +60,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, unquote, urlparse
 
-APP_VERSION = "1.2"
+APP_VERSION = "1.2.1"
 BASE_URL = "https://data.imas.utas.edu.au/attachments/69e9ac91-babe-47ed-8c37-0ef08f29338a/bathymetry/"
 DOI_URL = "https://doi.org/10.25959/Y9VF-V723"
 CITATION = (
@@ -944,6 +944,12 @@ def raster_max(tools: Tools, path: Path) -> float:
     return float(band.get("maximum", 0.0))
 
 
+# What CC BY 4.0 asks for besides the credits themselves: say the data was changed, and link the licence.
+CHANGES_NOTE = ("Changes: the data above was reprojected and resampled onto this file's grid and merged into one "
+                "layer; surveys shifted to sea level or blended at their edges are noted above.")
+LICENCE_NOTE = "Licence for all data above: CC BY 4.0, https://creativecommons.org/licenses/by/4.0/"
+
+
 def sources_text(plan: dict, final_name: str) -> str:
     """Credits for everything that went into one GeoTIFF (CC BY 4.0 asks for them)."""
     lines = [f"Sources for {final_name}", f"Made with BathyPicker {APP_VERSION} on {time.strftime('%Y-%m-%d')}. Not for navigation.", ""]
@@ -968,6 +974,7 @@ def sources_text(plan: dict, final_name: str) -> str:
             for u in s["urls"]:
                 lines.append(f"    {u}")
         lines.append("")
+    lines += [CHANGES_NOTE, LICENCE_NOTE, ""]
     return "\n".join(lines)
 
 

@@ -5,7 +5,7 @@ Draw a box, get one depth GeoTIFF: 10 m detail along the coast, and down to 0.5 
 original survey exists. Free and open source.</p>
 
 <p align="center">
-  <img alt="Version 1.2" src="https://img.shields.io/badge/version-1.2-0f766e">
+  <img alt="Version 1.2.1" src="https://img.shields.io/badge/version-1.2.1-0f766e">
   <img alt="Windows, macOS, Linux or Android" src="https://img.shields.io/badge/runs%20on-Windows%20%7C%20macOS%20%7C%20Linux%20%7C%20Android-0078d4">
   <img alt="Python 3.8+" src="https://img.shields.io/badge/Python-3.8%2B-3776ab?logo=python&logoColor=white">
   <img alt="Data IMAS and AusSeabed, CC BY 4.0" src="https://img.shields.io/badge/data-IMAS%20%2B%20AusSeabed%20CC%20BY%204.0-orange">
