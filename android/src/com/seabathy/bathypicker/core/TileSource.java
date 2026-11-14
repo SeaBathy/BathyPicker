@@ -133,7 +133,8 @@ public final class TileSource {
                             bytesDownloaded.addAndGet(len);
                             for (int tx = first; tx <= last; tx++) {
                                 int o = (int) (off[tx] - start);
-                                finish(owned, key(t, L, tx, fty), Arrays.copyOfRange(data, o, o + (int) cnt[tx]));
+                                finish(owned, key(t, L, tx, fty),
+                                        t.pack(L, fty, Arrays.copyOfRange(data, o, o + (int) cnt[tx]), off[tx], cancel));
                             }
                         } catch (Exception ex) {
                             for (int tx = first; tx <= last; tx++) fail(owned, key(t, L, tx, fty), ex);

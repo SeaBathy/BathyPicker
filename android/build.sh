@@ -26,10 +26,13 @@ KSPASS="$(cat keystore/password.txt)"
 python -I tools/make_page.py
 
 rm -rf build/apk && mkdir -p build/apk/res build/apk/gen build/apk/classes build/apk/dex
+# The page and Leaflet, plus the survey list so it works offline (the app fetches a newer list when online).
+cp -r assets build/apk/assets
+cp ../catalogue/surveys.json build/apk/assets/surveys.json
 
 "$BT/aapt2$EXE" compile --dir res -o build/apk/res/compiled.zip
 "$BT/aapt2$EXE" link -o build/apk/unsigned.apk -I "$JAR" \
-    --manifest AndroidManifest.xml --java build/apk/gen -A assets \
+    --manifest AndroidManifest.xml --java build/apk/gen -A build/apk/assets \
     --min-sdk-version 24 --target-sdk-version 35 \
     build/apk/res/compiled.zip
 

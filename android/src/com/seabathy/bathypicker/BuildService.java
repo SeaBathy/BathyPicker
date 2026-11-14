@@ -15,10 +15,12 @@ import android.os.IBinder;
 import android.os.PowerManager;
 
 import com.seabathy.bathypicker.core.Builder;
+import com.seabathy.bathypicker.core.Credits;
 import com.seabathy.bathypicker.core.Job;
 import com.seabathy.bathypicker.core.Planner;
 import com.seabathy.bathypicker.core.TileSource;
 
+import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.util.Map;
 
@@ -101,11 +103,20 @@ public final class BuildService extends Service {
             long budget = Math.max(48L << 20, Runtime.getRuntime().maxMemory() / 3);
             TileSource tiles = new TileSource(e.net, budget);
             Builder b = new Builder(plan, job, tiles, e.workers);
+            b.workDir = getCacheDir();
             Map<String, Object> r = b.run(out.write, out.read);
             if (job.cancelled()) throw new InterruptedIOException("Cancelled");
             job.progress(99.5, "Saving to Downloads");
             Uri uri = out.publish();
             out = null;
+            // Credits for everything in the file (CC BY 4.0 asks for them), as the desktop writes them.
+            String stem = plan.filename.replaceAll("\\.tif$", "");
+            try {
+                r.put("sources_path", Output.writeText(this, stem + "_sources.txt", Credits.text(plan, plan.filename, BuildConfig.VERSION)));
+            } catch (IOException ex) {
+                job.add("Couldn't save the credits file: " + ex.getMessage());
+                r.put("sources_path", null);
+            }
             r.put("path", Engine.OUT_LABEL + "/" + plan.filename);
             r.put("uri", uri != null ? uri.toString() : null);
             job.done(r);

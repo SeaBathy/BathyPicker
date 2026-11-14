@@ -50,13 +50,13 @@ builds the file right on your phone.
 |---|---|
 | 🗺️ **Pick on a map** | Drag a box over any Australian waters on a satellite or street map, type the corners, or jump to a preset. |
 | 🧩 **One merged file** | All 8 depth zones (shallow, mesophotic, rariphotic, upper, mid and lower slope, abyss, hadal) merged into a single Cloud-Optimized GeoTIFF. |
-| 🔍 **Original surveys on top** | Where a finer survey exists (0.2–7 m), it goes on top of IMAS. You choose which, and in what order. Desktop only. |
+| 🔍 **Original surveys on top** | Where a finer survey exists (0.2–7 m), it goes on top of IMAS. You choose which, and in what order. On the computer and the phone. |
 | 🪡 **No steps at survey edges** | Each survey fades into what's underneath over 200–500 m at its edges, so there's no cliff where it ends. Further in, its depths are exact. |
 | ⚡ **Only what you need** | Streams just your box from the IMAS and AusSeabed servers, never whole files. |
 | 📏 **Sensible sizes** | *Check size* shows the pixels and file size first. *Automatic* detail picks the finest that fits under 8 GB. |
 | 📝 **Credits included** | Every GeoTIFF gets a `_sources.txt` file listing the data used, for the CC BY 4.0 credit. |
 | 🧭 **Your choice of coordinates** | WGS84 lat/long (what SeaBathy and most apps read) or GDA2020 Australian Albers (metres). |
-| 📱 **Android app** | The same map as a phone app. Builds the GeoTIFF on the phone, saves it to Downloads and opens it straight in SeaBathy. It uses the IMAS composite only (no original surveys yet). |
+| 📱 **Android app** | The same map as a phone app, original surveys and blended edges included. Builds the GeoTIFF on the phone, saves it to Downloads and opens it straight in SeaBathy. |
 | 🔧 **Nothing to install** | A single Windows exe, or one Python file with no packages. GDAL is set up for you the first time. |
 
 ## Download and run
@@ -94,15 +94,16 @@ Or install GDAL yourself: `sudo apt install gdal-bin` (Ubuntu/Debian), `brew ins
 
 ## Android app
 
-The same page as a phone app, for Android 7.0 or newer. **It uses the IMAS composite only:** the
-original surveys (see [below](#original-surveys-on-top)) are on the computer version for now.
-Draw your box, press *Check size*,
-then *Build GeoTIFF*. The file is saved in **Download/BathyPicker**, and *Open* or *Share*
+The same page as a phone app, for Android 7.0 or newer, with the
+[original surveys](#original-surveys-on-top) and their blended edges, just like the computer
+version. Draw your box, press *Check size*, tick the surveys you want, then *Build GeoTIFF*. The
+file is saved in **Download/BathyPicker** with its `_sources.txt` credits, and *Open* or *Share*
 sends it straight to SeaBathy or anywhere else.
 
 <p align="center">
-  <img src="screenshots/android-check.jpg" width="270" alt="BathyPicker on Android: the Whitsundays box with Check size showing 10 m detail and 142 MB">
-  <img src="screenshots/android-done.jpg" width="270" alt="BathyPicker on Android: the finished GeoTIFF with Open and Share buttons">
+  <img src="screenshots/android-check.jpg" width="250" alt="BathyPicker on Android: the Whitsundays box with Check size showing 10 m detail and 142 MB">
+  <img src="screenshots/android-surveys.jpg" width="250" alt="BathyPicker on Android: Check size listing the original surveys in a Darwin Harbour box, with tick boxes and arrows">
+  <img src="screenshots/android-done.jpg" width="250" alt="BathyPicker on Android: the finished GeoTIFF with nine surveys, the credits file, and Open and Share buttons">
 </p>
 
 - **Install:** download [`BathyPicker.apk`](download/BathyPicker.apk) on the phone and tap it.
@@ -110,9 +111,14 @@ sends it straight to SeaBathy or anywhere else.
   **Settings**, turn on **Allow from this source**, go back and tap **Install**. If Play Protect
   says it doesn't recognise the app (it isn't from the Play Store), tap **More details**, then
   **Install anyway**.
-- **No GDAL needed.** The app has its own small engine that reads just your box from IMAS,
-  reprojects it and merges the depth zones the same way `gdalwarp` does. Its files were checked
-  pixel by pixel against `gdalwarp` and match.
+- **No GDAL needed.** The app has its own small engine that reads just your box from IMAS and
+  the surveys, reprojects it, and merges and blends the layers the way the computer version's
+  GDAL does. Its files were checked pixel by pixel against GDAL in 26 test boxes across every
+  state, with blended and hard edges, and with 9 surveys stacked at Darwin: the same pixels
+  filled, and the same depths to within about a millimetre (mostly within 0.1 mm). See
+  [`android/`](android) for how.
+- **One survey needs the computer version:** Zeehan and Franklin Marine Parks (west Tasmania)
+  uses a compression the phone can't read, so the app lists it but leaves it out.
 - **Size limit 3 GB** (8 GB on a computer). *Automatic* detail picks the finest that fits.
 - **Keeps going in the background** with a progress notification, even with the screen off.
   *Cancel* leaves nothing behind.
@@ -139,7 +145,7 @@ IMAS is 10 m at best. Many places around Australia were surveyed in much finer d
 those surveys are free to use (CC BY 4.0) on [AusSeabed](https://www.ausseabed.gov.au)'s public
 download site. BathyPicker keeps a list of about 120 of them that are finer than IMAS and lays
 the ones in your box on top. It reads just your box from each survey; nothing is stored by
-SeaBathy. This is on the computer version (Windows exe or Python); the Android app uses IMAS only.
+SeaBathy. It works the same on the computer (Windows exe or Python) and in the Android app.
 
 <p align="center"><img src="screenshots/surveys-before-after.jpg" width="860" alt="Middleton Reef in the Coral Sea: on the left the IMAS composite alone, a smooth blur at 10 m; on the right with the 2 m survey on top, showing every pool and patch of the reef, blended into IMAS at its edges"></p>
 

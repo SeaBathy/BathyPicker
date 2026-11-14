@@ -3,6 +3,8 @@ import com.seabathy.bathypicker.core.Catalog;
 import com.seabathy.bathypicker.core.Job;
 import com.seabathy.bathypicker.core.Planner;
 import com.seabathy.bathypicker.core.TileSource;
+import com.seabathy.bathypicker.core.Surveys;
+import com.seabathy.bathypicker.core.Credits;
 
 import java.io.File;
 import java.io.RandomAccessFile;
@@ -32,8 +34,24 @@ public class DesktopBuild {
         ExecutorService work = Executors.newFixedThreadPool(4);
         Catalog cat = new Catalog(net);
         Job job = new Job();
-        Planner.Params p = Planner.parse(bbox, zones, a[5], a[4], a[6]);
-        Planner.Plan plan = Planner.assess(p, cat, 3.0, new File(a[8]).getAbsoluteFile().getParentFile().getUsableSpace(), "here", job);
+        // Surveys: -Dcatalogue=surveys.json [-Dsurveys=default|none] [-Dblend=false] [-Dbase=false] [-Dorder=id,id] [-Dprefs=id:1,id:0]
+        Surveys surveys = null;
+        if (System.getProperty("catalogue") != null) {
+            surveys = Surveys.parse(new String(java.nio.file.Files.readAllBytes(new File(System.getProperty("catalogue")).toPath()),
+                    java.nio.charset.StandardCharsets.UTF_8), "file");
+            if (surveys == null) throw new IllegalArgumentException("Not a survey catalogue: " + System.getProperty("catalogue"));
+        }
+        java.util.Map<String, Boolean> prefs = new java.util.HashMap<>();
+        if (System.getProperty("prefs") != null) {
+            for (String kv : System.getProperty("prefs").split(",")) {
+                String[] p2 = kv.split(":");
+                prefs.put(p2[0], p2[1].equals("1"));
+            }
+        }
+        List<String> order = System.getProperty("order") == null ? null : Arrays.asList(System.getProperty("order").split(","));
+        Planner.Params p = Planner.parse(bbox, zones, !"false".equals(System.getProperty("base")), a[5], a[4], a[6],
+                System.getProperty("surveys", surveys == null ? "none" : "default"), prefs, order, !"false".equals(System.getProperty("blend")));
+        Planner.Plan plan = Planner.assess(p, cat, surveys, 3.0, new File(a[8]).getAbsoluteFile().getParentFile().getUsableSpace(), "here", job);
         System.out.println("assess: " + plan.json);
         if (!(Boolean) plan.json.get("ok")) System.exit(1);
         job.start();
@@ -55,6 +73,9 @@ public class DesktopBuild {
             job.done(r);
             System.out.println("result: " + r);
         }
+        String name = new File(a[8]).getName();
+        java.nio.file.Files.write(new File(a[8].replaceAll("\\.tif$", "") + "_sources.txt").toPath(),
+                Credits.text(plan, name, "test").getBytes(java.nio.charset.StandardCharsets.UTF_8));
         System.out.println("log: " + job.snapshot().get("log"));
         System.out.printf("seconds: %.1f%n", (System.currentTimeMillis() - t0) / 1000.0);
         net.shutdownNow();

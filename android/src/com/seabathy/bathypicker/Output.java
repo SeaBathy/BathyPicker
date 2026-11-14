@@ -91,6 +91,30 @@ final class Output {
         return found[0];
     }
 
+    /** A small text file next to the GeoTIFF (the _sources.txt credits). Returns its path as shown on the page. */
+    static String writeText(Context ctx, String name, String text) throws IOException {
+        byte[] bytes = text.getBytes("UTF-8");
+        if (Build.VERSION.SDK_INT >= 29) {
+            ContentResolver cr = ctx.getContentResolver();
+            ContentValues v = new ContentValues();
+            v.put(MediaStore.MediaColumns.DISPLAY_NAME, name);
+            v.put(MediaStore.MediaColumns.MIME_TYPE, "text/plain");
+            v.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS + "/" + Engine.FOLDER);
+            Uri u = cr.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, v);
+            if (u == null) throw new IOException("Couldn't create " + name + " in Downloads.");
+            try (java.io.OutputStream out = cr.openOutputStream(u)) {
+                if (out == null) throw new IOException("Couldn't open " + name + " in Downloads.");
+                out.write(bytes);
+            }
+        } else {
+            File dir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), Engine.FOLDER);
+            try (FileOutputStream out = new FileOutputStream(new File(dir, name))) {
+                out.write(bytes);
+            }
+        }
+        return Engine.OUT_LABEL + "/" + name;
+    }
+
     /** Remove an unfinished file. */
     void discard() {
         close();

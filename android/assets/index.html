@@ -86,7 +86,7 @@ dialog::backdrop{background:rgba(8,38,48,.55)}
 <div id="panel">
   <div>
     <h1>BathyPicker</h1>
-    <p class="lede">Drag the box over Australian waters. The app pulls every depth layer for it from IMAS and merges them into one GeoTIFF.</p>
+    <p class="lede">Drag the box over Australian waters. The app pulls every depth layer for it from IMAS, with any finer original surveys on top, and merges them into one GeoTIFF.</p>
   </div>
 
   <section aria-labelledby="h-area">
@@ -124,6 +124,7 @@ dialog::backdrop{background:rgba(8,38,48,.55)}
         <select id="res">
           <option value="auto">Automatic</option>
           <option value="finest">Full detail</option>
+          <option value="0.5">0.5 m</option><option value="1">1 m</option><option value="2">2 m</option><option value="5">5 m</option>
           <option value="10">10 m</option><option value="20">20 m</option><option value="30">30 m</option>
           <option value="50">50 m</option><option value="100">100 m</option><option value="250">250 m</option>
           <option value="500">500 m</option><option value="1000">1 km</option>
@@ -368,7 +369,7 @@ dialog::backdrop{background:rgba(8,38,48,.55)}
   // ---------- assess
   // Original surveys: a layer list, the top of the list wins where they overlap. (This sits after
   // the "assess" marker on purpose: android/tools/make_page.py cuts everything above it up to the
-  // folder chooser.) The phone app sends no survey list, so none of this shows there.
+  // folder chooser.) The phone app sends the same list, so it shows there too.
   const PREFS_KEY = "bathypicker-survey-prefs", ORDER_KEY = "bathypicker-survey-order";
   function loadJson(key, fallback) { try { const v = JSON.parse(localStorage.getItem(key) || "null"); return v || fallback; } catch (e) { return fallback; } }
   function saveJson(key, v) { try { localStorage.setItem(key, JSON.stringify(v)); } catch (e) {} }
@@ -445,7 +446,7 @@ dialog::backdrop{background:rgba(8,38,48,.55)}
       meta.appendChild(rep);
       row.appendChild(meta);
       if (s.note) row.appendChild(el("div", "lnote", s.note));
-      if (!s.usable) row.appendChild(el("div", "lnote", "Needs GDAL 3.7 or newer."));
+      if (!s.usable) row.appendChild(el("div", "lnote", s.unusable_note || "Needs GDAL 3.7 or newer."));
       row.addEventListener("mouseenter", () => { row.classList.add("hi"); highlight(s.id, s.on, true); });
       row.addEventListener("mouseleave", () => { row.classList.remove("hi"); highlight(s.id, s.on, false); });
       wrap.appendChild(row);

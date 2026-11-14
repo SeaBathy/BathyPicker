@@ -180,7 +180,7 @@ public final class MainActivity extends Activity {
                 return error("BathyPicker needs permission to save files in Downloads. Allow it, then try again.");
             }
             Planner.Params p = params(new JSONObject(body.isEmpty() ? "{}" : body));
-            Planner.Plan plan = Planner.assess(p, engine.catalog, Engine.MAX_GB, Engine.freeBytes(), Engine.OUT_LABEL, null);
+            Planner.Plan plan = Planner.assess(p, engine.catalog, engine.surveys(), Engine.MAX_GB, Engine.freeBytes(), Engine.OUT_LABEL, null);
             if (path.equals("/api/assess")) return Json.write(plan.json);
             if (!Boolean.TRUE.equals(plan.json.get("ok"))) {
                 StringBuilder sb = new StringBuilder();
@@ -204,7 +204,7 @@ public final class MainActivity extends Activity {
         } catch (IllegalArgumentException e) {
             return error(e.getMessage());
         } catch (IOException e) {
-            return error(e.getMessage() != null ? e.getMessage() : "Couldn't reach the IMAS server. Check your internet connection.");
+            return error(e.getMessage() != null ? e.getMessage() : "Couldn't reach the data servers. Check your internet connection.");
         } catch (org.json.JSONException e) {
             return error("Request wasn't valid JSON.");
         } catch (RuntimeException e) {
@@ -227,7 +227,18 @@ public final class MainActivity extends Activity {
         } else if (z != null && !"all".equals(z)) {
             throw new IllegalArgumentException("Pick at least one depth layer.");
         }
-        return Planner.parse(bbox, zones, o.optString("crs", "wgs84"), o.optString("resolution", "auto"), o.optString("resampling", "auto"));
+        // The original surveys: which the page ticked or unticked, their order (top wins) and edge blending.
+        Map<String, Boolean> prefs = new LinkedHashMap<>();
+        JSONObject pr = o.optJSONObject("survey_prefs");
+        if (pr != null) {
+            JSONArray names = pr.names();
+            for (int i = 0; names != null && i < names.length(); i++) prefs.put(names.getString(i), pr.optBoolean(names.getString(i)));
+        }
+        List<String> order = new ArrayList<>();
+        JSONArray or = o.optJSONArray("survey_order");
+        for (int i = 0; or != null && i < or.length(); i++) order.add(String.valueOf(or.get(i)));
+        return Planner.parse(bbox, zones, o.optBoolean("base", true), o.optString("crs", "wgs84"), o.optString("resolution", "auto"),
+                o.optString("resampling", "auto"), o.optString("surveys", "default"), prefs, order, o.optBoolean("blend", true));
     }
 
     private static String error(String msg) {

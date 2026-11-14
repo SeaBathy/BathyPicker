@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -14,7 +16,7 @@ import java.util.Map;
 public final class Planner {
     public static final double GB = 1024.0 * 1024 * 1024;
     public static final double DEFAULT_MAX_GB = 3.0;
-    static final double[] RES_LADDER = {10, 15, 20, 25, 30, 50, 100, 200, 250, 500, 1000, 2000, 5000};
+    static final double[] RES_LADDER = {0.5, 1, 2, 5, 10, 15, 20, 25, 30, 50, 100, 200, 250, 500, 1000, 2000, 5000};
     public static final String[] RESAMPLING = {"auto", "near", "average", "bilinear", "cubic"};
     public static final String FORMAT = "Tiled GeoTIFF with overviews (Deflate)";
 
@@ -26,6 +28,11 @@ public final class Planner {
         public String crs = "wgs84";
         public String resolution = "auto";
         public String resampling = "auto";
+        /** "default" (the usual picks, with the page's choices on top) or "none" (IMAS only). */
+        public String surveys = "default";
+        public Map<String, Boolean> surveyPrefs = new HashMap<>();
+        public List<String> surveyOrder = new ArrayList<>();
+        public boolean blend = true;
 
         public double[] bbox() {
             return new double[]{w, s, e, n};
@@ -41,6 +48,17 @@ public final class Planner {
         public List<Catalog.Info> orderInfo = new ArrayList<>();
         public Map<String, Object> json;
         public long estBytes;
+        /** IMAS's finest detail in the box (metres), or null when IMAS isn't used. */
+        public Double imasResM;
+        /** The ticked surveys, top of the list (wins) first. */
+        public List<Surveys.Survey> chosen = new ArrayList<>();
+        /** Survey file headers, by url. */
+        public Map<String, RemoteTiff> surveyTiffs = new HashMap<>();
+        /** Survey edges blended into what's underneath, and each survey's band in metres. */
+        public boolean blend;
+        public Map<String, Double> bandM = new HashMap<>();
+        /** Filled in while building: the band each survey really got (narrower for small surveys). */
+        public final Map<String, Double> bandUsedM = Collections.synchronizedMap(new HashMap<>());
     }
 
     public static String crsLabel(String crs) {
@@ -48,6 +66,12 @@ public final class Planner {
     }
 
     public static Params parse(double[] bbox, List<String> zones, String crs, String resolution, String resampling) {
+        return parse(bbox, zones, true, crs, resolution, resampling, "default", null, null, true);
+    }
+
+    /** parse_params in bathy_picker.py. base false leaves the IMAS composite out (surveys only). */
+    public static Params parse(double[] bbox, List<String> zones, boolean base, String crs, String resolution, String resampling,
+                               String surveys, Map<String, Boolean> prefs, List<String> order, boolean blend) {
         if (bbox == null || bbox.length != 4) throw new IllegalArgumentException("Pick an area first: west, south, east and north are all needed.");
         double w = bbox[0], s = bbox[1], e = bbox[2], n = bbox[3];
         for (double v : bbox) if (Double.isNaN(v) || Double.isInfinite(v)) throw new IllegalArgumentException("The box edges must be numbers.");
@@ -62,7 +86,12 @@ public final class Planner {
             for (String k : zones) if (Catalog.zone(k) == null) throw new IllegalArgumentException("Unknown depth layer: " + k);
             for (Catalog.Zone z : Catalog.ZONES) if (zones.contains(z.key)) keys.add(z.key);
         }
-        if (keys.isEmpty()) throw new IllegalArgumentException("Pick at least one depth layer.");
+        if (!base) keys.clear();
+        if (surveys == null) surveys = "default";
+        if (!surveys.equals("default") && !surveys.equals("none")) throw new IllegalArgumentException("surveys must be default or none.");
+        if ((prefs != null && prefs.size() > 2000) || (order != null && order.size() > 2000))
+            throw new IllegalArgumentException("The survey choices weren't understood.");
+        if (keys.isEmpty() && surveys.equals("none")) throw new IllegalArgumentException("Pick at least one depth layer.");
         if (crs == null) crs = "wgs84";
         if (!crs.equals("wgs84") && !crs.equals("albers")) throw new IllegalArgumentException("Unknown output coordinate system.");
         String res = resolution == null ? "auto" : resolution.trim().toLowerCase(Locale.ROOT);
@@ -73,7 +102,7 @@ public final class Planner {
             } catch (NumberFormatException ex) {
                 throw new IllegalArgumentException("Resolution must be auto, finest, or a number of metres.");
             }
-            if (!(r >= 1 && r <= 20000)) throw new IllegalArgumentException("Resolution must be between 1 and 20000 metres.");
+            if (!(r >= 0.5 && r <= 20000)) throw new IllegalArgumentException("Resolution must be between 0.5 and 20000 metres.");
             res = g(r);
         }
         if (resampling == null) resampling = "auto";
@@ -84,6 +113,10 @@ public final class Planner {
         p.crs = crs;
         p.resolution = res;
         p.resampling = resampling;
+        p.surveys = surveys;
+        if (prefs != null) p.surveyPrefs.putAll(prefs);
+        if (order != null) p.surveyOrder.addAll(order);
+        p.blend = blend;
         return p;
     }
 
@@ -121,9 +154,10 @@ public final class Planner {
         return new Object[]{ladder.get(ladder.size() - 1), "Even the coarsest option is over the size limit."};
     }
 
-    static String makeFilename(double[] b, double resM, String crs) {
+    static String makeFilename(double[] b, double resM, String crs, int nSurveys) {
         String res = g(resM).replace(".", "p");
         String suffix = crs.equals("wgs84") ? "" : "_albers";
+        if (nSurveys > 0) suffix += "_plus" + nSurveys + "survey" + (nSurveys > 1 ? "s" : "");
         String stamp = new SimpleDateFormat("yyyyMMdd-HHmmss", Locale.ROOT).format(new Date());
         return "IMAS-bathymetry_" + lat(b[1]) + "-" + lat(b[3]) + "_" + lon(b[0]) + "-" + lon(b[2]) + "_" + res + "m" + suffix + "_" + stamp + ".tif";
     }
@@ -136,11 +170,16 @@ public final class Planner {
         return String.format(Locale.ROOT, "%.2f%s", Math.abs(v), v >= 0 ? "E" : "W");
     }
 
-    /** Python's {:g} for the values used here. */
+    /** Python's {:g}: six significant digits, no trailing zeros. */
     public static String g(double v) {
-        if (v == Math.rint(v) && Math.abs(v) < 1e15) return Long.toString((long) v);
+        if (v == Math.rint(v) && Math.abs(v) < 1e6) return Long.toString((long) v);
         String s = String.format(Locale.ROOT, "%.6g", v);
-        if (s.contains("e")) return s;
+        if (s.contains("e")) {
+            // Python writes e+06 / e-05 with two exponent digits at least, like Java's %g
+            String[] parts = s.split("e");
+            String m = parts[0].contains(".") ? parts[0].replaceAll("0+$", "").replaceAll("\\.$", "") : parts[0];
+            return m + "e" + parts[1];
+        }
         if (s.contains(".")) s = s.replaceAll("0+$", "").replaceAll("\\.$", "");
         return s;
     }
@@ -155,14 +194,81 @@ public final class Planner {
         return String.format(Locale.ROOT, "%.1f TB", n);
     }
 
+    /** plan_surveys: rows for the page, and the chosen surveys top to bottom. */
+    private static void planSurveys(Params p, Plan plan, Surveys cat, Catalog headers, double[] bbox, Double imasRes,
+                                    List<Object> rows, List<String> warnings, Http.Cancel cancel) throws IOException {
+        if (cat == null || p.surveys.equals("none")) return;
+        List<Surveys.Survey> found = cat.inBox(bbox);
+        Surveys.defaultOrder(found);
+        if (!p.surveyOrder.isEmpty()) {
+            Map<String, Integer> pos = new HashMap<>();
+            for (int i = 0; i < p.surveyOrder.size(); i++) pos.put(p.surveyOrder.get(i), i);   // like a Python dict: last wins
+            int last = pos.size();
+            found.sort((a, b) -> Integer.compare(pos.getOrDefault(a.id, last), pos.getOrDefault(b.id, last)));
+        }
+        // The phone also needs to read each file's header: is it in a form this app can read?
+        List<String> urls = new ArrayList<>();
+        for (Surveys.Survey s : found) for (Surveys.SFile f : s.files) if (f.proj != null) urls.add(f.url);
+        Map<String, Object> heads = urls.isEmpty() ? Collections.emptyMap() : headers.surveyHeaders(urls, cancel);
+        for (Surveys.Survey s : found) {
+            String why = null;
+            for (Surveys.SFile f : s.files) {
+                if (f.proj == null) why = "Its coordinate system isn't one the phone knows. The computer version of BathyPicker can use it.";
+                else if (heads.get(f.url) instanceof String) why = (String) heads.get(f.url);
+            }
+            boolean usable = why == null;
+            boolean coarser = imasRes != null && s.resM >= imasRes * 0.99;
+            boolean defaultOn = !s.defaultOff && !coarser;
+            boolean on = usable && p.surveyPrefs.getOrDefault(s.id, defaultOn);
+            double extra = 0, cover = 0;
+            List<Object> cells = new ArrayList<>();
+            for (Surveys.SFile f : s.files) {
+                extra += Surveys.readBytes(bbox, f);
+                cover += Surveys.cellsCover(bbox, f);
+                for (double[] c : f.cells) {
+                    if (cells.size() < 200 && Surveys.intersects(bbox, c)) cells.add(Arrays.asList(c[0], c[1], c[2], c[3]));
+                }
+            }
+            Map<String, Object> r = new LinkedHashMap<>();
+            r.put("id", s.id);
+            r.put("name", s.name);
+            r.put("year", s.year);
+            r.put("res_m", s.resM);
+            r.put("on", on);
+            r.put("default_on", defaultOn);
+            r.put("usable", usable);
+            r.put("unusable_note", why);
+            r.put("shift_m", s.shiftM);
+            r.put("note", p.blend && imasRes != null ? Surveys.blendedNote(s.note) : s.note);
+            r.put("stated_datum", s.statedDatum);
+            r.put("verdict", s.verdict);
+            r.put("bbox", Arrays.asList(s.bbox[0], s.bbox[1], s.bbox[2], s.bbox[3]));
+            r.put("cells", cells);
+            r.put("cover_pct", Math.min(100.0, Surveys.pyRound(100 * cover, 1)));
+            r.put("read_bytes", (long) extra);
+            r.put("coarser", coarser);
+            rows.add(r);
+            if (on) {
+                plan.chosen.add(s);
+                for (Surveys.SFile f : s.files) plan.surveyTiffs.put(f.url, (RemoteTiff) heads.get(f.url));
+            }
+            if (!usable) warnings.add(s.name + " can't be read on the phone, so it's left out. " + why);
+        }
+    }
+
     /**
      * Check a request. freeBytes is the free space where the file will go, outDirLabel is shown on the page.
      */
     public static Plan assess(Params p, Catalog cat, double maxGb, long freeBytes, String outDirLabel, Http.Cancel cancel)
             throws IOException {
+        return assess(p, cat, null, maxGb, freeBytes, outDirLabel, cancel);
+    }
+
+    public static Plan assess(Params p, Catalog cat, Surveys surveys, double maxGb, long freeBytes, String outDirLabel,
+                              Http.Cancel cancel) throws IOException {
         List<Catalog.Zone> zones = new ArrayList<>();
         for (Catalog.Zone z : Catalog.ZONES) if (p.zones.contains(z.key)) zones.add(z);
-        Map<String, Catalog.Info> infos = cat.infos(zones, cancel);
+        Map<String, Catalog.Info> infos = zones.isEmpty() ? new HashMap<>() : cat.infos(zones, cancel);
         double[] bbox = p.bbox();
         double[] bm = boxMetres(bbox);
         double cap = maxGb * GB;
@@ -187,8 +293,22 @@ public final class Planner {
         plan.crs = p.crs;
         Map<String, Object> out = new LinkedHashMap<>();
         plan.json = out;
-        if (covered.isEmpty()) {
-            errors.add("This box is outside the area the dataset covers (Australia's exclusive economic zone).");
+        Double imasRes = null;
+        for (Catalog.Zone z : covered) imasRes = imasRes == null ? infos.get(z.key).pxM : Math.min(imasRes, infos.get(z.key).pxM);
+        plan.imasResM = imasRes;
+        List<Object> surveyRows = new ArrayList<>();
+        planSurveys(p, plan, surveys, cat, bbox, imasRes, surveyRows, warnings, cancel);
+        out.put("surveys", surveyRows);
+        out.put("imas_res_m", imasRes);
+        Map<String, Object> catInfo = new LinkedHashMap<>();
+        catInfo.put("built", surveys == null ? "" : surveys.built);
+        catInfo.put("origin", surveys == null ? "none" : surveys.origin);
+        catInfo.put("count", surveys == null ? 0 : surveys.list.size());
+        catInfo.put("report_url", Surveys.REPORT_URL);
+        out.put("catalogue", catInfo);
+        if (covered.isEmpty() && plan.chosen.isEmpty()) {
+            errors.add(zones.isEmpty() ? "Tick the IMAS composite or at least one survey."
+                    : "This box is outside the area the dataset covers (Australia's exclusive economic zone).");
             out.put("ok", false);
             out.put("errors", errors);
             out.put("warnings", warnings);
@@ -196,15 +316,37 @@ public final class Planner {
             return plan;
         }
         double finest = Double.MAX_VALUE;
-        for (Catalog.Zone z : covered) finest = Math.min(finest, infos.get(z.key).pxM);
+        if (imasRes != null) finest = imasRes;
+        for (Surveys.Survey s : plan.chosen) finest = Math.min(finest, s.resM);
         Object[] ch = chooseResolution(bbox, finest, p.crs, p.resolution, cap);
         double resM = (Double) ch[0];
         String note = (String) ch[1];
         long[] px = outputPixels(bbox, resM, p.crs);
         long est = px[0] * px[1] * 4;
         if (!p.resolution.equals("auto") && !p.resolution.equals("finest") && resM < finest * 0.99)
-            warnings.add(g(resM) + " m is finer than the data itself (" + g(Math.round(finest * 10) / 10.0)
+            warnings.add(g(resM) + " m is finer than the data itself (" + g(Surveys.pyRound(finest, 1))
                     + " m). The file gets bigger with no extra detail.");
+        plan.blend = p.blend && !plan.chosen.isEmpty() && !covered.isEmpty();
+        if (plan.blend) for (Surveys.Survey s : plan.chosen) plan.bandM.put(s.id, Surveys.blendBandM(s, resM));
+        if (!plan.chosen.isEmpty()) {
+            double cover = 0;
+            for (Object o : surveyRows) {
+                @SuppressWarnings("unchecked") Map<String, Object> r = (Map<String, Object>) o;
+                if ((Boolean) r.get("on")) cover += (Double) r.get("cover_pct");
+            }
+            cover = Math.min(100.0, cover);
+            String rest = imasRes != null ? " The rest is the IMAS composite at " + g(imasRes) + " m." : " The rest stays empty.";
+            String edge;
+            if (plan.blend) {
+                double mx = 0;
+                for (double v : plan.bandM.values()) mx = Math.max(mx, v);
+                edge = String.format(Locale.ROOT, " Survey edges and gaps are blended into what's underneath over up to %.0f m, "
+                        + "so there's no step; further in, the survey is used exactly.", mx);
+            } else {
+                edge = " Survey edges may show a small step.";
+            }
+            warnings.add(String.format(Locale.ROOT, "The surveys you ticked cover up to %.0f%% of the box.", cover) + rest + edge);
+        }
         if (est > cap)
             errors.add("About " + fmtBytes(est) + " is over the " + g(maxGb) + " GB limit. Pick a smaller box or a coarser resolution.");
         List<String> skipped = new ArrayList<>();
@@ -218,12 +360,13 @@ public final class Planner {
             warnings.add("No coverage in this box for: " + sb + ".");
         }
         warnings.add("Only seafloor inside Australian waters has data. Land and other countries' waters stay empty (NoData).");
-        // Room for the file, its overviews and a margin.
-        double need = est * 0.7;
+        // Room for the file, its overviews and a margin; blending also keeps three working copies while it runs.
+        double need = est * 0.7 + (plan.blend ? 3.0 * est : 0);
         if (freeBytes >= 0) {
             if (freeBytes < need)
-                errors.add("Not enough free space on this phone (" + fmtBytes(freeBytes) + " free, roughly " + fmtBytes(need) + " needed).");
-            else if (freeBytes < est * 1.2)
+                errors.add("Not enough free space on this phone (" + fmtBytes(freeBytes) + " free, roughly " + fmtBytes(need) + " needed"
+                        + (plan.blend ? ", including working space for blending survey edges" : "") + ").");
+            else if (freeBytes < need + est * 0.5)
                 warnings.add("Storage space is tight on this phone (" + fmtBytes(freeBytes) + " free).");
         }
 
@@ -240,8 +383,9 @@ public final class Planner {
         }
         plan.resM = resM;
         plan.finestM = Math.round(finest * 1000) / 1000.0;
-        plan.filename = makeFilename(bbox, resM, p.crs);
+        plan.filename = makeFilename(bbox, resM, p.crs, plan.chosen.size());
         plan.estBytes = est;
+        out.put("blend", plan.blend);
         out.put("ok", errors.isEmpty());
         out.put("errors", errors);
         out.put("warnings", warnings);

@@ -21,11 +21,17 @@ public final class RemoteTiff {
 
     private final boolean little;
     private final boolean big;
-    private byte[] head = new byte[0];
+    private Header head;
     private final OnceMap<Long, long[][]> rowIndex = new OnceMap<>();
 
     public static final class Level {
         public int index, width, height, tileW, tileH, tilesX, tilesY;
+        /**
+         * Stored in strips (rows) rather than tiles. Then a "tile" here is a group of whole strips,
+         * fetched in one request: tileW is the image width and tileH covers `group` strips.
+         */
+        boolean strip;
+        int rowsPerStrip, group, strips;
         int compression, predictor, bits, sampleFormat;
         int offType, cntType;
         long offPtr, cntPtr;
@@ -33,6 +39,15 @@ public final class RemoteTiff {
         /** Pixel size in source units (metres) at this level. */
         public double resX, resY;
     }
+
+    /** A file in a form this app can't read at all (say, Zstandard compression), as opposed to a network error. */
+    public static final class UnsupportedException extends IOException {
+        UnsupportedException(String msg) {
+            super(msg);
+        }
+    }
+
+    private final OnceMap<Long, long[][]> stripIndex = new OnceMap<>();
 
     private RemoteTiff(String url, boolean little, boolean big, float nodata, boolean hasNodata, int epsg) {
         this.url = url;
@@ -46,7 +61,8 @@ public final class RemoteTiff {
     public static RemoteTiff open(String url, Http.Cancel cancel) throws IOException {
         Header h = new Header(url, cancel);
         h.ensure(0, 16);
-        byte[] b = h.buf;
+        byte[] b = new byte[4];
+        h.copy(0, b);
         boolean little;
         if (b[0] == 'I' && b[1] == 'I') little = true;
         else if (b[0] == 'M' && b[1] == 'M') little = false;
@@ -100,11 +116,16 @@ public final class RemoteTiff {
                     case 322: L.tileW = (int) h.uint(type, dataPos); break;
                     case 323: L.tileH = (int) h.uint(type, dataPos); break;
                     case 339: L.sampleFormat = (int) h.uint(type, dataPos); break;
+                    case 278: L.rowsPerStrip = (int) Math.min(Integer.MAX_VALUE, h.uint(type, dataPos)); break;
+                    case 273:
+                        L.strip = true;
+                        // fall through: strip offsets are read like tile offsets
                     case 324:
                         L.offType = type;
                         if (dataPos == valPos) L.offInline = h.uints(type, dataPos, (int) count);
                         else L.offPtr = dataPos;
                         break;
+                    case 279:
                     case 325:
                         L.cntType = type;
                         if (dataPos == valPos) L.cntInline = h.uints(type, dataPos, (int) count);
@@ -128,7 +149,7 @@ public final class RemoteTiff {
                             h.ensure(dataPos, (int) bytes);
                             StringBuilder sb = new StringBuilder();
                             for (int k = 0; k < count; k++) {
-                                int c = h.buf[(int) (dataPos + k)] & 0xff;
+                                int c = h.at(dataPos + k);
                                 if (c == 0) break;
                                 sb.append((char) c);
                             }
@@ -141,10 +162,25 @@ public final class RemoteTiff {
             }
             long next = big ? h.u64(first + n * entrySize) : h.u32(first + n * entrySize);
             if ((subfile & 4) == 0) {  // skip transparency masks
-                if (L.tileW <= 0 || L.tileH <= 0) throw new IOException(url + " isn't tiled.");
+                if (L.tileW > 0 && L.tileH > 0) {
+                    L.strip = false;
+                } else if (L.strip) {
+                    // Strips: group them so one request fetches about 2 MB of pixels (a few hundred rows).
+                    int rps = L.rowsPerStrip <= 0 ? L.height : Math.min(L.rowsPerStrip, L.height);
+                    L.rowsPerStrip = Math.max(1, rps);
+                    L.strips = (L.height + L.rowsPerStrip - 1) / L.rowsPerStrip;
+                    long stripBytes = (long) L.width * 4 * L.rowsPerStrip;
+                    L.group = (int) Math.max(1, Math.min(L.strips, Math.min(1024, (2L << 20) / Math.max(1, stripBytes))));
+                    L.tileW = L.width;
+                    L.tileH = L.rowsPerStrip * L.group;
+                } else {
+                    throw new IOException(url + " has neither tiles nor strips.");
+                }
                 if (L.bits != 32 || L.sampleFormat != 3) throw new IOException(url + " isn't 32-bit float data.");
+                if (L.compression == 50000 || L.compression == 34926)
+                    throw new UnsupportedException(url + " uses Zstandard compression, which the phone can't read.");
                 if (L.compression != 1 && L.compression != 5 && L.compression != 8 && L.compression != 32946)
-                    throw new IOException(url + " uses TIFF compression " + L.compression + ", which this app can't read.");
+                    throw new UnsupportedException(url + " uses TIFF compression " + L.compression + ", which this app can't read.");
                 L.tilesX = (L.width + L.tileW - 1) / L.tileW;
                 L.tilesY = (L.height + L.tileH - 1) / L.tileH;
                 L.index = lv.size();
@@ -176,7 +212,7 @@ public final class RemoteTiff {
             }
         }
         RemoteTiff t = new RemoteTiff(url, little, big, nd, hasNd, epsg);
-        t.head = h.buf;
+        t.head = h;
         t.gt[1] = scale[0];
         t.gt[5] = -scale[1];
         t.gt[0] = tie[3] - tie[0] * scale[0];
@@ -207,6 +243,17 @@ public final class RemoteTiff {
     /** {offsets, byteCounts} for one row of tiles at a level. */
     long[][] tileRow(Level L, int ty, Http.Cancel cancel) throws IOException {
         long key = ((long) L.index << 32) | ty;
+        if (L.strip) {
+            // One "tile" per row: the byte range from the group's first strip to its last.
+            long[][] s = strips(L, ty, cancel);
+            long start = Long.MAX_VALUE, end = 0;
+            for (int i = 0; i < s[0].length; i++) {
+                if (s[1][i] <= 0) continue;
+                start = Math.min(start, s[0][i]);
+                end = Math.max(end, s[0][i] + s[1][i]);
+            }
+            return end == 0 ? new long[][]{{0}, {0}} : new long[][]{{start}, {end - start}};
+        }
         try {
             return rowIndex.get(key, () -> {
                 int start = ty * L.tilesX, n = L.tilesX;
@@ -221,6 +268,51 @@ public final class RemoteTiff {
         }
     }
 
+    /** {offsets, byteCounts} of the strips in one group. */
+    private long[][] strips(Level L, int group, Http.Cancel cancel) throws IOException {
+        long key = ((long) L.index << 32) | group;
+        try {
+            return stripIndex.get(key, () -> {
+                int start = group * L.group, n = Math.min(L.strips, start + L.group) - start;
+                return new long[][]{readIndex(L.offInline, L.offType, L.offPtr, start, n, cancel),
+                        readIndex(L.cntInline, L.cntType, L.cntPtr, start, n, cancel)};
+            });
+        } catch (IOException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new IOException(e.getMessage(), e);
+        }
+    }
+
+    /**
+     * What gets cached for one fetched tile: the bytes as they are for a tiled file; for a strip
+     * group, each strip's bytes with its length in front, so decode can split them again.
+     */
+    byte[] pack(Level L, int ty, byte[] range, long rangeStart, Http.Cancel cancel) throws IOException {
+        if (!L.strip) return range;
+        long[][] s = strips(L, ty, cancel);
+        int n = s[0].length, total = 4 + 4 * n;
+        for (int i = 0; i < n; i++) total += (int) Math.max(0, s[1][i]);
+        byte[] out = new byte[total];
+        int p = 4 + 4 * n;
+        putInt(out, 0, n);
+        for (int i = 0; i < n; i++) {
+            int len = (int) Math.max(0, s[1][i]);
+            putInt(out, 4 + 4 * i, len);
+            if (len > 0) System.arraycopy(range, (int) (s[0][i] - rangeStart), out, p, len);
+            p += len;
+        }
+        return out;
+    }
+
+    private static void putInt(byte[] b, int p, int v) {
+        b[p] = (byte) (v >>> 24); b[p + 1] = (byte) (v >>> 16); b[p + 2] = (byte) (v >>> 8); b[p + 3] = (byte) v;
+    }
+
+    private static int getInt(byte[] b, int p) {
+        return ((b[p] & 0xff) << 24) | ((b[p + 1] & 0xff) << 16) | ((b[p + 2] & 0xff) << 8) | (b[p + 3] & 0xff);
+    }
+
     private long[] readIndex(long[] inline, int type, long ptr, int start, int n, Http.Cancel cancel) throws IOException {
         long[] out = new long[n];
         if (inline != null) {
@@ -230,9 +322,11 @@ public final class RemoteTiff {
         int sz = typeSize(type);
         long pos = ptr + (long) start * sz;
         byte[] b;
-        if (pos + (long) n * sz <= head.length) {
+        if (head.has(pos, (long) n * sz)) {
             b = new byte[n * sz];
-            System.arraycopy(head, (int) pos, b, 0, b.length);
+            synchronized (head) {
+                head.copy(pos, b);
+            }
         } else {
             b = Http.range(url, pos, n * sz, cancel);
         }
@@ -247,9 +341,25 @@ public final class RemoteTiff {
         return out;
     }
 
-    /** Decode one compressed tile into floats (tileW * tileH, row-major). */
+    /** Decode one compressed tile (or packed strip group) into floats (tileW * tileH, row-major). */
     float[] decode(Level L, byte[] data, int off, int len) throws IOException {
-        int n = L.tileW * L.tileH;
+        if (!L.strip) return decodeBlock(L, data, off, len, L.tileW, L.tileH);
+        float[] out = new float[L.tileW * L.tileH];
+        java.util.Arrays.fill(out, Float.NaN);
+        int n = getInt(data, off), p = off + 4 + 4 * n, rows = L.rowsPerStrip, w = L.tileW;
+        for (int i = 0; i < n; i++) {
+            int sl = getInt(data, off + 4 + 4 * i);
+            if (sl > 0) {
+                float[] strip = decodeBlock(L, data, p, sl, w, rows);
+                System.arraycopy(strip, 0, out, i * rows * w, Math.min(strip.length, out.length - i * rows * w));
+            }
+            p += sl;
+        }
+        return out;
+    }
+
+    private float[] decodeBlock(Level L, byte[] data, int off, int len, int tileW, int tileH) throws IOException {
+        int n = tileW * tileH;
         byte[] raw = new byte[n * 4];
         if (L.compression == 1) {
             System.arraycopy(data, off, raw, 0, Math.min(len, raw.length));
@@ -275,10 +385,10 @@ public final class RemoteTiff {
             }
         }
         float[] out = new float[n];
-        int w = L.tileW;
+        int w = tileW;
         if (L.predictor == 3) {
             byte[] row = new byte[w * 4];
-            for (int y = 0; y < L.tileH; y++) {
+            for (int y = 0; y < tileH; y++) {
                 int base = y * w * 4;
                 for (int i = 1; i < row.length; i++) raw[base + i] += raw[base + i - 1];
                 for (int x = 0; x < w; x++) {
@@ -297,7 +407,7 @@ public final class RemoteTiff {
             out[i] = Float.intBitsToFloat(bits);
         }
         if (L.predictor == 2) {  // horizontal differencing on the integer bit pattern (rare for floats)
-            for (int y = 0; y < L.tileH; y++)
+            for (int y = 0; y < tileH; y++)
                 for (int x = 1; x < w; x++) {
                     int a = Float.floatToRawIntBits(out[y * w + x - 1]), b2 = Float.floatToRawIntBits(out[y * w + x]);
                     out[y * w + x] = Float.intBitsToFloat(a + b2);
@@ -400,11 +510,16 @@ public final class RemoteTiff {
         return (hi << 32) | lo;
     }
 
-    /** The start of the file, grown on demand. */
+    /**
+     * The parts of the file holding its header, fetched on demand in 64 KB pages: a COG keeps its
+     * header at the start, but other GeoTIFFs keep it (and their tile or strip index) at the end.
+     */
     private static final class Header {
+        static final int PAGE = 65536;
         final String url;
         final Http.Cancel cancel;
-        byte[] buf = new byte[0];
+        final java.util.HashMap<Long, byte[]> pages = new java.util.HashMap<>();
+        long fetched;
         boolean little = true, big = false;
 
         Header(String url, Http.Cancel cancel) {
@@ -412,28 +527,47 @@ public final class RemoteTiff {
             this.cancel = cancel;
         }
 
+        boolean has(long pos, long len) {
+            for (long pg = pos / PAGE; pg <= (pos + Math.max(1, len) - 1) / PAGE; pg++) if (!pages.containsKey(pg)) return false;
+            return true;
+        }
+
         void ensure(long pos, int len) throws IOException {
-            long need = pos + len;
-            if (need <= buf.length) return;
-            if (need > 64L * 1024 * 1024) throw new IOException("Header of " + url + " is unexpectedly large.");
-            int want = (int) Math.max(need, Math.max(65536, buf.length * 2L));
-            byte[] more = Http.range(url, buf.length, want - buf.length, cancel);
-            byte[] nb = new byte[buf.length + more.length];
-            System.arraycopy(buf, 0, nb, 0, buf.length);
-            System.arraycopy(more, 0, nb, buf.length, more.length);
-            buf = nb;
+            long first = pos / PAGE, last = (pos + Math.max(1, len) - 1) / PAGE;
+            long pg = first;
+            while (pg <= last) {
+                if (pages.containsKey(pg)) { pg++; continue; }
+                long run = pg;
+                while (run + 1 <= last && !pages.containsKey(run + 1)) run++;
+                long n = run - pg + 1;
+                fetched += n * PAGE;
+                if (fetched > 64L * 1024 * 1024) throw new IOException("Header of " + url + " is unexpectedly large.");
+                byte[] got = Http.rangeUpTo(url, pg * PAGE, (int) (n * PAGE), cancel);
+                for (long k = 0; k < n; k++) {
+                    int from = (int) (k * PAGE);
+                    byte[] page = new byte[PAGE];  // past the end of the file reads as zeros
+                    if (from < got.length) System.arraycopy(got, from, page, 0, Math.min(PAGE, got.length - from));
+                    pages.put(pg + k, page);
+                }
+                pg = run + 1;
+            }
+        }
+
+        int at(long p) {
+            return pages.get(p / PAGE)[(int) (p % PAGE)] & 0xff;
+        }
+
+        void copy(long pos, byte[] out) {
+            for (int i = 0; i < out.length; i++) out[i] = (byte) at(pos + i);
         }
 
         int u16(long p) {
-            int i = (int) p;
-            return little ? (buf[i] & 0xff) | ((buf[i + 1] & 0xff) << 8) : ((buf[i] & 0xff) << 8) | (buf[i + 1] & 0xff);
+            return little ? at(p) | (at(p + 1) << 8) : (at(p) << 8) | at(p + 1);
         }
 
         long u32(long p) {
-            int i = (int) p;
-            return little
-                    ? (buf[i] & 0xffL) | ((buf[i + 1] & 0xffL) << 8) | ((buf[i + 2] & 0xffL) << 16) | ((buf[i + 3] & 0xffL) << 24)
-                    : ((buf[i] & 0xffL) << 24) | ((buf[i + 1] & 0xffL) << 16) | ((buf[i + 2] & 0xffL) << 8) | (buf[i + 3] & 0xffL);
+            long a = at(p), b = at(p + 1), c = at(p + 2), d = at(p + 3);
+            return little ? a | (b << 8) | (c << 16) | (d << 24) : (a << 24) | (b << 16) | (c << 8) | d;
         }
 
         long u64(long p) {
@@ -444,7 +578,7 @@ public final class RemoteTiff {
         long uint(int type, long p) throws IOException {
             ensure(p, typeSize(type));
             switch (typeSize(type)) {
-                case 1: return buf[(int) p] & 0xff;
+                case 1: return at(p);
                 case 2: return u16(p);
                 case 4: return u32(p);
                 default: return u64(p);

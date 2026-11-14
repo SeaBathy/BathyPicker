@@ -100,6 +100,40 @@ public final class Catalog {
         }
     }
 
+    private final OnceMap<String, Object> surveyHeads = new OnceMap<>();
+
+    /**
+     * Headers of original survey files, read in parallel and kept: each url maps to its RemoteTiff,
+     * or to a String saying why this app can't read it (say, Zstandard compression). Network
+     * errors are thrown, and not kept.
+     */
+    public Map<String, Object> surveyHeaders(List<String> urls, Http.Cancel cancel) throws IOException {
+        List<Future<Object>> fs = new ArrayList<>();
+        for (String u : urls) {
+            fs.add(pool.submit(() -> surveyHeads.get(u, () -> {
+                try {
+                    return RemoteTiff.open(u, cancel);
+                } catch (RemoteTiff.UnsupportedException e) {
+                    return "Uses a compression the phone can't read. The computer version of BathyPicker can.";
+                }
+            })));
+        }
+        Map<String, Object> out = new LinkedHashMap<>();
+        for (int i = 0; i < urls.size(); i++) {
+            try {
+                out.put(urls.get(i), fs.get(i).get());
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new java.io.InterruptedIOException("Cancelled");
+            } catch (java.util.concurrent.ExecutionException e) {
+                Throwable c = e.getCause();
+                throw new IOException("Could not read an original survey's header (" + c.getMessage()
+                        + "). Check your internet connection.", c);
+            }
+        }
+        return out;
+    }
+
     /** Headers of several zones, read in parallel. */
     public Map<String, Info> infos(List<Zone> zones, Http.Cancel cancel) throws IOException {
         List<Future<Info>> fs = new ArrayList<>();

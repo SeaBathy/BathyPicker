@@ -1684,7 +1684,7 @@ dialog::backdrop{background:rgba(8,38,48,.55)}
 <div id="panel">
   <div>
     <h1>Seafloor GeoTIFF picker</h1>
-    <p class="lede">Drag the box over Australian waters. The script pulls every depth layer for it from IMAS and merges them into one GeoTIFF.</p>
+    <p class="lede">Drag the box over Australian waters. The script pulls every depth layer for it from IMAS, with any finer original surveys on top, and merges them into one GeoTIFF.</p>
   </div>
 
   <section id="setup" hidden aria-labelledby="h-setup">
@@ -2026,7 +2026,7 @@ dialog::backdrop{background:rgba(8,38,48,.55)}
   // ---------- assess
   // Original surveys: a layer list, the top of the list wins where they overlap. (This sits after
   // the "assess" marker on purpose: android/tools/make_page.py cuts everything above it up to the
-  // folder chooser.) The phone app sends no survey list, so none of this shows there.
+  // folder chooser.) The phone app sends the same list, so it shows there too.
   const PREFS_KEY = "bathypicker-survey-prefs", ORDER_KEY = "bathypicker-survey-order";
   function loadJson(key, fallback) { try { const v = JSON.parse(localStorage.getItem(key) || "null"); return v || fallback; } catch (e) { return fallback; } }
   function saveJson(key, v) { try { localStorage.setItem(key, JSON.stringify(v)); } catch (e) {} }
@@ -2103,7 +2103,7 @@ dialog::backdrop{background:rgba(8,38,48,.55)}
       meta.appendChild(rep);
       row.appendChild(meta);
       if (s.note) row.appendChild(el("div", "lnote", s.note));
-      if (!s.usable) row.appendChild(el("div", "lnote", "Needs GDAL 3.7 or newer."));
+      if (!s.usable) row.appendChild(el("div", "lnote", s.unusable_note || "Needs GDAL 3.7 or newer."));
       row.addEventListener("mouseenter", () => { row.classList.add("hi"); highlight(s.id, s.on, true); });
       row.addEventListener("mouseleave", () => { row.classList.remove("hi"); highlight(s.id, s.on, false); });
       wrap.appendChild(row);
