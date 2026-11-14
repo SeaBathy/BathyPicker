@@ -1,3 +1,5 @@
+// Follows GDAL's gdalproximity.cpp: Copyright (c) 2008, Frank Warmerdam; Copyright (c) 2009-2010,
+// Even Rouault. MIT licence; see licenses/GDAL-LICENSE.txt.
 package com.seabathy.bathypicker.core;
 
 /**

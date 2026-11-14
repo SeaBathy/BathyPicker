@@ -60,7 +60,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, unquote, urlparse
 
-APP_VERSION = "1.2.1"
+APP_VERSION = "1.2.2"
 BASE_URL = "https://data.imas.utas.edu.au/attachments/69e9ac91-babe-47ed-8c37-0ef08f29338a/bathymetry/"
 DOI_URL = "https://doi.org/10.25959/Y9VF-V723"
 CITATION = (

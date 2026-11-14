@@ -1,3 +1,6 @@
+// The resampling and scale steps follow GDAL's gdalwarpkernel.cpp and gdalwarpoperation.cpp:
+// Copyright (c) 2003, Frank Warmerdam; Copyright (c) 2007-2013, Even Rouault. MIT licence; see
+// licenses/GDAL-LICENSE.txt.
 package com.seabathy.bathypicker.core;
 
 import java.io.File;

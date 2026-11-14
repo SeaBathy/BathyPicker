@@ -18,9 +18,10 @@ licence texts are in the [`licenses`](licenses) folder.
 | Component | Version | Licence | Full text |
 | --- | --- | --- | --- |
 | Leaflet (in the app's assets) | 1.9.4 | BSD 2-Clause | [`licenses/Leaflet-1.9.4-LICENSE.txt`](licenses/Leaflet-1.9.4-LICENSE.txt) |
+| Code that follows GDAL: `Proximity.java` (from `gdalproximity.cpp`) and the resampling and scale steps in `Builder.java` (from `gdalwarpkernel.cpp` and `gdalwarpoperation.cpp`), so the phone matches the desktop | 3.13.3 | MIT (© Frank Warmerdam, Even Rouault) | [`licenses/GDAL-LICENSE.txt`](licenses/GDAL-LICENSE.txt), also inside the app |
 
 The rest of the app is BathyPicker's own code (MIT) and Android's built-in libraries. It doesn't
-use GDAL.
+include GDAL itself.
 
 ## Loaded by the desktop map page (not included)
 
