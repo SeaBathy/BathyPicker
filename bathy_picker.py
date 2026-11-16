@@ -2501,7 +2501,7 @@ def main(argv=None) -> int:
     url = f"http://{shown_host}:{args.port}/" + ("" if app.strict_host else f"?t={token}")
     print(f"Seafloor picker running. Open: {url}")
     if not app.strict_host:
-        print("Listening on the network. Replace the address with this machine's IP or Tailscale name, e.g. "
+        print("Listening on the network. Replace the address with this machine's IP address or network name, e.g. "
               f"http://<this-machine>:{args.port}/?t={token}")
         print("Anyone with that link can start downloads on this machine, so only share it with yourself.")
     if tools is None:
