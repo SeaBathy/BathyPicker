@@ -1,6 +1,6 @@
 # Third-party software and data
 
-BathyPicker's own code is under the MIT licence in [`LICENSE`](LICENSE). It uses, or
+BathyPicker's own code is under the GNU GPL-3.0 in [`LICENSE`](LICENSE). It uses, or
 `BathyPicker.exe` and `BathyPicker.apk` include, the software and data below under their own licences. The full
 licence texts are in the [`licenses`](licenses) folder.
 

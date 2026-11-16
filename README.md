@@ -9,7 +9,7 @@ original survey exists. Free and open source.</p>
   <img alt="Windows, macOS, Linux or Android" src="https://img.shields.io/badge/runs%20on-Windows%20%7C%20macOS%20%7C%20Linux%20%7C%20Android-0078d4">
   <img alt="Python 3.8+" src="https://img.shields.io/badge/Python-3.8%2B-3776ab?logo=python&logoColor=white">
   <img alt="Data IMAS and AusSeabed, CC BY 4.0" src="https://img.shields.io/badge/data-IMAS%20%2B%20AusSeabed%20CC%20BY%204.0-orange">
-  <img alt="MIT licence" src="https://img.shields.io/badge/licence-MIT-blue">
+  <img alt="GPL-3.0 licence" src="https://img.shields.io/badge/licence-GPL--3.0-blue">
 </p>
 
 <p align="center"><img src="screenshots/start.jpg" width="860" alt="BathyPicker: a satellite map of Australia with a box to drag over any waters, and the settings panel"></p>
@@ -276,7 +276,7 @@ The survey list itself is made with `tools/build_catalogue.py`; see
   your own terms with that provider.
 - **GDAL** (MIT), downloaded on first use if needed, not included here. The Android app doesn't use it.
 - **The exe** is built with [PyInstaller](https://pyinstaller.org) and includes Python (PSF licence).
-- **BathyPicker's code:** MIT licence, see [LICENSE](LICENSE).
+- **BathyPicker's code:** GNU GPL-3.0, see [LICENSE](LICENSE): free to use, change and share; anyone who shares a copy or a changed version must keep it free and open source under the same licence.
 - **Full licence texts and notices** for everything above: [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) and the [`licenses`](licenses) folder.
 
 BathyPicker is an independent project, not made or endorsed by IMAS, the University of
